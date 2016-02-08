@@ -7,8 +7,8 @@ public class Bow : Weapon
 {
 	private float charge;
 	public float initialCharge = 0.5f;
-    public float chargeFactor = 5f;
-    public float maxCharge = 5f;
+    public float chargeFactor = 3f;
+    public float maxCharge = 3f;
 
 	private float force = 50f;
 	private float coolDownDuration = 0.25f;

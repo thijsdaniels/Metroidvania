@@ -24,15 +24,22 @@ public class Stalker : MonoBehaviour {
 	public float
 		speed;
 
-	void Awake() {
+    /**
+     *
+     */
+	void Awake()
+    {
 		wakeDistanceSquared = wakeDistance * wakeDistance;
 		if (target && startOnTarget) {
 			transform.position = GetTargetPosition();
 		}
 	}
 
-	void Update() {
-
+    /**
+     *
+     */
+    void Update()
+    {
 		if (!target) {
 			return;
 		}
@@ -44,15 +51,43 @@ public class Stalker : MonoBehaviour {
 		}
 	}
 
-	void Sleep() {
+    /**
+     *
+     */
+    void Sleep()
+    {
 		var distanceSquared = (transform.position - target.position).sqrMagnitude;
+
 		if (distanceSquared < wakeDistanceSquared) {
-			asleep = false;
+            WakeUp();
 		}
 	}
 
-	private void Move() {
+    /**
+     *
+     */
+    protected void WakeUp()
+    {
+        asleep = false;
 
+        gameObject.SendMessage("OnWakeUp", null, SendMessageOptions.DontRequireReceiver);
+    }
+
+    /**
+     *
+     */
+    protected void FallAsleep()
+    {
+        asleep = true;
+
+        gameObject.SendMessage("OnFallAsleep", null, SendMessageOptions.DontRequireReceiver);
+    }
+
+    /**
+     *
+     */
+    protected void Move()
+    {
 		if (moveMode == MoveMode.linear) {
 
 			transform.position = Vector3.MoveTowards(
@@ -70,10 +105,13 @@ public class Stalker : MonoBehaviour {
 			);
 
 		}
-
 	}
 
-	private Vector3 GetTargetPosition() {
+    /**
+     *
+     */
+    protected Vector3 GetTargetPosition()
+    {
 		return new Vector3(
 			followXAxis ? target.position.x + targetOffset.x : transform.position.x,
 			followYAxis ? target.position.y + targetOffset.y : transform.position.y,
@@ -81,7 +119,11 @@ public class Stalker : MonoBehaviour {
 		);
 	}
 
-	void OnDrawGizmos() {
+    /**
+     *
+     */
+    public void OnDrawGizmos()
+    {
 		if (asleep) {
 			Gizmos.DrawWireSphere(transform.position, wakeDistance);
 		}
