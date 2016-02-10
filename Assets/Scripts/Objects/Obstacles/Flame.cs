@@ -55,15 +55,17 @@ public class Flame : MonoBehaviour
      */
     public void OnTriggerEnter2D(Collider2D other)
     {
-        Flame otherFlame = other.GetComponent<Flame>();
-
-        if (otherFlame != null)
+        if (this.IsLit())
         {
-            if (this.IsLit())
-            {
-                Debug.Log("Lighting otherFlame.");
-                otherFlame.Light();
-            }
+            other.SendMessage("OnFlameEnter", this, SendMessageOptions.DontRequireReceiver);
         }
+    }
+
+    /**
+     *
+     */
+    public void OnFlameEnter(Flame other)
+    {
+        this.Light();
     }
 }

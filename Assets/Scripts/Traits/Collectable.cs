@@ -5,8 +5,8 @@ public class Collectable : MonoBehaviour {
 
 	public AudioClip collectSound;
 
-	void OnTriggerEnter2D(Collider2D target) {
-
+	void OnTriggerEnter2D(Collider2D target)
+    {
 		if (target.gameObject.tag == "Player") {
 
 			var collector = target.gameObject.GetComponent<Collector>();
@@ -16,16 +16,15 @@ public class Collectable : MonoBehaviour {
 			}
 
 		}
-
 	}
 
-	public void Collect(Collector collector) {
-
+	public void Collect(Collector collector)
+    {
 		if (collectSound) {
 			AudioSource.PlayClipAtPoint(collectSound, transform.position);
 		}
 
-		this.SendMessage("OnCollect", collector, SendMessageOptions.RequireReceiver);
+		gameObject.SendMessage("OnCollect", collector, SendMessageOptions.RequireReceiver);
 	}
 
 }

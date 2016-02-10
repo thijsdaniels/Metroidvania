@@ -407,8 +407,10 @@ public class Player : MonoBehaviour {
 		var carriable = Release();
 
 		var body = carriable.GetComponent<Rigidbody2D>();
-		if (body) {
+		if (body)
+        {
 			body.AddForce(force);
+            return;
 		}
 	}
 

@@ -12,7 +12,7 @@ public class Lootable : MonoBehaviour {
 
 		animator = GetComponent<Animator>();
 
-		if (looted) {
+		if (animator && looted) {
 			animator.SetTrigger("Looted");
 		}
 

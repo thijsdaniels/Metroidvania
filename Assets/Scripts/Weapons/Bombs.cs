@@ -6,7 +6,7 @@
 public class Bombs : Weapon
 {
 	private float charge;
-	public float initialCharge = 0.5f;
+	public float initialCharge = 1.5f;
     public float chargeFactor = 3f;
     public float maxCharge = 3f;
 

@@ -43,4 +43,20 @@ public class Bomb : MonoBehaviour {
 		Destroy(gameObject);
 	}
 
+    /**
+     *
+     */
+    public void OnFlameEnter(Flame flame)
+    {
+        this.Explode();
+    }
+
+    /**
+     *
+     */
+    public void OnExplosionEnter(Explosion explosion)
+    {
+        this.Explode();
+    }
+
 }
