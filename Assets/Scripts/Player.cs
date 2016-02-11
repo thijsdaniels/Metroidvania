@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController2D))]
 public class Player : MonoBehaviour {
@@ -350,7 +351,7 @@ public class Player : MonoBehaviour {
 			damagable.Revive();
 
 		} else {
-			Application.LoadLevel(Application.loadedLevel);
+			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
 
 	}

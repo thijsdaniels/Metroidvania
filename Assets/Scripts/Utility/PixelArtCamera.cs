@@ -8,10 +8,15 @@ public class PixelArtCamera : MonoBehaviour {
 
 	void Awake()
     {
-        float pixelPerfectSize = Mathf.Pow(2, size);
-		Camera camera = GetComponent<Camera>();
-
-		camera.orthographicSize = (1 / pixelPerfectSize) * ((Screen.height / 2f) / pixelsPerUnit);
+        this.SetOrthographicSize();
 	}
+
+    public void SetOrthographicSize()
+    {
+        float pixelPerfectSize = Mathf.Pow(2, size);
+        Camera camera = GetComponent<Camera>();
+
+        camera.orthographicSize = (1 / pixelPerfectSize) * ((Screen.height / 2f) / pixelsPerUnit);
+    }
 
 }
