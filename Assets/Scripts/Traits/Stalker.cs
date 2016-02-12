@@ -88,7 +88,14 @@ public class Stalker : MonoBehaviour {
      */
     protected void Move()
     {
-		if (moveMode == MoveMode.linear) {
+        transform.localScale = new Vector3(
+            Mathf.Abs(transform.localScale.x) * GetTargetPosition().x > transform.position.x ? 1 : -1,
+            transform.localScale.y,
+            transform.localScale.z
+        );
+
+
+        if (moveMode == MoveMode.linear) {
 
 			transform.position = Vector3.MoveTowards(
 				transform.position,

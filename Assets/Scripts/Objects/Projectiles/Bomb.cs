@@ -48,7 +48,7 @@ public class Bomb : MonoBehaviour {
      */
     public void OnFlameEnter(Flame flame)
     {
-        this.Explode();
+        this.fuseLength = 0f;
     }
 
     /**
@@ -56,7 +56,7 @@ public class Bomb : MonoBehaviour {
      */
     public void OnExplosionEnter(Explosion explosion)
     {
-        this.Explode();
+        this.fuseLength = 0.15f;
     }
 
 }

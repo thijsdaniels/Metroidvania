@@ -8,11 +8,19 @@ public class Path : MonoBehaviour {
 
 	public List<Transform> points;
 
-	public enum LoopMode {
+	public enum LoopMode
+    {
 		pingPong,
 		loop
 	}
 	public LoopMode loopMode;
+
+    public enum Direction
+    {
+        Forward,
+        Backward
+    }
+    private Direction direction = Direction.Forward;
 
 	public void Start() {
 		points = points.Where(e => e != null).ToList();
@@ -24,7 +32,7 @@ public class Path : MonoBehaviour {
 			yield break;
 		}
 
-		var direction = 1;
+		this.direction = Direction.Forward;
 		var index = 0;
 
 		while (true) {
@@ -38,12 +46,12 @@ public class Path : MonoBehaviour {
 			if (loopMode == LoopMode.pingPong) {
 
 				if (index <= 0) {
-					direction = 1;
-				} else if (index >= points.Count - 1) {
-					direction = -1;
-				}
+                    this.direction = Direction.Forward;
+                } else if (index >= points.Count - 1) {
+                    this.direction = Direction.Backward;
+                }
 
-				index = index + direction;
+				index = index + (this.direction.Equals(Direction.Forward) ? 1 : -1);
 
 			} else if (loopMode == LoopMode.loop) {
 
@@ -84,5 +92,10 @@ public class Path : MonoBehaviour {
 		}
 
 	}
+
+    public Direction GetDirection()
+    {
+        return this.direction;
+    }
 
 }
