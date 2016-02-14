@@ -9,9 +9,12 @@ public class Heart : MonoBehaviour {
     {
 		var damagable = collector.GetComponent<Damagable>();
 
-		if (damagable) {
+		if (damagable)
+        {
 			damagable.Heal(1);
 		}
-	}
+
+        Destroy(gameObject);
+    }
 
 }

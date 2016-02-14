@@ -34,7 +34,7 @@ public class Lootable : MonoBehaviour {
 		}
 
 		if (loot) {
-			loot.Collect(collector);
+			collector.Collect(Instantiate(loot));
 			loot = null;
 		}
 

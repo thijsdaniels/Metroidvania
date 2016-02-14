@@ -8,6 +8,7 @@ public class Key : MonoBehaviour {
 	public void OnCollect(Collector collector)
     {
 		collector.keys++;
-	}
+        Destroy(gameObject);
+    }
 
 }

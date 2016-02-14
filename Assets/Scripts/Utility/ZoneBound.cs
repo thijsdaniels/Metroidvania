@@ -5,6 +5,8 @@ using System.Collections;
 
 public class ZoneBound : MonoBehaviour
 {
+    public float margin = 0.5f;
+
     public void LateUpdate()
     {
         float vSize = Camera.main.orthographicSize;
@@ -19,10 +21,10 @@ public class ZoneBound : MonoBehaviour
 
         Rect zoneExtents = ZoneManager.GetCurrentZone().GetExtents();
 
-        float overshootLeft = zoneExtents.x - cameraExtents.x;
-        float overshootRight = (cameraExtents.x + cameraExtents.width) - (zoneExtents.x + zoneExtents.width);
-        float overshootTop = zoneExtents.y - cameraExtents.y;
-        float overshootBottom = (cameraExtents.y + cameraExtents.height) - (zoneExtents.y + zoneExtents.height);
+        float overshootLeft = zoneExtents.x - cameraExtents.x - margin;
+        float overshootRight = (cameraExtents.x + cameraExtents.width) - (zoneExtents.x + zoneExtents.width) - margin;
+        float overshootTop = zoneExtents.y - cameraExtents.y - margin;
+        float overshootBottom = (cameraExtents.y + cameraExtents.height) - (zoneExtents.y + zoneExtents.height) - margin;
 
         Vector3 newPosition = Camera.main.transform.position;
 

@@ -6,7 +6,7 @@ using System.Collections;
 /**
  * 
  */
-abstract public class Weapon : MonoBehaviour
+abstract public class Item : MonoBehaviour
 {
 	public float coolDown = 0f;
 
@@ -15,7 +15,8 @@ abstract public class Weapon : MonoBehaviour
 	 */
 	public void Update()
     {
-        if (!IsCooledDown()) {
+        if (!IsCooledDown())
+        {
 			CoolDown(Time.deltaTime);
 		}
 	}
@@ -25,8 +26,7 @@ abstract public class Weapon : MonoBehaviour
 	 */
 	public bool IsCooledDown()
     {
-        return true;
-		return this.coolDown <= 0f;
+        return true; // return this.coolDown <= 0f;
 	}
 
 	/**
@@ -51,13 +51,12 @@ abstract public class Weapon : MonoBehaviour
 	public void OnCollect(Collector collector)
     {
 
-		if (collector.hasWeapon(this)) {
+		if (collector.hasItem(this))
+        {
 			return;
 		}
 
-		collector.weapons.Add(this);
-
-		Debug.Log("weapon added");
+		collector.items.Add(this);
 	}
 
 	/**
@@ -71,15 +70,15 @@ abstract public class Weapon : MonoBehaviour
 	/**
 	 * 
 	 */
-	public virtual void Press(Player player) {}
+	public virtual void OnPress(Player player) {}
 
 	/**
 	 * 
 	 */
-	public virtual void Hold(Player player) {}
+	public virtual void OnHold(Player player) {}
 
 	/**
 	 * 
 	 */
-	public virtual void Release(Player player) {}
+	public virtual void OnRelease(Player player) {}
 }

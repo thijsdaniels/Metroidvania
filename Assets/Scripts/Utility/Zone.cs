@@ -17,6 +17,21 @@ public class Zone : MonoBehaviour
         }
     }
 
+    public void OnTriggerExit2D(Collider2D other)
+    {
+        Player player = other.GetComponent<Player>();
+
+        if (player && this.IsCurrentZone())
+        {
+            ZoneManager.RestorePreviousZone();
+        }
+    }
+
+    public bool IsCurrentZone()
+    {
+        return this == ZoneManager.GetCurrentZone();
+    }
+
     public virtual void OnEnter()
     {
         this.PlayTheme();
@@ -40,8 +55,9 @@ public class Zone : MonoBehaviour
 
         if (audioSource && theme && (!audioSource.clip || audioSource.clip.name != theme.name))
         {
+            audioSource.Stop();
             audioSource.clip = theme;
-            audioSource.Play();
+            audioSource.PlayDelayed(0.5f);
         }
     }
 

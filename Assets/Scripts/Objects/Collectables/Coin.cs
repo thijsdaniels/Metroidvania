@@ -10,6 +10,7 @@ public class Coin : MonoBehaviour {
 	public void OnCollect(Collector collector)
     {
 		collector.coins += value;
+        Destroy(gameObject);
 	}
 
 }

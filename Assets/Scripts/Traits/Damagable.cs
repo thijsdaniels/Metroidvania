@@ -12,6 +12,8 @@ public class Damagable : MonoBehaviour {
 	public AudioClip hitSound;
 	public AudioClip deathSound;
 
+    public GameObject deathResidue;
+
 	public void Start() {
 		currentHealth = initialHealth;
 	}
@@ -70,6 +72,11 @@ public class Damagable : MonoBehaviour {
 		if (deathSound) {
 			AudioSource.PlayClipAtPoint(deathSound, transform.position);
 		}
+
+        if (deathResidue)
+        {
+            Instantiate(deathResidue, this.transform.position, Quaternion.identity);
+        }
 
 		if (destroyOnDeath) {
 			Destroy(gameObject);

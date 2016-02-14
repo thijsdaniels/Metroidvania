@@ -11,20 +11,17 @@ public class Collectable : MonoBehaviour {
 
 			var collector = target.gameObject.GetComponent<Collector>();
 			if (collector) {
-				Collect(collector);
-				Destroy(gameObject);
+                collector.Collect(this);
 			}
 
 		}
 	}
 
-	public void Collect(Collector collector)
+	public void OnCollect(Collector collector)
     {
 		if (collectSound) {
-			AudioSource.PlayClipAtPoint(collectSound, transform.position);
+			AudioSource.PlayClipAtPoint(collectSound, collector.transform.position);
 		}
-
-		gameObject.SendMessage("OnCollect", collector, SendMessageOptions.RequireReceiver);
 	}
 
 }

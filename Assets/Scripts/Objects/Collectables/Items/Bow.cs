@@ -3,7 +3,7 @@ using UnityEngine;
 /**
  * 
  */
-public class Bow : Weapon
+public class Bow : Item
 {
 	private float charge;
 	public float initialCharge = 0.5f;
@@ -36,7 +36,7 @@ public class Bow : Weapon
 	/**
 	 * 
 	 */
-	public override void Hold(Player player)
+	public override void OnHold(Player player)
 	{
 		Charge(Time.deltaTime * chargeFactor);
 	}
@@ -52,7 +52,7 @@ public class Bow : Weapon
 	/**
 	 * 
 	 */
-	public override void Release(Player player)
+	public override void OnRelease(Player player)
 	{
 		if (!IsCooledDown() || !CanBeUsed(player)) {
 			return;

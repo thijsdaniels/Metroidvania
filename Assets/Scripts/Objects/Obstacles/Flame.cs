@@ -25,6 +25,8 @@ public class Flame : MonoBehaviour
      */
     public void Light()
     {
+        this.lit = true;
+
         foreach (ParticleSystem emitter in emitters)
         {
             emitter.Play();
@@ -36,6 +38,8 @@ public class Flame : MonoBehaviour
      */
     public void Extinguish()
     {
+        this.lit = false;
+
         foreach (ParticleSystem emitter in emitters)
         {
             emitter.Stop();

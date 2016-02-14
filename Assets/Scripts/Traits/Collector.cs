@@ -5,12 +5,16 @@ public class Collector : MonoBehaviour {
 
 	public int coins;
 	public int keys;
+	public List<Item> items;
 
-	public List<Weapon> weapons;
-
-	public bool hasWeapon(Weapon weapon)
+	public bool hasItem(Item item)
 	{
-		return weapons.Contains(weapon);
+		return items.Contains(item);
 	}
+
+    public void Collect(Collectable collectable)
+    {
+        collectable.SendMessage("OnCollect", this, SendMessageOptions.RequireReceiver);
+    }
 
 }

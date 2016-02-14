@@ -3,7 +3,7 @@
 /**
  * 
  */
-public class Bombs : Weapon
+public class Bombs : Item
 {
 	private float charge;
 	public float initialCharge = 1.5f;
@@ -37,7 +37,7 @@ public class Bombs : Weapon
 	/**
 	 * 
 	 */
-	public override void Press(Player player)
+	public override void OnPress(Player player)
 	{
 		if (this.bombInstance || !this.IsCooledDown() || !this.CanBeUsed(player))
         {
@@ -62,7 +62,7 @@ public class Bombs : Weapon
 	/**
 	 * 
 	 */
-	public override void Hold(Player player)
+	public override void OnHold(Player player)
 	{
         if (!this.bombInstance)
         {
@@ -88,7 +88,7 @@ public class Bombs : Weapon
 	/**
 	 * 
 	 */
-	public override void Release(Player player)
+	public override void OnRelease(Player player)
 	{
         if (!this.bombInstance)
         {

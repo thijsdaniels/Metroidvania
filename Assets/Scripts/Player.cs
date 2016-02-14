@@ -3,14 +3,19 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController2D))]
+
 public class Player : MonoBehaviour {
 
 	// components
 	public CharacterController2D controller;
-	private Animator animator;
+    protected Animator animator;
+    protected Inventory inventory;
 
-	// movement
-	private enum Direction {
+    // listening
+    protected bool isListening = true;
+
+    // movement
+    private enum Direction {
 		right,
 		left
 	}
@@ -54,9 +59,9 @@ public class Player : MonoBehaviour {
 	public float
 		crosshairDistance = 1.5f;
 
-	// weapons
-	public Weapon primaryWeapon;
-    public Weapon secondaryWeapon;
+	// items
+	public Item primaryItem;
+    public Item secondaryItem;
 
     // checkpoints
     public Checkpoint checkpoint;
@@ -76,6 +81,7 @@ public class Player : MonoBehaviour {
 		// reference components
 		controller = GetComponent<CharacterController2D>();
 		animator = GetComponent<Animator>();
+        inventory = GetComponent<Inventory>();
 
 		// determine the facing direction
 		direction = transform.localScale.x > 0f ? Direction.right : Direction.left;
@@ -105,7 +111,28 @@ public class Player : MonoBehaviour {
 	///// INPUT /////
 	/////////////////
 
+    public void StartListening()
+    {
+        isListening = true;
+    }
+
+    public void StopListening()
+    {
+        isListening = false;
+    }
+
+    public bool IsListening()
+    {
+        return isListening;
+    }
+
 	private void HandleInput() {
+
+        // skip input if the player isn't listening
+        if (!isListening)
+        {
+            return;
+        }
 
 		// horizontal movement
 		movement = Input.GetAxis("Horizontal Primary");
@@ -125,7 +152,7 @@ public class Player : MonoBehaviour {
 		}
 
         // mouse aiming
-        /** Disabled because I started using a controller.
+        /* Disabled because I started using a controller.
 		var mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		aimingDirection = new Vector2(
 			mousePositionInWorld.x - transform.position.x,
@@ -138,37 +165,45 @@ public class Player : MonoBehaviour {
             (Input.GetAxis("Vertical Secondary") == 0 && Input.GetAxis("Horizontal Secondary") == 0) ? Input.GetAxis("Vertical Primary") : Input.GetAxis("Vertical Secondary")
         ));
 
-		// primary weapon
-		if (Input.GetButtonDown("Attack Primary"))
+		// primary item
+        if (primaryItem)
         {
-			Press(primaryWeapon);
-		}
-		if (Input.GetButton("Attack Primary"))
-        {
-			Hold(primaryWeapon);
-		}
-		if (Input.GetButtonUp("Attack Primary"))
-        {
-			Release(primaryWeapon);
-		}
+            if (Input.GetButtonDown("Attack Primary"))
+            {
+                primaryItem.OnPress(this);
+            }
+            if (Input.GetButton("Attack Primary"))
+            {
+                primaryItem.OnHold(this);
+            }
+            if (Input.GetButtonUp("Attack Primary"))
+            {
+                primaryItem.OnRelease(this);
+            }
+        }
 
-        // secondary weapon
-        if (Input.GetButtonDown("Attack Secondary"))
+        // secondary item
+        if (secondaryItem)
         {
-            Press(secondaryWeapon);
-        }
-        if (Input.GetButton("Attack Secondary"))
-        {
-            Hold(secondaryWeapon);
-        }
-        if (Input.GetButtonUp("Attack Secondary"))
-        {
-            Release(secondaryWeapon);
+            if (Input.GetButtonDown("Attack Secondary"))
+            {
+                secondaryItem.OnPress(this);
+            }
+            if (Input.GetButton("Attack Secondary"))
+            {
+                secondaryItem.OnHold(this);
+            }
+            if (Input.GetButtonUp("Attack Secondary"))
+            {
+                secondaryItem.OnRelease(this);
+            }
         }
 
         // interaction
-        if (Input.GetButtonDown("Interact")) {
-			if (interactable) {
+        if (Input.GetButtonDown("Interact"))
+        {
+			if (interactable)
+            {
 				interactable.SendMessage("OnInteraction", this, SendMessageOptions.RequireReceiver);
 			}
 		}
@@ -261,24 +296,6 @@ public class Player : MonoBehaviour {
 
 	public Vector2 GetAim() {
 		return this.aimingDirection;
-	}
-
-	///////////////////
-	///// WEAPONRY /////
-	///////////////////
-	
-	// TODO Move all weaponry related code to a corresponding class.
-
-	private void Press(Weapon weapon) {
-		weapon.Press(this);
-	}
-
-	private void Hold(Weapon weapon) {
-		weapon.Hold(this);
-	}
-
-	private void Release(Weapon weapon) {
-		weapon.Release(this);
 	}
 
 	/////////////////////
