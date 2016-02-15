@@ -72,6 +72,13 @@ public class Player : MonoBehaviour {
 	// carrying
 	private GameObject carrying;
 
+    // equipment
+    public enum ItemSlot
+    {
+        Primary,
+        Secondary
+    }
+
 	//////////////////////
 	///// GAME HOOKS /////
 	//////////////////////
@@ -431,5 +438,23 @@ public class Player : MonoBehaviour {
             return;
 		}
 	}
+
+    /////////////////////
+    ///// EQUIPMENT /////
+    /////////////////////
+
+    public void Equip(ItemSlot slot, Item item)
+    {
+        switch (slot)
+        {
+            case ItemSlot.Primary:
+                primaryItem = item;
+                break;
+
+            case ItemSlot.Secondary:
+                secondaryItem = item;
+                break;
+        }
+    }
 
 }
