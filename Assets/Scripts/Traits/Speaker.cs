@@ -77,9 +77,9 @@ public class Speaker : MonoBehaviour {
 			speechBackground.Apply();
 
 			GUIStyle speechStyle = GUI.skin.GetStyle("Box");
-			speechStyle.contentOffset = new Vector2(2, -3);
+            speechStyle.padding = new RectOffset(20, 20, 20, 20);
 			speechStyle.normal.background = speechBackground;
-			speechStyle.alignment = TextAnchor.UpperLeft;
+			speechStyle.alignment = TextAnchor.MiddleCenter;
 			speechStyle.wordWrap = true;
 
 			GUI.Box(

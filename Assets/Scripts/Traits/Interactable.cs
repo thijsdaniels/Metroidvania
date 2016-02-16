@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Collider2D))]
+
 public class Interactable : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other) {

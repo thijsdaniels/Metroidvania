@@ -51,13 +51,14 @@ abstract public class Item : MonoBehaviour
 	 */
 	public void OnCollect(Collector collector)
     {
-
 		if (collector.hasItem(this))
         {
 			return;
 		}
 
 		collector.items.Add(this);
+
+        //Destroy(gameObject); // TODO: I can't destroy the gameObject, since it is in the inventory.
 	}
 
 	/**
