@@ -1,8 +1,11 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Interactable))]
+
 public class Lootable : MonoBehaviour {
 
 	private Animator animator;
+    private Interactable interactable;
 	private bool looted = false;
 
 	public Collectable loot;
@@ -11,6 +14,7 @@ public class Lootable : MonoBehaviour {
 	void Start() {
 
 		animator = GetComponent<Animator>();
+        interactable = GetComponent<Interactable>();
 
 		if (animator && looted) {
 			animator.SetTrigger("Looted");
@@ -37,6 +41,8 @@ public class Lootable : MonoBehaviour {
 			collector.Collect(Instantiate(loot));
 			loot = null;
 		}
+
+        interactable.action = null;
 
 		looted = true;
 

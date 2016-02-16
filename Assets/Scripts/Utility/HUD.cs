@@ -25,9 +25,11 @@ public class HUD : MonoBehaviour
     public Sprite rButtonSprite;
 
     private GUIStyle labelLeftStyle;
+    private GUIStyle labelCenterStyle;
     private GUIStyle labelRightStyle;
 
     public Vector2 spacing = new Vector2(8, 8);
+    public Vector2 padding = new Vector2(0, 0);
 
     private Texture2D fullHealthUnitTexture;
     private Rect fullHealthUnitRectangle;
@@ -80,6 +82,10 @@ public class HUD : MonoBehaviour
         labelLeftStyle = new GUIStyle();
         labelLeftStyle.alignment = TextAnchor.MiddleLeft;
         labelLeftStyle.normal.textColor = Color.white;
+
+        labelCenterStyle = new GUIStyle();
+        labelCenterStyle.alignment = TextAnchor.MiddleCenter;
+        labelCenterStyle.normal.textColor = Color.white;
 
         labelRightStyle = new GUIStyle();
         labelRightStyle.alignment = TextAnchor.MiddleRight;
@@ -211,6 +217,7 @@ public class HUD : MonoBehaviour
         GUI.skin.font = font;
 
         labelLeftStyle.fontSize = Mathf.RoundToInt(6 * scale);
+        labelCenterStyle.fontSize = Mathf.RoundToInt(6 * scale);
         labelRightStyle.fontSize = Mathf.RoundToInt(6 * scale);
 
         DrawHealth();
@@ -326,7 +333,6 @@ public class HUD : MonoBehaviour
 
     void DrawButtons()
     {
-
         if (!collector || !aButtonTexture || !bButtonTexture || !xButtonTexture || !yButtonTexture || !lButtonTexture || !rButtonTexture)
         {
             return;
@@ -392,7 +398,7 @@ public class HUD : MonoBehaviour
                     rButtonActionRectangle.width / rButtonActionTexture.width,
                     rButtonActionRectangle.height / rButtonActionTexture.height
                 );
-                GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x, rIconPosition.y, size.x, size.y), rButtonActionTexture, rButtonActionCoordinates);
+                GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x + padding.x * scale, rIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), rButtonActionTexture, rButtonActionCoordinates);
             }
         }
 
@@ -410,8 +416,62 @@ public class HUD : MonoBehaviour
                     lButtonActionRectangle.width / lButtonActionTexture.width,
                     lButtonActionRectangle.height / lButtonActionTexture.height
                 );
-                GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x, lIconPosition.y, size.x, size.y), lButtonActionTexture, lButtonActionCoordinates);
+                GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x + padding.x * scale, lIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), lButtonActionTexture, lButtonActionCoordinates);
             }
+        }
+
+        if (player.tertiaryItem)
+        {
+            var yButtonActionSprite = player.tertiaryItem.GetComponent<SpriteRenderer>().sprite;
+
+            if (yButtonActionSprite)
+            {
+                Texture2D yButtonActionTexture = yButtonActionSprite.texture;
+                Rect yButtonActionRectangle = yButtonActionSprite.textureRect;
+                Rect yButtonActionCoordinates = new Rect(
+                    yButtonActionRectangle.x / yButtonActionTexture.width,
+                    yButtonActionRectangle.y / yButtonActionTexture.height,
+                    yButtonActionRectangle.width / yButtonActionTexture.width,
+                    yButtonActionRectangle.height / yButtonActionTexture.height
+                );
+                GUI.DrawTextureWithTexCoords(new Rect(yIconPosition.x + padding.x * scale, yIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), yButtonActionTexture, yButtonActionCoordinates);
+            }
+        }
+
+        if (player.aButtonLabel != null)
+        {
+            var aLabelPosition = new Rect(
+                aIconPosition.x,
+                aIconPosition.y,
+                16 * scale,
+                16 * scale
+            );
+
+            GUI.Label(aLabelPosition, player.aButtonLabel, labelCenterStyle);
+        }
+
+        if (player.bButtonLabel != null)
+        {
+            var bLabelPosition = new Rect(
+                bIconPosition.x,
+                bIconPosition.y,
+                16 * scale,
+                16 * scale
+            );
+
+            GUI.Label(bLabelPosition, player.bButtonLabel, labelCenterStyle);
+        }
+
+        if (player.xButtonLabel != null)
+        {
+            var xLabelPosition = new Rect(
+                xIconPosition.x,
+                xIconPosition.y,
+                16 * scale,
+                16 * scale
+            );
+
+            GUI.Label(xLabelPosition, player.xButtonLabel, labelCenterStyle);
         }
     }
 }

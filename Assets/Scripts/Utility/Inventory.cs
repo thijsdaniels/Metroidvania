@@ -51,14 +51,19 @@ public class Inventory : MonoBehaviour
             Input.GetAxis("Vertical Primary") * -1
         ));
 
-        if (Input.GetButtonDown("Attack Primary"))
+        if (Input.GetButtonDown("Item Primary"))
         {
             Select(cursorPosition, Player.ItemSlot.Primary);
         }
 
-        if (Input.GetButtonDown("Attack Secondary"))
+        if (Input.GetButtonDown("Item Secondary"))
         {
             Select(cursorPosition, Player.ItemSlot.Secondary);
+        }
+
+        if (Input.GetButtonDown("Item Tertiary"))
+        {
+            Select(cursorPosition, Player.ItemSlot.Tertiary);
         }
     }
 

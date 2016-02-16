@@ -11,6 +11,11 @@ public class Player : MonoBehaviour {
     protected Animator animator;
     protected Inventory inventory;
 
+    // button labels
+    public string aButtonLabel;
+    public string bButtonLabel;
+    public string xButtonLabel;
+
     // listening
     protected bool isListening = true;
 
@@ -62,6 +67,7 @@ public class Player : MonoBehaviour {
 	// items
 	public Item primaryItem;
     public Item secondaryItem;
+    public Item tertiaryItem;
 
     // checkpoints
     public Checkpoint checkpoint;
@@ -76,7 +82,8 @@ public class Player : MonoBehaviour {
     public enum ItemSlot
     {
         Primary,
-        Secondary
+        Secondary,
+        Tertiary
     }
 
 	//////////////////////
@@ -95,8 +102,11 @@ public class Player : MonoBehaviour {
 
 	}
 
-	public void Update() {
-
+	public void Update()
+    {
+        // update button labels
+        UpdateButtonLabels();
+        
 		// handle input
 		HandleInput();
 
@@ -111,12 +121,21 @@ public class Player : MonoBehaviour {
 
 		// animate the player
 		Animate();
-
 	}
 
 	/////////////////
 	///// INPUT /////
 	/////////////////
+
+    /**
+     * @todo Move to wherever the appropriate place is. Probably the HUD.
+     */
+    protected void UpdateButtonLabels()
+    {
+        aButtonLabel = controller.CanJump() ? "Jump" : null;
+        bButtonLabel = interactable ? interactable.action : null;
+        xButtonLabel = "Run";
+    }
 
     public void StartListening()
     {
@@ -175,15 +194,15 @@ public class Player : MonoBehaviour {
 		// primary item
         if (primaryItem)
         {
-            if (Input.GetButtonDown("Attack Primary"))
+            if (Input.GetButtonDown("Item Primary"))
             {
                 primaryItem.OnPress(this);
             }
-            if (Input.GetButton("Attack Primary"))
+            if (Input.GetButton("Item Primary"))
             {
                 primaryItem.OnHold(this);
             }
-            if (Input.GetButtonUp("Attack Primary"))
+            if (Input.GetButtonUp("Item Primary"))
             {
                 primaryItem.OnRelease(this);
             }
@@ -192,17 +211,34 @@ public class Player : MonoBehaviour {
         // secondary item
         if (secondaryItem)
         {
-            if (Input.GetButtonDown("Attack Secondary"))
+            if (Input.GetButtonDown("Item Secondary"))
             {
                 secondaryItem.OnPress(this);
             }
-            if (Input.GetButton("Attack Secondary"))
+            if (Input.GetButton("Item Secondary"))
             {
                 secondaryItem.OnHold(this);
             }
-            if (Input.GetButtonUp("Attack Secondary"))
+            if (Input.GetButtonUp("Item Secondary"))
             {
                 secondaryItem.OnRelease(this);
+            }
+        }
+
+        // secondary item
+        if (tertiaryItem)
+        {
+            if (Input.GetButtonDown("Item Tertiary"))
+            {
+                tertiaryItem.OnPress(this);
+            }
+            if (Input.GetButton("Item Tertiary"))
+            {
+                tertiaryItem.OnHold(this);
+            }
+            if (Input.GetButtonUp("Item Tertiary"))
+            {
+                tertiaryItem.OnRelease(this);
             }
         }
 
@@ -453,6 +489,10 @@ public class Player : MonoBehaviour {
 
             case ItemSlot.Secondary:
                 secondaryItem = item;
+                break;
+
+            case ItemSlot.Tertiary:
+                tertiaryItem = item;
                 break;
         }
     }
