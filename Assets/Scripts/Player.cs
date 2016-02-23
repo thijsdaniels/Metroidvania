@@ -31,21 +31,18 @@ public class Player : MonoBehaviour {
 	// walking
 	public float walkSpeed = 4f;
 	[Range(0f, 1f)]
-	public float
-		walkAcceleration = 0.6f;
+	public float walkAcceleration = 0.6f;
 
 	// running
 	private bool running;
 	public float runSpeed = 8f;
 	[Range(0f, 1f)]
-	public float
-		runAcceleration = 0.8f;
+	public float runAcceleration = 0.8f;
 
 	// climbing
 	public float climbSpeed = 3f;
 	[Range(0f, 1f)]
-	public float
-		climbAcceleration = 1f;
+	public float climbAcceleration = 1f;
 
 	// sound effects
 	public AudioClip leftFootSound;
@@ -61,8 +58,7 @@ public class Player : MonoBehaviour {
 	public Transform crosshair;
 	public Vector2 crosshairOffset;
 	[Range(0f, 3f)]
-	public float
-		crosshairDistance = 1.5f;
+	public float crosshairDistance = 1.5f;
 
 	// items
 	public Item primaryItem;
@@ -166,11 +162,8 @@ public class Player : MonoBehaviour {
 		// running
 		running = Input.GetButton("Run");
 
-		// horizontal movement
+		// vertical movement
 		verticalMovement = Input.GetAxis("Vertical Primary");
-		if (verticalMovement > 0.01f && controller.CanClimb()) {
-			controller.StartClimbing();
-		}
 
 		// jumping
 		if (Input.GetButtonDown("Jump") && controller.CanJump()) {
@@ -289,7 +282,7 @@ public class Player : MonoBehaviour {
 	
 	private void Move() {
 		
-		var speed = controller.IsClimbing() ? climbSpeed : running ? runSpeed : walkSpeed;
+		var speed = controller.State.IsClimbing() ? climbSpeed : running ? runSpeed : walkSpeed;
 		var acceleration = running ? runAcceleration : walkAcceleration;
 
 		acceleration *= controller.Parameters.traction;
@@ -300,7 +293,7 @@ public class Player : MonoBehaviour {
 			);
 		}
 		
-		if (controller.IsClimbing()) {
+		if (controller.State.IsClimbing()) {
 			controller.SetVerticalVelocity(verticalMovement * climbSpeed);
 		}
 		
@@ -360,7 +353,7 @@ public class Player : MonoBehaviour {
 		animator.SetBool("Running", running);
 
 		// set climbing animation parameter
-		animator.SetBool("Climbing", controller.IsClimbing());
+		animator.SetBool("Climbing", controller.State.IsClimbing());
 		
 	}
 

@@ -1,34 +1,55 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Climbable : MonoBehaviour {
+[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Interactable))]
 
-	// void OnCharacterControllerEnter2D(CharacterController2D controller) {
-	// 	controller.AddClimbable(this);
-	// }
+public class Climbable : MonoBehaviour
+{
+    public float offset;
 
-	// void OnCharacterControllerExit2D(CharacterController2D controller) {
-	// 	controller.RemoveClimbable();
-	// }
+    private Interactable interactable;
 
-	void OnTriggerEnter2D(Collider2D collider) {
+    public void Start()
+    {
+        interactable = GetComponent<Interactable>();
+    }
 
-		var controller = collider.GetComponent<CharacterController2D>();
+	public void OnCharacterControllerEnter2D(CharacterController2D controller)
+    {
+		controller.AddClimbable(this);
 
-		if (controller) {
-			controller.AddClimbable(this);
-		}
-
+        if (controller.State.IsClimbing())
+        {
+            interactable.action = "Drop";
+        }
+        else
+        {
+            interactable.action = "Climb";
+        }
 	}
 
-	void OnTriggerExit2D(Collider2D collider) {
-		
-		var controller = collider.GetComponent<CharacterController2D>();
-		
-		if (controller) {
-			controller.RemoveClimbable();
-		}
-		
+    public void OnCharacterControllerExit2D(CharacterController2D controller)
+    {
+		controller.RemoveClimbable();
 	}
 
+    public void OnInteraction(Player player)
+    {
+        CharacterController2D controller = player.GetComponent<CharacterController2D>();
+
+        if (controller)
+        {
+            if (!controller.State.IsClimbing() && controller.CanClimb())
+            {
+                controller.StartClimbing();
+                interactable.action = "Drop";
+            }
+            else if (controller.State.IsClimbing())
+            {
+                controller.StopClimbing();
+                interactable.action = "Climb";
+            }
+        }
+    }
 }

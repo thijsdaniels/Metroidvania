@@ -30,7 +30,7 @@ public class Bow : Item
 	{
 		var controller = player.GetComponent<CharacterController2D>();
 
-		return controller && !controller.IsClimbing();
+		return controller && !controller.State.IsClimbing();
 	}
 
 	/**

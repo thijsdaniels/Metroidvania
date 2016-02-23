@@ -3,8 +3,8 @@ using UnityEngine;
 using System.Collections;
 
 [Serializable]
-public class CharacterControllerState2D {
-
+public class CharacterControllerState2D
+{
 	public bool collisionRight;
 	public bool collisionLeft;
 	public bool collisionAbove;
@@ -14,20 +14,32 @@ public class CharacterControllerState2D {
 	public bool slopeDown;
 	public float slopeAngle;
 
-	public bool IsGrounded() {
-		return collisionBelow;
+    public bool climbing;
+
+	public bool IsGrounded()
+    {
+        return collisionBelow || climbing;
 	}
 
-	public bool IsColliding() {
+    public bool IsClimbing()
+    {
+        return climbing;
+    }
+
+	public bool IsColliding()
+    {
 		return collisionRight || collisionLeft || collisionAbove || collisionBelow;
 	}
 
-	public bool IsOnSlope() {
+	public bool IsOnSlope()
+    {
 		return slopeUp || slopeDown;
 	}
 
-	public void Reset() {
+	public void Reset()
+    {
 		collisionRight = collisionLeft = collisionAbove = collisionBelow = slopeUp = slopeDown = false;
+        slopeAngle = 0;
 	}
 
 }

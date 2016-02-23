@@ -50,7 +50,6 @@ public class CharacterController2D : MonoBehaviour {
 	// climbing
 	public int climbables;
 	public Climbable climbable;
-	private bool climbing;
 
 	// parameters
 	public CharacterControllerParameters2D defaultParameters;
@@ -148,7 +147,7 @@ public class CharacterController2D : MonoBehaviour {
 	private void ApplyGravity() {
 
 		// bypass gravity when climbing
-		if (IsClimbing()) {
+		if (State.IsClimbing()) {
 			return;
 		}
 
@@ -250,10 +249,6 @@ public class CharacterController2D : MonoBehaviour {
 
 	public bool CanJump() {
 
-		if (IsClimbing()) {
-			// return false;
-		}
-
 		if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.anywhere) {
 			return jumpTimeout <= 0;
 
@@ -268,11 +263,6 @@ public class CharacterController2D : MonoBehaviour {
 
 	public void Jump() {
 
-		if (IsClimbing()) {
-			StopClimbing();
-			return;
-		}
-
 		if (!State.IsGrounded()) {
 			if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.ground) {
 				currentAirJump++;
@@ -282,7 +272,12 @@ public class CharacterController2D : MonoBehaviour {
 			SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
 		}
 
-		SetVerticalVelocity(Parameters.jumpVelocity);
+        if (State.IsClimbing())
+        {
+            StopClimbing();
+        }
+
+        SetVerticalVelocity(Parameters.jumpVelocity);
 
 		jumpTimeout = Parameters.jumpCooldown;
 
@@ -298,16 +293,20 @@ public class CharacterController2D : MonoBehaviour {
 
 	// TODO Move all climbing related code to a "Climber Trait" class?
 
-	public void AddClimbable(Climbable climbable) {
+	public void AddClimbable(Climbable climbable)
+    {
 		climbables++;
+
 		this.climbable = climbable;
 	}
 	
-	public void RemoveClimbable() {
+	public void RemoveClimbable()
+    {
 		if (climbables > 0) {
 			climbables--;
 		}
-		if (climbables == 0 && IsClimbing()) {
+
+		if (climbables == 0 && State.IsClimbing()) {
 			StopClimbing();
 			climbable = null;
 		}
@@ -317,23 +316,26 @@ public class CharacterController2D : MonoBehaviour {
 		return climbables > 0;
 	}
 
-	public void StartClimbing() {
-		climbing = true;
+	public void StartClimbing()
+    {
+        State.climbing = true;
+
 		SetHorizontalVelocity(0);
-		transform.position = new Vector3(
-			climbable.transform.position.x,
+
+        currentAirJump = 0;
+
+        transform.position = new Vector3(
+			climbable.transform.position.x + climbable.offset,
 			transform.position.y,
 			transform.position.z
 		);
 	}
 
-	public void StopClimbing() {
-		climbing = false;
-		SetVerticalVelocity(0);
-	}
+	public void StopClimbing()
+    {
+		State.climbing = false;
 
-	public bool IsClimbing() {
-		return climbing;
+		SetVerticalVelocity(0);
 	}
 
 	//////////////////
@@ -373,6 +375,7 @@ public class CharacterController2D : MonoBehaviour {
 
 			CorrectHorizontalPlacement(ref deltaMovement, true);
 			CorrectHorizontalPlacement(ref deltaMovement, false);
+
 		}
 
 		return deltaMovement;
@@ -412,6 +415,10 @@ public class CharacterController2D : MonoBehaviour {
 		externalVelocity = Vector2.zero;
 
 	}
+
+    ///////////////////////////////
+    ///// COLLISION DETECTION /////
+    ///////////////////////////////
 
 	/**
 	 * Using additional inner rays, checks if a solid object
@@ -457,7 +464,7 @@ public class CharacterController2D : MonoBehaviour {
 	private void DetermineHorizontalMovement(ref Vector2 deltaMovement) {
 
 		// can't move horizontally while climbing
-		if (IsClimbing()) {
+		if (State.IsClimbing()) {
 			deltaMovement.x = 0;
 			return;
 		}
@@ -545,7 +552,7 @@ public class CharacterController2D : MonoBehaviour {
 			}
 
 			RaycastHit2D raycastHit;
-			if (movingUp) {
+			if (movingUp || State.IsClimbing()) {
 				raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, groundLayerMask);
 			} else {
 				raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, groundLayerMask | oneWayPlatformLayerMask);
@@ -599,7 +606,7 @@ public class CharacterController2D : MonoBehaviour {
 
 				SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
 
-				if (IsClimbing()) {
+				if (State.IsClimbing()) {
 					StopClimbing();
 				}
 
@@ -629,11 +636,30 @@ public class CharacterController2D : MonoBehaviour {
 
 	}
 
-	////////////////////////////
-	///// MOVING PLATFORMS /////
-	////////////////////////////
+    ////////////////////////////
+    ///// COLLISION EVENTS /////
+    ////////////////////////////
 
-	private void HandleMovingPlatforms() {
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        other.SendMessage("OnCharacterControllerEnter2D", this, SendMessageOptions.DontRequireReceiver);
+    }
+
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        other.SendMessage("OnCharacterControllerStay2D", this, SendMessageOptions.DontRequireReceiver);
+    }
+
+    public void OnTriggerExit2D(Collider2D other)
+    {
+        other.SendMessage("OnCharacterControllerExit2D", this, SendMessageOptions.DontRequireReceiver);
+    }
+
+    ////////////////////////////
+    ///// MOVING PLATFORMS /////
+    ////////////////////////////
+
+    private void HandleMovingPlatforms() {
 		
 		if (standingOn != null) {
 			

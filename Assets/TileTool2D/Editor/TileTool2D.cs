@@ -162,9 +162,9 @@ public class TileTool2D : EditorWindow {
 
 	// Handles everything that happens in scene view, updates as long as window is open
 	public void OnSceneGUI(SceneView sceneview) {
-		if (Selection.activeGameObject) {           // Disable if something is selected
-			return;
-		}
+		//if (Selection.activeGameObject) {           // Disable if something is selected
+		//	return;
+		//}
 		if (Event.current.type == EventType.layout) HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 		Event e = Event.current;
 		if (e.shift && e.control) alt = true; else alt = false;

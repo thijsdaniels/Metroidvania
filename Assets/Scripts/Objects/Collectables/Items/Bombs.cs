@@ -31,7 +31,7 @@ public class Bombs : Item
 	{
 		CharacterController2D controller = player.GetComponent<CharacterController2D>();
 
-		return controller && !controller.IsClimbing();
+		return controller && !controller.State.IsClimbing();
 	}
 
 	/**
