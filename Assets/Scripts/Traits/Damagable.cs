@@ -7,15 +7,19 @@ public class Damagable : MonoBehaviour {
 	public int currentHealth { get; protected set; }
 	public int maximumHealth;
 
+    public bool flinch;
+    private Animator animator;
+
 	public bool destroyOnDeath = true;
 
 	public AudioClip hitSound;
-	public AudioClip deathSound;
+    public AudioClip deathSound;
 
     public GameObject deathResidue;
 
 	public void Start() {
 		currentHealth = initialHealth;
+        animator = GetComponent<Animator>();
 	}
 
 	public void TakeDamage(GameObject cause, int damage) {
@@ -57,13 +61,25 @@ public class Damagable : MonoBehaviour {
 
 	protected void Hit() {
 
-		SendMessage("OnHit", this, SendMessageOptions.DontRequireReceiver);
+		SendMessage("OnHit", null, SendMessageOptions.DontRequireReceiver);
 
 		if (hitSound) {
 			AudioSource.PlayClipAtPoint(hitSound, transform.position);
 		}
 
+        if (flinch) {
+            animator.SetTrigger("Flinch");
+        }
+
 	}
+
+    private void OnFlinchAnimationStart() {
+        SendMessage("OnFlinch", null, SendMessageOptions.RequireReceiver);
+    }
+
+    private void OnFlinchAnimationEnd() {
+        SendMessage("OnFlinchEnd", null, SendMessageOptions.RequireReceiver);
+    }
 
 	protected void Die() {
 

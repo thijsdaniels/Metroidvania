@@ -40,7 +40,7 @@ public class Player : MonoBehaviour {
 	public float runAcceleration = 0.8f;
 
 	// climbing
-	public float climbSpeed = 3f;
+	public float climbSpeed = 4f;
 	[Range(0f, 1f)]
 	public float climbAcceleration = 1f;
 

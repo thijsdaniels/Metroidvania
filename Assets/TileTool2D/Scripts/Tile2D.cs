@@ -4,6 +4,7 @@ using UnityEditor;
 #endif
 //Tiles must have a box collider component
 //[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Tile2D : MonoBehaviour {
 	public Texture tileTexture;
 	public string tileName;

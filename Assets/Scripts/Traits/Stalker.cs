@@ -21,6 +21,8 @@ public class Stalker : MonoBehaviour {
 	public float wakeDistance;
 	private float wakeDistanceSquared;
 
+    private bool stopped;
+
 	[Range(0, 30)]
 	public float
 		speed;
@@ -41,7 +43,7 @@ public class Stalker : MonoBehaviour {
      */
     void Update()
     {
-		if (!target) {
+		if (!target || stopped) {
 			return;
 		}
 
@@ -138,5 +140,15 @@ public class Stalker : MonoBehaviour {
 			Gizmos.DrawWireSphere(transform.position, wakeDistance);
 		}
 	}
+
+    public void OnFlinch()
+    {
+        stopped = true;
+    }
+
+    public void OnFlinchEnd()
+    {
+        stopped = false;
+    }
 
 }

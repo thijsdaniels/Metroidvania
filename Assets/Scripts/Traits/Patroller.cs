@@ -16,12 +16,14 @@ public class Patroller : MonoBehaviour {
 	public Vector2 gapSightStart;
 	public Vector2 gapSightEnd;
 
-	void Start() {
+    private bool stopped;
+
+	public void Start() {
 		body = GetComponent<Rigidbody2D>();
 		controller = GetComponent<CharacterController2D>();
 	}
 
-	void Update() {
+	public void Update() {
 
 		// turn around if a collision is ahead
 		if (avoidCollisions && CollisionAhead()) {
@@ -38,7 +40,7 @@ public class Patroller : MonoBehaviour {
 
 	}
 
-	bool CollisionAhead() {
+	protected bool CollisionAhead() {
 
 		// correct sight start for position and direction
 		var correctedSightStart = new Vector2(
@@ -64,7 +66,7 @@ public class Patroller : MonoBehaviour {
 
 	}
 
-	bool GapAhead() {
+	protected bool GapAhead() {
 
 		// don't scan for gaps in the air
 		if (controller && !controller.State.IsGrounded()) {
@@ -95,7 +97,7 @@ public class Patroller : MonoBehaviour {
 		
 	}
 
-	void TurnAround() {
+	protected void TurnAround() {
 
 		transform.localScale = new Vector3(
 			transform.localScale.x * -1,
@@ -105,15 +107,30 @@ public class Patroller : MonoBehaviour {
 
 	}
 
-	void Move() {
+	protected void Move() {
 
-		var velocity = new Vector2(
-			walkSpeed * transform.localScale.x,
-			body.velocity.y
-		);
+        var velocity = Vector2.zero;
+
+        if (!stopped)
+        {
+            velocity = new Vector2(
+                walkSpeed * transform.localScale.x,
+                body.velocity.y
+            );
+        }
 		
 		body.velocity = velocity;
 
 	}
+
+    public void OnFlinch()
+    {
+        stopped = true;
+    }
+
+    public void OnFlinchEnd()
+    {
+        stopped = false;
+    }
 
 }
