@@ -5,110 +5,149 @@
  */
 public class Bombs : Item
 {
-	private float charge;
+    protected float charge;
 	public float initialCharge = 1.5f;
     public float chargeFactor = 3f;
     public float maxCharge = 3f;
 
-	private float force = 25f;
-	private float coolDownDuration = 0.25f;
+    protected float force = 25f;
+    protected float coolDownDuration = 0.25f;
 
 	public Bomb bomb;
-	private Bomb bombInstance;
+    protected Bomb bombInstance;
 
 	/**
 	 * 
 	 */
 	public void Start()
 	{
-		this.charge = this.initialCharge;
+		charge = initialCharge;
 	}
 
     /**
 	 * 
 	 */
-    public override bool CanBeUsed(Player player)
-	{
-		CharacterController2D controller = player.GetComponent<CharacterController2D>();
+    public override void OnCollect(Collector collector)
+    {
+        base.OnCollect(collector);
 
-		return controller && !controller.State.IsClimbing();
-	}
+        collector.bombs = Mathf.Max(collector.bombs, 10);
+    }
+
+    /**
+	 * 
+	 */
+    public override bool CanBeUsed()
+    {
+        if (!owner || owner.bombs <= 0)
+        {
+            return false;
+        }
+
+        CharacterController2D controller = owner.GetComponent<CharacterController2D>();
+        if (controller.State.IsClimbing())
+        {
+            return false;
+        }
+
+        return true;
+    }
 
 	/**
 	 * 
 	 */
-	public override void OnPress(Player player)
+	public override void OnPress()
 	{
-		if (this.bombInstance || !this.IsCooledDown() || !this.CanBeUsed(player))
+		if (bombInstance || !IsCooledDown() || !CanBeUsed())
         {
             return;
         }
 
-        this.Draw(player);
+        Draw();
 	}
 
 	/**
 	 * 
 	 */
-	public void Draw(Player player)
+	protected void Draw()
 	{
-		this.bombInstance = Instantiate(bomb, player.transform.position, Quaternion.identity) as Bomb;
+        owner.bombs--;
 
+        bombInstance = Instantiate(bomb, owner.transform.position, Quaternion.identity) as Bomb;
+
+        Player player = owner.GetComponent<Player>();
 		player.Grab(bombInstance.gameObject);
 
-		this.bombInstance.LightFuse();
+		bombInstance.LightFuse();
 	}
 
 	/**
 	 * 
 	 */
-	public override void OnHold(Player player)
+	public override void OnHold()
+	{
+        if (!bombInstance)
+        {
+            return;
+        }
+
+        Charge(Time.deltaTime * chargeFactor);
+	}
+
+    /**
+	 * 
+	 */
+    protected void Charge(float deltaCharge)
+	{
+        if (!bombInstance)
+        {
+            return;
+        }
+
+        charge = Mathf.Min(maxCharge, charge + deltaCharge);
+	}
+
+	/**
+	 * 
+	 */
+	public override void OnRelease()
 	{
         if (!this.bombInstance)
         {
             return;
         }
 
-        this.Charge(Time.deltaTime * chargeFactor);
-	}
-
-	/**
-	 * 
-	 */
-	private void Charge(float deltaCharge)
-	{
-        if (!this.bombInstance)
-        {
-            return;
-        }
-
-        this.charge = Mathf.Min(this.maxCharge, this.charge + deltaCharge);
-	}
-
-	/**
-	 * 
-	 */
-	public override void OnRelease(Player player)
-	{
-        if (!this.bombInstance)
-        {
-            return;
-        }
-
-        this.Throw(player);
+        this.Throw();
 
 		this.SetCoolDown(this.coolDownDuration);
 	}
 
-	/**
+    /**
 	 * 
 	 */
-	private void Throw(Player player)
+    protected void Throw()
 	{
-		player.Throw(player.GetAim() * this.charge * this.force);
+        Player player = owner.GetComponent<Player>();
+        player.Throw(player.GetAim() * this.charge * this.force);
 
 		this.bombInstance = null;
 
 		this.charge = this.initialCharge;
 	}
+
+    /**
+     *
+     */
+    public override bool RequiresAmmo()
+    {
+        return true;
+    }
+
+    /**
+     *
+     */
+    public override int GetAmmo()
+    {
+        return owner.bombs;
+    }
 }

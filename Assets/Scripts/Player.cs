@@ -189,15 +189,15 @@ public class Player : MonoBehaviour {
         {
             if (Input.GetButtonDown("Item Primary"))
             {
-                primaryItem.OnPress(this);
+                primaryItem.OnPress();
             }
             if (Input.GetButton("Item Primary"))
             {
-                primaryItem.OnHold(this);
+                primaryItem.OnHold();
             }
             if (Input.GetButtonUp("Item Primary"))
             {
-                primaryItem.OnRelease(this);
+                primaryItem.OnRelease();
             }
         }
 
@@ -206,15 +206,15 @@ public class Player : MonoBehaviour {
         {
             if (Input.GetButtonDown("Item Secondary"))
             {
-                secondaryItem.OnPress(this);
+                secondaryItem.OnPress();
             }
             if (Input.GetButton("Item Secondary"))
             {
-                secondaryItem.OnHold(this);
+                secondaryItem.OnHold();
             }
             if (Input.GetButtonUp("Item Secondary"))
             {
-                secondaryItem.OnRelease(this);
+                secondaryItem.OnRelease();
             }
         }
 
@@ -223,15 +223,15 @@ public class Player : MonoBehaviour {
         {
             if (Input.GetButtonDown("Item Tertiary"))
             {
-                tertiaryItem.OnPress(this);
+                tertiaryItem.OnPress();
             }
             if (Input.GetButton("Item Tertiary"))
             {
-                tertiaryItem.OnHold(this);
+                tertiaryItem.OnHold();
             }
             if (Input.GetButtonUp("Item Tertiary"))
             {
-                tertiaryItem.OnRelease(this);
+                tertiaryItem.OnRelease();
             }
         }
 

@@ -10,6 +10,7 @@ using System.Collections;
 abstract public class Item : MonoBehaviour
 {
 	public float coolDown = 0f;
+    protected Collector owner;
 
 	/**
 	 * @todo Somehow, Update isn't being called...
@@ -49,7 +50,7 @@ abstract public class Item : MonoBehaviour
 	/**
 	 * 
 	 */
-	public void OnCollect(Collector collector)
+	public virtual void OnCollect(Collector collector)
     {
 		if (collector.hasItem(this))
         {
@@ -58,13 +59,15 @@ abstract public class Item : MonoBehaviour
 
 		collector.items.Add(this);
 
+        this.owner = collector;
+
         //Destroy(gameObject); // TODO: I can't destroy the gameObject, since it is in the inventory.
 	}
 
 	/**
 	 * 
 	 */
-	public virtual bool CanBeUsed(Player player)
+	public virtual bool CanBeUsed()
 	{
 		return true;
 	}
@@ -72,15 +75,31 @@ abstract public class Item : MonoBehaviour
 	/**
 	 * 
 	 */
-	public virtual void OnPress(Player player) {}
+	public virtual void OnPress() {}
 
 	/**
 	 * 
 	 */
-	public virtual void OnHold(Player player) {}
+	public virtual void OnHold() {}
 
 	/**
 	 * 
 	 */
-	public virtual void OnRelease(Player player) {}
+	public virtual void OnRelease() {}
+
+    /**
+     *
+     */
+    public virtual bool RequiresAmmo()
+    {
+        return false;
+    }
+
+    /**
+     *
+     */
+    public virtual int GetAmmo()
+    {
+        return 0;
+    }
 }

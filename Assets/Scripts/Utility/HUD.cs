@@ -398,7 +398,20 @@ public class HUD : MonoBehaviour
                     rButtonActionRectangle.width / rButtonActionTexture.width,
                     rButtonActionRectangle.height / rButtonActionTexture.height
                 );
+
                 GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x + padding.x * scale, rIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), rButtonActionTexture, rButtonActionCoordinates);
+            }
+
+            if (player.primaryItem.RequiresAmmo())
+            {
+                var rLabelPosition = new Rect(
+                    rIconPosition.x + (4 * scale),
+                    rIconPosition.y + (4 * scale),
+                    16 * scale,
+                    16 * scale
+                );
+
+                GUI.Label(rLabelPosition, player.primaryItem.GetAmmo().ToString(), labelCenterStyle);
             }
         }
 
@@ -416,7 +429,20 @@ public class HUD : MonoBehaviour
                     lButtonActionRectangle.width / lButtonActionTexture.width,
                     lButtonActionRectangle.height / lButtonActionTexture.height
                 );
+
                 GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x + padding.x * scale, lIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), lButtonActionTexture, lButtonActionCoordinates);
+            }
+
+            if (player.secondaryItem.RequiresAmmo())
+            {
+                var lLabelPosition = new Rect(
+                    lIconPosition.x + (4 * scale),
+                    lIconPosition.y + (4 * scale),
+                    16 * scale,
+                    16 * scale
+                );
+
+                GUI.Label(lLabelPosition, player.secondaryItem.GetAmmo().ToString(), labelCenterStyle);
             }
         }
 
@@ -434,7 +460,20 @@ public class HUD : MonoBehaviour
                     yButtonActionRectangle.width / yButtonActionTexture.width,
                     yButtonActionRectangle.height / yButtonActionTexture.height
                 );
+
                 GUI.DrawTextureWithTexCoords(new Rect(yIconPosition.x + padding.x * scale, yIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), yButtonActionTexture, yButtonActionCoordinates);
+            }
+
+            if (player.tertiaryItem.RequiresAmmo())
+            {
+                var yLabelPosition = new Rect(
+                    yIconPosition.x + (4 * scale),
+                    yIconPosition.y + (4 * scale),
+                    16 * scale,
+                    16 * scale
+                );
+
+                GUI.Label(yLabelPosition, player.tertiaryItem.GetAmmo().ToString(), labelCenterStyle);
             }
         }
 

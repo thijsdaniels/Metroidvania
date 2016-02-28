@@ -14,7 +14,7 @@ public class Arrow : MonoBehaviour {
 	/**
 	 * 
 	 */
-	void Awake()
+	public void Awake()
 	{
         StartCoroutine(Timeout());
 
@@ -24,22 +24,31 @@ public class Arrow : MonoBehaviour {
 	/**
 	 * 
 	 */
-	void Update()
+	public void Update()
 	{
-		var moveDirection = gameObject.transform.position - lastPosition;
-
-		if (moveDirection != Vector3.zero) {
-			float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
-			transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-		}
-
-		lastPosition = transform.position;
+        PointInDirection();
 	}
+
+    /**
+     *
+     */
+    protected void PointInDirection()
+    {
+        Vector3 direction = gameObject.transform.position - lastPosition;
+
+        if (direction != Vector3.zero)
+        {
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+
+        lastPosition = transform.position;
+    }
 
 	/**
 	 * 
 	 */
-	void OnTriggerEnter2D(Collider2D other)
+	public void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.isTrigger || other.gameObject.tag == "Player") {
 			return;
@@ -51,7 +60,7 @@ public class Arrow : MonoBehaviour {
 	/**
 	 * 
 	 */
-	void OnHit()
+	protected void OnHit()
 	{
 		var body = GetComponent<Rigidbody2D>();
 		body.isKinematic = true;
@@ -64,7 +73,7 @@ public class Arrow : MonoBehaviour {
 	/**
 	 * 
 	 */
-	IEnumerator Despawn()
+	protected IEnumerator Despawn()
 	{
 		yield return new WaitForSeconds(despawnDelay);
 
@@ -74,7 +83,7 @@ public class Arrow : MonoBehaviour {
     /**
 	 * 
 	 */
-    IEnumerator Timeout()
+    protected IEnumerator Timeout()
     {
         yield return new WaitForSeconds(timeoutDelay);
 
