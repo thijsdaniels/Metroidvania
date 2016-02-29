@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Objects.Collectables;
 
 [RequireComponent(typeof(CharacterController2D))]
 

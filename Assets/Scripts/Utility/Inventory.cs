@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Objects.Collectables;
 
 [RequireComponent(typeof(Player))]
 [RequireComponent(typeof(CharacterController2D))]

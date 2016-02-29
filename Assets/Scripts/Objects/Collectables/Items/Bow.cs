@@ -1,122 +1,120 @@
 using UnityEngine;
 
-/**
- * 
- */
-public class Bow : Item
+namespace Objects.Collectables.Items
 {
-    protected float charge;
-	public float initialCharge = 0.5f;
-    public float chargeFactor = 3f;
-    public float maxCharge = 3f;
-
-    protected float force = 50f;
-    protected float coolDownDuration = 0.25f;
-
-	public Arrow arrow;
-
-	/**
-	 * 
-	 */
-	public void Start()
-	{
-		charge = initialCharge;
-	}
-
     /**
-	 * 
-	 */
-    public override void OnCollect(Collector collector)
+     * 
+     */
+    public class Bow : Objects.Collectables.Item
     {
-        base.OnCollect(collector);
+        protected float charge;
+        public float initialCharge = 0.5f;
+        public float chargeFactor = 3f;
+        public float maxCharge = 3f;
 
-        collector.arrows = Mathf.Max(collector.arrows, 30);
-    }
+        protected float force = 50f;
+        protected float coolDownDuration = 0.25f;
 
-    /**
-	 * 
-	 */
-    public override bool CanBeUsed()
-	{
-        if (!owner || owner.arrows <= 0)
+        public Arrow arrow;
+
+        /**
+	     * 
+	     */
+        public void Start()
         {
-            return false;
+            charge = initialCharge;
         }
 
-        CharacterController2D controller = owner.GetComponent<CharacterController2D>();
-        if (controller.State.IsClimbing())
+        /**
+	     * 
+	     */
+        public override void OnCollect(Collector collector)
         {
-            return false;
+            base.OnCollect(collector);
+
+            collector.arrows = Mathf.Max(collector.arrows, 30);
         }
 
-        return true;
-	}
+        /**
+	     * 
+	     */
+        public override bool CanBeUsed()
+        {
+            if (!owner || owner.arrows <= 0)
+            {
+                return false;
+            }
 
-    /**
-	 * 
-	 */
-    public override void OnPress()
-    {
-        owner.arrows--;
-    }
+            CharacterController2D controller = owner.GetComponent<CharacterController2D>();
+            if (controller.State.IsClimbing())
+            {
+                return false;
+            }
 
-    /**
-	 * 
-	 */
-    public override void OnHold()
-	{
-		Charge(Time.deltaTime * chargeFactor);
-	}
+            return true;
+        }
 
-    /**
-	 * 
-	 */
-    protected void Charge(float deltaCharge)
-	{
-		charge = Mathf.Min(maxCharge, charge + deltaCharge);
-	}
+        /**
+	     * 
+	     */
+        public override void OnHold()
+        {
+            Charge(Time.deltaTime * chargeFactor);
+        }
 
-	/**
-	 * 
-	 */
-	public override void OnRelease()
-	{
-		if (!IsCooledDown() || !CanBeUsed()) {
-			return;
-		}
+        /**
+	     * 
+	     */
+        protected void Charge(float deltaCharge)
+        {
+            charge = Mathf.Min(maxCharge, charge + deltaCharge);
+        }
 
-        Player player = owner.GetComponent<Player>();
-        Shoot(player.transform.position, player.GetAim());
+        /**
+	     * 
+	     */
+        public override void OnRelease()
+        {
+            if (!IsCooledDown() || !CanBeUsed())
+            {
+                return;
+            }
 
-		SetCoolDown(coolDownDuration);
-	}
+            owner.arrows--;
 
-    /**
-	 * 
-	 */
-    protected void Shoot(Vector3 origin, Vector2 direction)
-	{
-		Arrow arrowInstance = Instantiate(arrow, origin, Quaternion.identity) as Arrow;
+            Player player = owner.GetComponent<Player>();
+            Shoot(player.transform.position, player.GetAim());
 
-        Rigidbody2D arrowBody = arrowInstance.GetComponent<Rigidbody2D>();
-		arrowBody.AddForce(direction * charge * force);
+            SetCoolDown(coolDownDuration);
+        }
 
-		charge = initialCharge;
-	}
+        /**
+	     * 
+	     */
+        protected void Shoot(Vector3 origin, Vector2 direction)
+        {
+            Arrow arrowInstance = Instantiate(arrow, origin, Quaternion.identity) as Arrow;
 
-    /**
-     *
-     */
-    public override bool RequiresAmmo()
-    {
-        return true;
-    }
+            Rigidbody2D arrowBody = arrowInstance.GetComponent<Rigidbody2D>();
+            arrowBody.AddForce(direction * charge * force);
 
-    /**
-     *
-     */
-    public override int GetAmmo()
-    {
-        return owner.arrows;
+            charge = initialCharge;
+        }
+
+        /**
+         *
+         */
+        public override bool RequiresAmmo()
+        {
+            return true;
+        }
+
+        /**
+         *
+         */
+        public override int GetAmmo()
+        {
+            return owner.arrows;
+        }
     }
 }

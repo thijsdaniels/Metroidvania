@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Collectable))]
+namespace Objects.Collectables
+{
+    [RequireComponent(typeof(Collectable))]
 
-public class Heart : MonoBehaviour {
-	
-	public void OnCollect(Collector collector)
+    public class Heart : MonoBehaviour
     {
-		var damagable = collector.GetComponent<Damagable>();
-
-		if (damagable)
+        public void OnCollect(Collector collector)
         {
-			damagable.Heal(1);
-		}
+            var damagable = collector.GetComponent<Damagable>();
 
-        Destroy(gameObject);
+            if (damagable)
+            {
+                damagable.Heal(1);
+            }
+
+            Destroy(gameObject);
+        }
     }
-
 }

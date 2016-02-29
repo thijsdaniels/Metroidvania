@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Objects.Collectables;
 
 [RequireComponent(typeof(Player))]
 

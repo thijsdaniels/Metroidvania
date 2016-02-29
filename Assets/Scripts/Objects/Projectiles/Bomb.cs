@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Objects.Collectables.Items;
 
 /**
  * 
@@ -9,6 +10,9 @@ public class Bomb : MonoBehaviour {
 	public float fuseLength = 5f;
 
 	public Fleeting explosion;
+
+    [HideInInspector]
+    public Bombs origin;
 
 	/**
 	 * 
@@ -38,6 +42,11 @@ public class Bomb : MonoBehaviour {
 	 */
 	public void Explode()
 	{
+        if (origin)
+        {
+            origin.bombCount--;
+        }
+
 		Instantiate(explosion, transform.position, Quaternion.identity);
 
 		Destroy(gameObject);

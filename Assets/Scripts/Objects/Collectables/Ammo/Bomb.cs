@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Ammo
+namespace Objects.Collectables.Ammo
 {
     [RequireComponent(typeof(Collectable))]
 

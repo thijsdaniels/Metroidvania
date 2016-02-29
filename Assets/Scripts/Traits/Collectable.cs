@@ -17,7 +17,7 @@ public class Collectable : MonoBehaviour {
 		}
 	}
 
-	public void OnCollect(Collector collector)
+	public virtual void OnCollect(Collector collector)
     {
 		if (collectSound) {
 			AudioSource.PlayClipAtPoint(collectSound, collector.transform.position);
