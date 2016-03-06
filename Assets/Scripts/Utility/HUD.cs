@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Player))]
+[RequireComponent(typeof(Collector))]
+[RequireComponent(typeof(Damagable))]
+
 public class HUD : MonoBehaviour
 {
-
+    private Player player;
     private Collector collector;
     private Damagable damagable;
 
@@ -23,10 +27,14 @@ public class HUD : MonoBehaviour
     public Sprite yButtonSprite;
     public Sprite lButtonSprite;
     public Sprite rButtonSprite;
+    public Color buttonColor = new Color(1f, 1f, 1f, 0.5f);
 
     private GUIStyle labelLeftStyle;
     private GUIStyle labelCenterStyle;
     private GUIStyle labelRightStyle;
+
+    public Color labelOutlineColor = new Color(0f, 0f, 0f, 0.25f);
+    public float labelOutlineThickness = 1f;
 
     public Vector2 spacing = new Vector2(8, 8);
     public Vector2 padding = new Vector2(0, 0);
@@ -71,12 +79,15 @@ public class HUD : MonoBehaviour
     private Rect rButtonRectangle;
     private Rect rButtonCoordinates;
 
-    void Start()
+    /**
+     * 
+     */
+    public void Start()
     {
         scale = scale * Camera.main.orthographicSize;
 
+        player = GetComponent<Player>();
         collector = GetComponent<Collector>();
-
         damagable = GetComponent<Damagable>();
 
         labelLeftStyle = new GUIStyle();
@@ -212,28 +223,34 @@ public class HUD : MonoBehaviour
         }
     }
 
-    void OnGUI()
+    /**
+     * 
+     */
+    public void OnGUI()
     {
         GUI.skin.font = font;
 
-        labelLeftStyle.fontSize = Mathf.RoundToInt(6 * scale);
-        labelCenterStyle.fontSize = Mathf.RoundToInt(6 * scale);
-        labelRightStyle.fontSize = Mathf.RoundToInt(6 * scale);
+        labelLeftStyle.fontSize = Mathf.RoundToInt(6f * scale);
+        labelCenterStyle.fontSize = Mathf.RoundToInt(6f * scale);
+        labelRightStyle.fontSize = Mathf.RoundToInt(6f * scale);
 
         DrawHealth();
+
+        DrawMana();
 
         DrawCoins();
 
         DrawKeys();
 
         DrawButtons();
-
     }
 
-    void DrawHealth()
+    /**
+     * 
+     */
+    protected void DrawHealth()
     {
-
-        if (!damagable || !fullHealthUnitTexture || !emptyHealthUnitTexture)
+        if (!fullHealthUnitTexture || !emptyHealthUnitTexture)
         {
             return;
         }
@@ -242,7 +259,6 @@ public class HUD : MonoBehaviour
 
         for (int i = 0; i < damagable.maximumHealth; i++)
         {
-
             var position = new Vector2(
                 margin + spacing.x * (i % 10) * scale,
                 margin + spacing.y * Mathf.Ceil(i / 10) * scale
@@ -257,18 +273,54 @@ public class HUD : MonoBehaviour
             {
                 GUI.DrawTextureWithTexCoords(new Rect(position.x, position.y, size.x, size.y), fullHealthUnitTexture, fullHealthUnitCoordinates);
             }
-            else {
+            else
+            {
                 GUI.DrawTextureWithTexCoords(new Rect(position.x, position.y, size.x, size.y), emptyHealthUnitTexture, emptyHealthUnitCoordinates);
             }
-
         }
-
     }
 
-    void DrawCoins()
+    /**
+     * 
+     */
+    protected void DrawMana()
     {
+        GUI.depth = 0;
 
-        if (!collector || !coinUnitTexture)
+        var container = new Rect(
+            0.5f * margin * scale, // TODO: This offset should just be 1 * margin.
+            2.25f * margin * scale, // TODO: This offset should be determined by the height of the health bar.
+            2 * scale * collector.maximumMana,
+            6 * scale
+        );
+
+        DrawRectangle(container, Color.white);
+
+        var background = new Rect(
+            container.x + 1 * scale,
+            container.y + 1 * scale,
+            container.width - 2 * scale,
+            container.height - 2 * scale
+        );
+
+        DrawRectangle(background, new Color(0.15f, 0.15f, 0.15f));
+
+        var mana = new Rect(
+            background.x,
+            background.y,
+            background.width * ((float) collector.currentMana / collector.maximumMana),
+            background.height
+        );
+
+        DrawRectangle(mana, new Color(0.22f, 0.71f, 0.29f));
+    }
+
+    /**
+     * 
+     */
+    protected void DrawCoins()
+    {
+        if (!coinUnitTexture)
         {
             return;
         }
@@ -294,14 +346,15 @@ public class HUD : MonoBehaviour
             16 * scale
         );
 
-        GUI.Label(textPosition, collector.coins.ToString(), labelLeftStyle);
-
+        OutlinedLabel(textPosition, collector.coins.ToString(), labelLeftStyle);
     }
 
-    void DrawKeys()
+    /**
+     * 
+     */
+    protected void DrawKeys()
     {
-
-        if (!collector || !keyUnitTexture)
+        if (!keyUnitTexture)
         {
             return;
         }
@@ -327,123 +380,138 @@ public class HUD : MonoBehaviour
             16 * scale
         );
 
-        GUI.Label(textPosition, collector.keys.ToString(), labelRightStyle);
-
+        OutlinedLabel(textPosition, collector.keys.ToString(), labelRightStyle);
     }
 
-    void DrawButtons()
+    /**
+     * 
+     */
+    protected void DrawButtons()
     {
-        if (!collector || !aButtonTexture || !bButtonTexture || !xButtonTexture || !yButtonTexture || !lButtonTexture || !rButtonTexture)
-        {
-            return;
-        }
-
         GUI.depth = 0;
 
-        var size = new Vector2(
+        Vector2 size = new Vector2(
             16 * scale,
             16 * scale
         );
 
-        var aIconPosition = new Vector2(
+        DrawAButton(size);
+        DrawBButton(size);
+        DrawXButton(size);
+        DrawYButton(size);
+        DrawLButton(size);
+        DrawRButton(size);
+    }
+
+    /**
+     * 
+     */
+    protected void DrawAButton(Vector2 size)
+    {
+        Vector2 aIconPosition = new Vector2(
             Camera.main.pixelWidth - margin - (size.x * 2.25f),
             margin + (size.y * 2)
         );
 
-        var bIconPosition = new Vector2(
+        if (aButtonTexture)
+        {
+            Color oldColor = GUI.color;
+            GUI.color = buttonColor;
+            GUI.DrawTextureWithTexCoords(new Rect(aIconPosition.x, aIconPosition.y, size.x, size.y), aButtonTexture, aButtonCoordinates);
+            GUI.color = oldColor;
+        }
+
+        if (player.aButtonLabel != null)
+        {
+            var aLabelPosition = new Rect(
+                aIconPosition.x,
+                aIconPosition.y,
+                16 * scale,
+                16 * scale
+            );
+
+            OutlinedLabel(aLabelPosition, player.aButtonLabel, labelCenterStyle);
+        }
+    }
+
+    /**
+     * 
+     */
+    protected void DrawBButton(Vector2 size)
+    {
+        Vector2 bIconPosition = new Vector2(
             Camera.main.pixelWidth - margin - (size.x * 1.5f),
             margin + (size.y * 1.25f)
         );
 
-        var xIconPosition = new Vector2(
+        if (bButtonTexture)
+        {
+            Color oldColor = GUI.color;
+            GUI.color = buttonColor;
+            GUI.DrawTextureWithTexCoords(new Rect(bIconPosition.x, bIconPosition.y, size.x, size.y), bButtonTexture, bButtonCoordinates);
+            GUI.color = oldColor;
+        }
+
+        if (player.bButtonLabel != null)
+        {
+            var bLabelPosition = new Rect(
+                bIconPosition.x,
+                bIconPosition.y,
+                16 * scale,
+                16 * scale
+            );
+
+            OutlinedLabel(bLabelPosition, player.bButtonLabel, labelCenterStyle);
+        }
+    }
+
+    /**
+     * 
+     */
+    protected void DrawXButton(Vector2 size)
+    {
+        Vector2 xIconPosition = new Vector2(
             Camera.main.pixelWidth - margin - (size.x * 3f),
             margin + (size.y * 1.25f)
         );
 
-        var yIconPosition = new Vector2(
+        if (xButtonTexture)
+        {
+            Color oldColor = GUI.color;
+            GUI.color = buttonColor;
+            GUI.DrawTextureWithTexCoords(new Rect(xIconPosition.x, xIconPosition.y, size.x, size.y), xButtonTexture, xButtonCoordinates);
+            GUI.color = oldColor;
+        }
+
+        if (player.xButtonLabel != null)
+        {
+            var xLabelPosition = new Rect(
+                xIconPosition.x,
+                xIconPosition.y,
+                16 * scale,
+                16 * scale
+            );
+
+            OutlinedLabel(xLabelPosition, player.xButtonLabel, labelCenterStyle);
+        }
+    }
+
+    /**
+     * 
+     */
+    protected void DrawYButton(Vector2 size)
+    {
+        Vector2 yIconPosition = new Vector2(
             Camera.main.pixelWidth - margin - (size.x * 2.25f),
             margin + (size.y * 0.5f)
         );
 
-        var lIconPosition = new Vector2(
-            Camera.main.pixelWidth - margin - (size.x * 3.5f),
-            margin
-        );
-
-        var rIconPosition = new Vector2(
-            Camera.main.pixelWidth - margin - size.x,
-            margin
-        );
-
-        GUI.DrawTextureWithTexCoords(new Rect(aIconPosition.x, aIconPosition.y, size.x, size.y), aButtonTexture, aButtonCoordinates);
-        GUI.DrawTextureWithTexCoords(new Rect(bIconPosition.x, bIconPosition.y, size.x, size.y), bButtonTexture, bButtonCoordinates);
-        GUI.DrawTextureWithTexCoords(new Rect(xIconPosition.x, xIconPosition.y, size.x, size.y), xButtonTexture, xButtonCoordinates);
-        GUI.DrawTextureWithTexCoords(new Rect(yIconPosition.x, yIconPosition.y, size.x, size.y), yButtonTexture, yButtonCoordinates);
-        GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x, lIconPosition.y, size.x, size.y), lButtonTexture, lButtonCoordinates);
-        GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x, rIconPosition.y, size.x, size.y), rButtonTexture, rButtonCoordinates);
-
-        Player player = collector.GetComponent<Player>();
-
-        if (player.primaryItem)
+        if (yButtonTexture)
         {
-            var rButtonActionSprite = player.primaryItem.GetComponent<SpriteRenderer>().sprite;
-
-            if (rButtonActionSprite)
-            {
-                Texture2D rButtonActionTexture = rButtonActionSprite.texture;
-                Rect rButtonActionRectangle = rButtonActionSprite.textureRect;
-                Rect rButtonActionCoordinates = new Rect(
-                    rButtonActionRectangle.x / rButtonActionTexture.width,
-                    rButtonActionRectangle.y / rButtonActionTexture.height,
-                    rButtonActionRectangle.width / rButtonActionTexture.width,
-                    rButtonActionRectangle.height / rButtonActionTexture.height
-                );
-
-                GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x + padding.x * scale, rIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), rButtonActionTexture, rButtonActionCoordinates);
-            }
-
-            if (player.primaryItem.RequiresAmmo())
-            {
-                var rLabelPosition = new Rect(
-                    rIconPosition.x + (4 * scale),
-                    rIconPosition.y + (4 * scale),
-                    16 * scale,
-                    16 * scale
-                );
-
-                GUI.Label(rLabelPosition, player.primaryItem.GetAmmo().ToString(), labelCenterStyle);
-            }
-        }
-
-        if (player.secondaryItem)
-        {
-            var lButtonActionSprite = player.secondaryItem.GetComponent<SpriteRenderer>().sprite;
-
-            if (lButtonActionSprite)
-            {
-                Texture2D lButtonActionTexture = lButtonActionSprite.texture;
-                Rect lButtonActionRectangle = lButtonActionSprite.textureRect;
-                Rect lButtonActionCoordinates = new Rect(
-                    lButtonActionRectangle.x / lButtonActionTexture.width,
-                    lButtonActionRectangle.y / lButtonActionTexture.height,
-                    lButtonActionRectangle.width / lButtonActionTexture.width,
-                    lButtonActionRectangle.height / lButtonActionTexture.height
-                );
-
-                GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x + padding.x * scale, lIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), lButtonActionTexture, lButtonActionCoordinates);
-            }
-
-            if (player.secondaryItem.RequiresAmmo())
-            {
-                var lLabelPosition = new Rect(
-                    lIconPosition.x + (4 * scale),
-                    lIconPosition.y + (4 * scale),
-                    16 * scale,
-                    16 * scale
-                );
-
-                GUI.Label(lLabelPosition, player.secondaryItem.GetAmmo().ToString(), labelCenterStyle);
-            }
+            Color oldColor = GUI.color;
+            GUI.color = buttonColor;
+            GUI.DrawTextureWithTexCoords(new Rect(yIconPosition.x, yIconPosition.y, size.x, size.y), yButtonTexture, yButtonCoordinates);
+            GUI.color = oldColor;
         }
 
         if (player.tertiaryItem)
@@ -473,44 +541,166 @@ public class HUD : MonoBehaviour
                     16 * scale
                 );
 
-                GUI.Label(yLabelPosition, player.tertiaryItem.GetAmmo().ToString(), labelCenterStyle);
+                OutlinedLabel(yLabelPosition, player.tertiaryItem.GetAmmo().ToString(), labelCenterStyle);
+            }
+        }
+    }
+
+    /**
+     * 
+     */
+    protected void DrawLButton(Vector2 size)
+    {
+        Vector2 lIconPosition = new Vector2(
+            Camera.main.pixelWidth - margin - (size.x * 3.5f),
+            margin
+        );
+
+        if (lButtonTexture)
+        {
+            Color oldColor = GUI.color;
+            GUI.color = buttonColor;
+            GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x, lIconPosition.y, size.x, size.y), lButtonTexture, lButtonCoordinates);
+            GUI.color = oldColor;
+        }
+
+        if (player.secondaryItem)
+        {
+            var lButtonActionSprite = player.secondaryItem.GetComponent<SpriteRenderer>().sprite;
+
+            if (lButtonActionSprite)
+            {
+                Texture2D lButtonActionTexture = lButtonActionSprite.texture;
+                Rect lButtonActionRectangle = lButtonActionSprite.textureRect;
+                Rect lButtonActionCoordinates = new Rect(
+                    lButtonActionRectangle.x / lButtonActionTexture.width,
+                    lButtonActionRectangle.y / lButtonActionTexture.height,
+                    lButtonActionRectangle.width / lButtonActionTexture.width,
+                    lButtonActionRectangle.height / lButtonActionTexture.height
+                );
+
+                GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x + padding.x * scale, lIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), lButtonActionTexture, lButtonActionCoordinates);
+            }
+
+            if (player.secondaryItem.RequiresAmmo())
+            {
+                var lLabelPosition = new Rect(
+                    lIconPosition.x + (4 * scale),
+                    lIconPosition.y + (4 * scale),
+                    16 * scale,
+                    16 * scale
+                );
+
+                OutlinedLabel(lLabelPosition, player.secondaryItem.GetAmmo().ToString(), labelCenterStyle);
+            }
+        }
+    }
+
+    /**
+     * 
+     */
+    protected void DrawRButton(Vector2 size)
+    {
+        Vector2 rIconPosition = new Vector2(
+            Camera.main.pixelWidth - margin - size.x,
+            margin
+        );
+
+        if (rButtonTexture)
+        {
+            Color oldColor = GUI.color;
+            GUI.color = buttonColor;
+            GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x, rIconPosition.y, size.x, size.y), rButtonTexture, rButtonCoordinates);
+            GUI.color = oldColor;
+        }
+
+        if (player.primaryItem)
+        {
+            var rButtonActionSprite = player.primaryItem.GetComponent<SpriteRenderer>().sprite;
+
+            if (rButtonActionSprite)
+            {
+                Texture2D rButtonActionTexture = rButtonActionSprite.texture;
+                Rect rButtonActionRectangle = rButtonActionSprite.textureRect;
+                Rect rButtonActionCoordinates = new Rect(
+                    rButtonActionRectangle.x / rButtonActionTexture.width,
+                    rButtonActionRectangle.y / rButtonActionTexture.height,
+                    rButtonActionRectangle.width / rButtonActionTexture.width,
+                    rButtonActionRectangle.height / rButtonActionTexture.height
+                );
+
+                GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x + padding.x * scale, rIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), rButtonActionTexture, rButtonActionCoordinates);
+            }
+
+            if (player.primaryItem.RequiresAmmo())
+            {
+                var rLabelPosition = new Rect(
+                    rIconPosition.x + (4 * scale),
+                    rIconPosition.y + (4 * scale),
+                    16 * scale,
+                    16 * scale
+                );
+
+                OutlinedLabel(rLabelPosition, player.primaryItem.GetAmmo().ToString(), labelCenterStyle);
+            }
+        }
+    }
+
+    /**
+     * 
+     */
+    protected void DrawRectangle(Rect rectangle, Color color)
+    {
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, color);
+        texture.Apply();
+
+        GUIStyle rectangleStyle = new GUIStyle();
+        rectangleStyle.normal.background = texture;
+
+        GUI.Box(rectangle, GUIContent.none, rectangleStyle);
+    }
+
+    /**
+     * 
+     */
+    protected void OutlinedLabel(Rect rect, string text, GUIStyle style)
+    {
+        OutlinedLabel(rect, text, style, labelOutlineColor);
+    }
+
+    /**
+     * 
+     */
+    protected void OutlinedLabel(Rect rect, string text, GUIStyle style, Color outlineColor)
+    {
+        OutlinedLabel(rect, text, style, outlineColor, labelOutlineThickness * scale);
+    }
+
+    /**
+     * 
+     */
+    protected void OutlinedLabel(Rect rect, string text, GUIStyle style, Color outlineColor, float thickness)
+    {
+        Color textColor = style.normal.textColor;
+        style.normal.textColor = outlineColor;
+
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                Rect outlineRect = new Rect(
+                    rect.x - x * thickness,
+                    rect.y - y * thickness,
+                    rect.width,
+                    rect.height
+                );
+
+                GUI.Label(outlineRect, text, style);
             }
         }
 
-        if (player.aButtonLabel != null)
-        {
-            var aLabelPosition = new Rect(
-                aIconPosition.x,
-                aIconPosition.y,
-                16 * scale,
-                16 * scale
-            );
-
-            GUI.Label(aLabelPosition, player.aButtonLabel, labelCenterStyle);
-        }
-
-        if (player.bButtonLabel != null)
-        {
-            var bLabelPosition = new Rect(
-                bIconPosition.x,
-                bIconPosition.y,
-                16 * scale,
-                16 * scale
-            );
-
-            GUI.Label(bLabelPosition, player.bButtonLabel, labelCenterStyle);
-        }
-
-        if (player.xButtonLabel != null)
-        {
-            var xLabelPosition = new Rect(
-                xIconPosition.x,
-                xIconPosition.y,
-                16 * scale,
-                16 * scale
-            );
-
-            GUI.Label(xLabelPosition, player.xButtonLabel, labelCenterStyle);
-        }
+        style.normal.textColor = textColor;
+        GUI.Label(rect, text, style);
     }
 }

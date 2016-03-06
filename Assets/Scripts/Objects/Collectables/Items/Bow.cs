@@ -5,7 +5,7 @@ namespace Objects.Collectables.Items
     /**
      * 
      */
-    public class Bow : Objects.Collectables.Item
+    public class Bow : Item
     {
         protected float charge;
         public float initialCharge = 0.5f;
@@ -40,7 +40,7 @@ namespace Objects.Collectables.Items
 	     */
         public override bool CanBeUsed()
         {
-            if (!owner || owner.arrows <= 0)
+            if (!owner || owner.arrows <= 0 || owner.currentMana < arrow.requiredMana)
             {
                 return false;
             }
@@ -59,6 +59,11 @@ namespace Objects.Collectables.Items
 	     */
         public override void OnHold()
         {
+            if (!IsCooledDown() || !CanBeUsed())
+            {
+                return;
+            }
+
             Charge(Time.deltaTime * chargeFactor);
         }
 
@@ -80,8 +85,6 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            owner.arrows--;
-
             Player player = owner.GetComponent<Player>();
             Shoot(player.transform.position, player.GetAim());
 
@@ -93,6 +96,9 @@ namespace Objects.Collectables.Items
 	     */
         protected void Shoot(Vector3 origin, Vector2 direction)
         {
+            owner.arrows--;
+            owner.currentMana -= arrow.requiredMana;
+
             Arrow arrowInstance = Instantiate(arrow, origin, Quaternion.identity) as Arrow;
 
             Rigidbody2D arrowBody = arrowInstance.GetComponent<Rigidbody2D>();

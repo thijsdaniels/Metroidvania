@@ -11,6 +11,8 @@ public class Arrow : MonoBehaviour {
 	public float despawnDelay = 0.25f;
     public float timeoutDelay = 30f;
 
+    public int requiredMana = 0;
+
 	/**
 	 * 
 	 */

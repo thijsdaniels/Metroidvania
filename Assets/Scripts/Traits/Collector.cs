@@ -11,8 +11,11 @@ public class Collector : MonoBehaviour {
 
 	public List<Item> items;
 
-    public int arrows;
-    public int bombs;
+    public int arrows = 0;
+    public int bombs = 0;
+
+    public int currentMana = 30;
+    public int maximumMana = 30;
 
 	public bool hasItem(Item item)
 	{

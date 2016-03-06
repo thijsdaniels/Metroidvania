@@ -5,7 +5,7 @@ namespace Objects.Collectables.Items
     /**
      * 
      */
-    public class Bombs : Objects.Collectables.Item
+    public class Bombs : Item
     {
         protected float charge;
         public float initialCharge = 1.5f;
