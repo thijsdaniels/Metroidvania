@@ -30,7 +30,7 @@ namespace Objects.Collectables
 	     */
         public bool IsCooledDown()
         {
-            return this.coolDown <= 0f;
+            return coolDown <= 0f;
         }
 
         /**
@@ -38,7 +38,7 @@ namespace Objects.Collectables
 	     */
         protected void CoolDown(float deltaCooldown)
         {
-            this.coolDown = Mathf.Max(0f, this.coolDown - deltaCooldown);
+            coolDown = Mathf.Max(0f, coolDown - deltaCooldown);
         }
 
         /**
@@ -46,7 +46,7 @@ namespace Objects.Collectables
 	     */
         protected void SetCoolDown(float duration)
         {
-            this.coolDown = duration;
+            coolDown = duration;
         }
 
         /**
@@ -61,7 +61,7 @@ namespace Objects.Collectables
 
             collector.items.Add(this);
 
-            this.owner = collector;
+            owner = collector;
 
             //this.gameObject.SetActive(false); // TODO: Find a way to remove the object instance from the game world while still allowing the item to be used.
         }
@@ -90,19 +90,11 @@ namespace Objects.Collectables
         public virtual void OnRelease() { }
 
         /**
-         *
-         */
-        public virtual bool RequiresAmmo()
+	     * 
+	     */
+        public virtual Collector.Ammo? GetAmmo()
         {
-            return false;
-        }
-
-        /**
-         *
-         */
-        public virtual int GetAmmo()
-        {
-            return 0;
+            return null;
         }
     }
 }

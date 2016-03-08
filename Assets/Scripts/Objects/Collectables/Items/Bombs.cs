@@ -36,7 +36,9 @@ namespace Objects.Collectables.Items
         {
             base.OnCollect(collector);
 
-            collector.bombs = Mathf.Max(collector.bombs, 10);
+            owner.ammo.bombs.Upgrade(20);
+            owner.ammo.bombs.Restore();
+            owner.ammo.bombs.Enable();
         }
 
         /**
@@ -44,7 +46,7 @@ namespace Objects.Collectables.Items
 	     */
         public override bool CanBeUsed()
         {
-            if (!owner || owner.bombs <= 0 || bombCount >= maxBombCount)
+            if (!owner || !owner.ammo.bombs.Available() || bombCount >= maxBombCount)
             {
                 return false;
             }
@@ -76,7 +78,7 @@ namespace Objects.Collectables.Items
 	     */
         protected void Draw()
         {
-            owner.bombs--;
+            owner.ammo.bombs.Consume();
 
             bombInstance = Instantiate(bomb, owner.transform.position, Quaternion.identity) as Bomb;
 
@@ -146,17 +148,9 @@ namespace Objects.Collectables.Items
         /**
          *
          */
-        public override bool RequiresAmmo()
+        public override Collector.Ammo? GetAmmo()
         {
-            return true;
-        }
-
-        /**
-         *
-         */
-        public override int GetAmmo()
-        {
-            return owner.bombs;
+            return owner.ammo.bombs;
         }
     }
 }

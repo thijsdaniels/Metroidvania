@@ -11,7 +11,7 @@ namespace Objects.Collectables.Ammo
 
         public void OnCollect(Collector collector)
         {
-            collector.arrows += value;
+            collector.ammo.arrows.Add(value);
             Destroy(gameObject);
         }
     }

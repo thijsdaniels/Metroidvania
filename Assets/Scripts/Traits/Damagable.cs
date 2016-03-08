@@ -1,103 +1,161 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Damagable : MonoBehaviour {
-
+public class Damagable : MonoBehaviour
+{
 	public int initialHealth;
 	public int currentHealth { get; protected set; }
 	public int maximumHealth;
 
     public bool flinch;
-    private Animator animator;
+    protected Animator animator;
 
 	public bool destroyOnDeath = true;
 
 	public AudioClip hitSound;
+    public float hitTimeout;
+    protected float currentHitTimeout;
+    protected SpriteRenderer spriteRenderer;
+    protected Color originalColor;
+
     public AudioClip deathSound;
+    public Fleeting deathResidue;
+    public Vector2 deathResidueOffset = Vector2.zero;
 
-    public GameObject deathResidue;
-
-	public void Start() {
-		currentHealth = initialHealth;
+    public void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+    }
+
+	public void Start()
+    {
+		currentHealth = initialHealth;
 	}
 
-	public void TakeDamage(GameObject cause, int damage) {
+    public void Update()
+    {
+        if (currentHitTimeout > 0)
+        {
+            currentHitTimeout = Mathf.Max(0, currentHitTimeout - Time.deltaTime);
 
-        if (Immune(cause)) {
+            if (currentHitTimeout <= 0 && spriteRenderer && originalColor != null)
+            {
+                spriteRenderer.color = originalColor;
+            }
+        }
+    }
+
+	public void TakeDamage(GameObject cause, int damage)
+    {
+        if (!CanBeHit() || Immune(cause))
+        {
             return;
         }
 		
 		currentHealth = Mathf.Max(0, currentHealth - damage);
 
-		if (currentHealth > 0) {
+		if (currentHealth > 0)
+        {
 			Hit();
-		} else {
+		}
+        else
+        {
 			Die();
 		}
-		
 	}
 
-    protected virtual bool Immune(GameObject cause) {
+    protected bool CanBeHit()
+    {
+        if (currentHitTimeout > 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected virtual bool Immune(GameObject cause)
+    {
         return false;
     }
 
-	public void Kill() {
+	public void Kill()
+    {
 		currentHealth = 0;
 		Die();
 	}
 
-	public void Heal(int amount) {
+	public void Heal(int amount)
+    {
 		currentHealth = Mathf.Min(maximumHealth, currentHealth + amount);
 	}
 
-	public void Restore() {
+	public void Restore()
+    {
 		currentHealth = maximumHealth;
 	}
 
-	public void Revive() {
+	public void Revive()
+    {
 		currentHealth = initialHealth;
 	}
 
-	protected void Hit() {
-
+	protected void Hit()
+    {
 		SendMessage("OnHit", null, SendMessageOptions.DontRequireReceiver);
 
-		if (hitSound) {
+		if (hitSound)
+        {
 			AudioSource.PlayClipAtPoint(hitSound, transform.position);
 		}
 
-        if (flinch) {
+        if (flinch)
+        {
             animator.SetTrigger("Flinch");
         }
 
+        if (hitTimeout > 0)
+        {
+            currentHitTimeout = hitTimeout;
+
+            if (spriteRenderer)
+            {
+                originalColor = spriteRenderer.color;
+                Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, originalColor.a * 0.5f);
+                spriteRenderer.color = newColor;
+            }
+        }
 	}
 
-    private void OnFlinchAnimationStart() {
+    private void OnFlinchAnimationStart()
+    {
         SendMessage("OnFlinch", null, SendMessageOptions.RequireReceiver);
     }
 
-    private void OnFlinchAnimationEnd() {
+    private void OnFlinchAnimationEnd()
+    {
         SendMessage("OnFlinchEnd", null, SendMessageOptions.RequireReceiver);
     }
 
-	protected void Die() {
-
+	protected void Die()
+    {
 		SendMessage("OnDeath", this, SendMessageOptions.DontRequireReceiver);
 
-		if (deathSound) {
+		if (deathSound)
+        {
 			AudioSource.PlayClipAtPoint(deathSound, transform.position);
 		}
 
         if (deathResidue)
         {
-            Instantiate(deathResidue, this.transform.position, Quaternion.identity);
+            Vector3 deathResiduePosition = new Vector3(transform.position.x + deathResidueOffset.x, transform.position.y + deathResidueOffset.y, transform.position.z);
+            Instantiate(deathResidue, deathResiduePosition, Quaternion.identity);
         }
 
-		if (destroyOnDeath) {
+		if (destroyOnDeath)
+        {
 			Destroy(gameObject);
 		}
-
 	}
-
 }

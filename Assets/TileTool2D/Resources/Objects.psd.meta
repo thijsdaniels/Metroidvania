@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: e75a452bc2a4c4e4c8a6566c7b5063d6
-timeCreated: 1456178847
+timeCreated: 1457389615
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -13,6 +13,7 @@ TextureImporter:
     21300012: Objects_6
     21300014: Objects_7
     21300016: Objects_8
+    21300018: Objects_9
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -151,6 +152,17 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 17
+        y: 95
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Objects_9
+      rect:
+        serializedVersion: 2
+        x: 34
         y: 95
         width: 16
         height: 16

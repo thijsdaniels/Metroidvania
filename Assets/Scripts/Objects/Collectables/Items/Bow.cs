@@ -32,7 +32,9 @@ namespace Objects.Collectables.Items
         {
             base.OnCollect(collector);
 
-            collector.arrows = Mathf.Max(collector.arrows, 30);
+            owner.ammo.arrows.Upgrade(30);
+            owner.ammo.arrows.Restore();
+            owner.ammo.arrows.Enable();
         }
 
         /**
@@ -40,7 +42,7 @@ namespace Objects.Collectables.Items
 	     */
         public override bool CanBeUsed()
         {
-            if (!owner || owner.arrows <= 0 || owner.currentMana < arrow.requiredMana)
+            if (!owner || !owner.ammo.arrows.Available() || !owner.mana.Available(arrow.requiredMana))
             {
                 return false;
             }
@@ -96,8 +98,8 @@ namespace Objects.Collectables.Items
 	     */
         protected void Shoot(Vector3 origin, Vector2 direction)
         {
-            owner.arrows--;
-            owner.currentMana -= arrow.requiredMana;
+            owner.ammo.arrows.Consume();
+            owner.mana.Consume(arrow.requiredMana);
 
             Arrow arrowInstance = Instantiate(arrow, origin, Quaternion.identity) as Arrow;
 
@@ -110,17 +112,9 @@ namespace Objects.Collectables.Items
         /**
          *
          */
-        public override bool RequiresAmmo()
+        public override Collector.Ammo? GetAmmo()
         {
-            return true;
-        }
-
-        /**
-         *
-         */
-        public override int GetAmmo()
-        {
-            return owner.arrows;
+            return owner.ammo.arrows;
         }
     }
 }

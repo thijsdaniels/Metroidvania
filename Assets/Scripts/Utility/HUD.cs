@@ -290,7 +290,7 @@ public class HUD : MonoBehaviour
         var container = new Rect(
             0.5f * margin * scale, // TODO: This offset should just be 1 * margin.
             2.25f * margin * scale, // TODO: This offset should be determined by the height of the health bar.
-            2 * scale * collector.maximumMana,
+            2 * scale * collector.mana.maximum,
             6 * scale
         );
 
@@ -308,7 +308,7 @@ public class HUD : MonoBehaviour
         var mana = new Rect(
             background.x,
             background.y,
-            background.width * ((float) collector.currentMana / collector.maximumMana),
+            background.width * collector.mana.Ratio(),
             background.height
         );
 
@@ -532,7 +532,7 @@ public class HUD : MonoBehaviour
                 GUI.DrawTextureWithTexCoords(new Rect(yIconPosition.x + padding.x * scale, yIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), yButtonActionTexture, yButtonActionCoordinates);
             }
 
-            if (player.tertiaryItem.RequiresAmmo())
+            if (player.tertiaryItem.GetAmmo() != null)
             {
                 var yLabelPosition = new Rect(
                     yIconPosition.x + (4 * scale),
@@ -582,7 +582,7 @@ public class HUD : MonoBehaviour
                 GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x + padding.x * scale, lIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), lButtonActionTexture, lButtonActionCoordinates);
             }
 
-            if (player.secondaryItem.RequiresAmmo())
+            if (player.secondaryItem.GetAmmo() != null)
             {
                 var lLabelPosition = new Rect(
                     lIconPosition.x + (4 * scale),
@@ -632,7 +632,7 @@ public class HUD : MonoBehaviour
                 GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x + padding.x * scale, rIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), rButtonActionTexture, rButtonActionCoordinates);
             }
 
-            if (player.primaryItem.RequiresAmmo())
+            if (player.primaryItem.GetAmmo() != null)
             {
                 var rLabelPosition = new Rect(
                     rIconPosition.x + (4 * scale),

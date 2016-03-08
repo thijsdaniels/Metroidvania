@@ -5,7 +5,8 @@ using System.Collections;
 
 public class Untouchable : MonoBehaviour
 {
-    public enum TargetTag {
+    public enum TargetTag
+    {
         Player,
         Enemy,
         Untagged,
@@ -15,25 +16,72 @@ public class Untouchable : MonoBehaviour
 
 	public int damage;
 
-	void OnCollisionEnter2D(Collision2D other)
+    public enum DamageEvent
     {
-        if (targetTag.ToString() == other.gameObject.tag) {
+        OnEnter,
+        OnStay,
+    }
+
+    public DamageEvent damageEvent;
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (!damageEvent.Equals(DamageEvent.OnEnter))
+        {
+            return;
+        }
+
+        if (targetTag.ToString() == other.gameObject.tag)
+        {
 			InflictDamage(other.gameObject);
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D other)
+    void OnCollisionStay2D(Collision2D other)
     {
-        if (targetTag.ToString() == other.gameObject.tag) {
-			InflictDamage(other.gameObject);
-		}
-	}
+        if (!damageEvent.Equals(DamageEvent.OnStay))
+        {
+            return;
+        }
+
+        if (targetTag.ToString() == other.gameObject.tag)
+        {
+            InflictDamage(other.gameObject);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!damageEvent.Equals(DamageEvent.OnEnter))
+        {
+            return;
+        }
+
+        if (targetTag.ToString() == other.gameObject.tag)
+        {
+            InflictDamage(other.gameObject);
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (!damageEvent.Equals(DamageEvent.OnStay))
+        {
+            return;
+        }
+
+        if (targetTag.ToString() == other.gameObject.tag)
+        {
+            InflictDamage(other.gameObject);
+        }
+    }
 
 	void InflictDamage(GameObject target)
     {
         var damagable = target.GetComponent<Damagable>();
 
-		if (damagable) {
+		if (damagable)
+        {
 			damagable.TakeDamage(gameObject, damage);
 		}
 	}

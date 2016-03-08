@@ -4,17 +4,17 @@ using System.Collections;
 
 public class Dropper : MonoBehaviour {
 
-	[Serializable]
-	public struct drop {
+    [Serializable]
+    public struct Drop {
 		public Collectable loot;
 		[Range(0f, 1f)]
-		public float
-			dropChance;
+        public float dropChance;
 	}
 
-	public drop[] drops;
+	public Drop[] drops;
 
-	private float offsetFactor = 0.5f;
+    public Vector2 offset = Vector2.zero;
+	private Vector2 offsetFactor = Vector2.zero;
 
 	public void OnDeath() {
 
@@ -25,12 +25,12 @@ public class Dropper : MonoBehaviour {
 
 			if (roll < drop.dropChance && drop.loot != null) {
 
-				var randomOffset = new Vector2(
-					transform.position.x + offsetFactor * (-1 + UnityEngine.Random.value * 2),
-					transform.position.y + offsetFactor * (-1 + UnityEngine.Random.value * 2)
-				);
+				var dropPosition = new Vector2(
+					transform.position.x,
+					transform.position.y
+				) + offset + offsetFactor * (-1 + UnityEngine.Random.value * 2);
 
-				Instantiate(drop.loot, randomOffset, Quaternion.identity);
+				Instantiate(drop.loot, dropPosition, Quaternion.identity);
 
 			}
 
