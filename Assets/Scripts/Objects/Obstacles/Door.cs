@@ -7,91 +7,110 @@ public class Door : MonoBehaviour {
 	private Collider2D myCollider;
 
 	public enum AccessMode {
-		proximity,
-		remote,
-		locked
+		Proximity,
+		Remote,
+		Locked
 	}
-	public AccessMode accessMode = AccessMode.proximity;
-	private bool locked;
+
+	public AccessMode accessMode = AccessMode.Proximity;
 
 	public AudioClip openSound;
 	public AudioClip closeSound;
 
-	void Start() {
+    void Awake()
+    {
 		animator = GetComponent<Animator>();
-		myCollider = GetComponent<Collider2D>();
-		if (accessMode == AccessMode.locked) {
-			locked = true;
-		}
-	}
+        myCollider = GetComponent<Collider2D>();
 
-	public void Open() {
+        if (accessMode != AccessMode.Locked)
+        {
+            animator.SetTrigger("Unlock");
+        }
+
+    }
+
+	public void Open()
+    {
 		animator.SetBool("Open", true);
 	}
 
-	public void Close() {
+	public void Close()
+    {
 		animator.SetBool("Open", false);
 	}
 
-	void OnOpenStart() {
-		if (openSound) {
+	void OnOpenStart()
+    {
+		if (openSound)
+        {
 			AudioSource.PlayClipAtPoint(openSound, transform.position);
 		}
 	}
 
-	void OnOpenEnd() {
-		myCollider.enabled = false;
+	void OnOpenEnd()
+    {
+        myCollider.enabled = false;
 	}
 
-	void OnCloseStart() {
-		if (closeSound) {
+	void OnCloseStart()
+    {
+		if (closeSound)
+        {
 			AudioSource.PlayClipAtPoint(closeSound, transform.position);
 		}
+
+        myCollider.enabled = true;
+    }
+
+	void OnCloseEnd()
+    {
+        
 	}
 
-	void OnCloseEnd() {
-		myCollider.enabled = true;
-	}
-
-	void OnTriggerEnter2D(Collider2D other) {
-
-		if (accessMode == AccessMode.locked && locked) {
-
+	void OnTriggerEnter2D(Collider2D other)
+    {
+		if (accessMode == AccessMode.Locked)
+        {
 			var collector = other.gameObject.GetComponent<Collector>();
-			if (collector && collector.keys > 0) {
-				collector.keys--;
-				locked = false;
-				Open();
+
+			if (collector && collector.keys > 0)
+            {
+                collector.keys--;
+                Unlock();
 			}
-
-		} else if (accessMode == AccessMode.proximity && other.tag == "Player") {
+		}
+        else if (accessMode == AccessMode.Proximity && other.tag == "Player")
+        {
 			Open();
 		}
-
 	}
 
-	void OnTriggerExit2D(Collider2D other) {
+    protected void Unlock()
+    {
+        animator.SetTrigger("Unlock");
+        Open();
+        accessMode = AccessMode.Proximity;
+    }
 
-		if (accessMode == AccessMode.proximity && other.tag == "Player") {
+	void OnTriggerExit2D(Collider2D other)
+    {
+		if (accessMode == AccessMode.Proximity && other.tag == "Player") {
 			Close();
 		}
-
 	}
 
-	public void OnSwitchPressed(Switch other) {
-
-		if (accessMode == AccessMode.remote) {
+	public void OnSwitchPressed(Switch other)
+    {
+		if (accessMode == AccessMode.Remote) {
 			Open();
 		}
-
 	}
 
-	public void OnSwitchDepressed(Switch other) {
-		
-		if (accessMode == AccessMode.remote) {
+	public void OnSwitchDepressed(Switch other)
+    {
+		if (accessMode == AccessMode.Remote) {
 			Close();
 		}
-		
 	}
 
 }
