@@ -8,7 +8,7 @@ public class Arrow : MonoBehaviour {
 
 	private Vector3 lastPosition;
 
-	public float despawnDelay = 0.25f;
+	public float despawnDelay = 1.5f;
     public float timeoutDelay = 30f;
 
     public int requiredMana = 0;
@@ -50,37 +50,35 @@ public class Arrow : MonoBehaviour {
 	/**
 	 * 
 	 */
-	public void OnTriggerEnter2D(Collider2D other)
-	{
-		if (other.isTrigger || other.gameObject.tag == "Player") {
-			return;
-		}
-
-		OnHit();
-	}
+	//public void OnTriggerEnter2D(Collider2D other)
+	//{
+	//	if (other.isTrigger || other.gameObject.tag == "Player") {
+	//		return;
+	//	}
+    //
+	//	OnHit();
+	//}
 
 	/**
 	 * 
 	 */
-	protected void OnHit()
+	protected void OnFleetingDelay()
 	{
 		var body = GetComponent<Rigidbody2D>();
 		body.isKinematic = true;
 
 		Destroy(gameObject.GetComponent<Untouchable>());
-
-		StartCoroutine(Despawn());
 	}
 
 	/**
 	 * 
 	 */
-	protected IEnumerator Despawn()
-	{
-		yield return new WaitForSeconds(despawnDelay);
-
-		Destroy(gameObject);
-	}
+	//protected IEnumerator Despawn()
+	//{
+	//	yield return new WaitForSeconds(despawnDelay);
+    //
+	//	Destroy(gameObject);
+	//}
 
     /**
 	 * 

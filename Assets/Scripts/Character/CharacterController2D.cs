@@ -10,14 +10,11 @@ public class CharacterController2D : MonoBehaviour {
 
 	// raycasting
 	[Range(0f, 0.1f)]
-	public float
-		skinThickness = 0.05f;
+	public float skinThickness = 0.05f;
 	[Range(0, 20)]
-	public int
-		horizontalRays = 12;
+	public int horizontalRays = 12;
 	[Range(0, 10)]
-	public int
-		verticalRays = 6;
+	public int verticalRays = 6;
 	private float horizontalRaySpread;
 	private float verticalRaySpread;
 	private Vector3 raycastOriginTopLeft;
@@ -443,7 +440,7 @@ public class CharacterController2D : MonoBehaviour {
 		var offset = 0f;
 		for (var i = 1; i < horizontalRays - 1; i++) {
 
-			var rayVector = new Vector2(rayOrigin.x, rayOrigin.y + (i * horizontalRaySpread));
+			var rayVector = new Vector2(rayOrigin.x, rayOrigin.y + (i * verticalRaySpread));
 			if (debugMode) {
 				Debug.DrawRay(rayVector, rayDirection * halfWidth, isRight ? Color.cyan : Color.magenta);
 			}

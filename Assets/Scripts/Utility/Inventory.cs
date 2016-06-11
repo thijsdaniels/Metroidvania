@@ -183,7 +183,7 @@ public class Inventory : MonoBehaviour
         {
             for (int x = 0; x < itemGrid.x; x++)
             {
-                int index = y * (int)itemGrid.y + x;
+                int index = y * (int) itemGrid.x + x;
 
                 if (collector.items.Count > index)
                 {
@@ -277,7 +277,7 @@ public class Inventory : MonoBehaviour
 
     protected void Select(Vector2 position, Player.ItemSlot slot)
     {
-        int index = (int) (position.y * itemGrid.y + position.x);
+        int index = (int) (position.y * itemGrid.x + position.x);
 
         if (collector.items.Count > index)
         {

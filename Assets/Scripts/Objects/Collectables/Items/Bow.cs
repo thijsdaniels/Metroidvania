@@ -13,7 +13,7 @@ namespace Objects.Collectables.Items
         public float maxCharge = 3f;
 
         protected float force = 50f;
-        protected float coolDownDuration = 0.25f;
+        public float coolDownDuration = 0.25f;
 
         public Arrow arrow;
 
@@ -42,7 +42,12 @@ namespace Objects.Collectables.Items
 	     */
         public override bool CanBeUsed()
         {
-            if (!owner || !owner.ammo.arrows.Available() || !owner.mana.Available(arrow.requiredMana))
+            if (!base.CanBeUsed())
+            {
+                return false;
+            }
+
+            if (!owner.ammo.arrows.Available() || !owner.mana.Available(arrow.requiredMana))
             {
                 return false;
             }

@@ -4,6 +4,10 @@ using BoomerangItem = Objects.Collectables.Items.Boomerang;
 
 namespace Objects.Projectiles
 {
+    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Fleeting))]
+
     /**
      * 
      */
@@ -11,6 +15,7 @@ namespace Objects.Projectiles
     {
         [HideInInspector] public Collector owner;
         [HideInInspector] public BoomerangItem boomerangItem;
+
         protected Rigidbody2D body;
         protected float previousDistance;
         protected bool returning;
@@ -83,29 +88,22 @@ namespace Objects.Projectiles
         }
 
         /**
-         * 
+         *
          */
-        public void OnTriggerEnter2D(Collider2D collider)
+        public void OnTriggerExit2D(Collider2D collider)
         {
-            if (returning && collider.gameObject.tag == "Player")
+            if (collider.tag == "Player")
             {
-                OnCaught();
+                GetComponent<Fleeting>().Activate();
             }
         }
 
         /**
-         * 
+         *
          */
-        protected void Deflect()
-        {
-            // TODO: Deflect velocity.
-        }
-
-        protected void OnCaught()
+        protected void OnFleetingEnd()
         {
             boomerangItem.projectileCount--;
-
-            Destroy(gameObject);
         }
     }
 }

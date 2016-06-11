@@ -11,7 +11,7 @@ namespace Objects.Collectables
      */
     abstract public class Item : MonoBehaviour
     {
-        public float coolDown = 0f;
+        protected float coolDown = 0f;
         protected Collector owner;
 
         /**
@@ -71,6 +71,11 @@ namespace Objects.Collectables
 	     */
         public virtual bool CanBeUsed()
         {
+            if (!owner)
+            {
+                return false;
+            }
+
             return true;
         }
 

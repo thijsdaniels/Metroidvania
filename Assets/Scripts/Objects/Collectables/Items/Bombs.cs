@@ -13,7 +13,7 @@ namespace Objects.Collectables.Items
         public float maxCharge = 3f;
 
         protected float force = 25f;
-        protected float coolDownDuration = 0.25f;
+        public float coolDownDuration = 0.25f;
 
         public Bomb bomb;
         protected Bomb bombInstance;
@@ -46,7 +46,12 @@ namespace Objects.Collectables.Items
 	     */
         public override bool CanBeUsed()
         {
-            if (!owner || !owner.ammo.bombs.Available() || bombCount >= maxBombCount)
+            if (!base.CanBeUsed())
+            {
+                return false;
+            }
+
+            if (!owner.ammo.bombs.Available() || bombCount >= maxBombCount)
             {
                 return false;
             }

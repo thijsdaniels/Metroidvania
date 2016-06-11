@@ -4,8 +4,8 @@ using Objects.Collectables.Items;
 /**
  * 
  */
-public class Bomb : MonoBehaviour {
-
+public class Bomb : MonoBehaviour
+{
 	private bool fuseLit;
 	public float fuseLength = 5f;
 
@@ -33,7 +33,8 @@ public class Bomb : MonoBehaviour {
 	/**
 	 * 
 	 */
-	public void LightFuse() {
+	public void LightFuse()
+    {
         fuseLit = true;
 	}
 
@@ -67,5 +68,4 @@ public class Bomb : MonoBehaviour {
     {
         this.fuseLength = 0.15f;
     }
-
 }

@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Tracer : MonoBehaviour {
-
-	public enum MoveMode {
+public class Tracer : MonoBehaviour
+{
+	public enum MoveMode
+    {
 		linear,
 		interpolated
 	}
@@ -18,8 +19,8 @@ public class Tracer : MonoBehaviour {
 	private IEnumerator<Transform> currentPoint;
     private bool paused = false;
 
-	public void Start() {
-
+	public void Start()
+    {
 		if (path == null)
         {
 			Debug.LogError("Path cannot be null", gameObject);
@@ -35,11 +36,10 @@ public class Tracer : MonoBehaviour {
 
 		// move to first point
 		transform.position = currentPoint.Current.position;
-
 	}
 
-	public void Update() {
-
+	public void Update()
+    {
         if (paused)
         {
             return;
@@ -87,5 +87,4 @@ public class Tracer : MonoBehaviour {
         this.paused = false;
         this.SendMessage("OnTracerContinue", this.path.GetDirection(), SendMessageOptions.DontRequireReceiver);
     }
-
 }

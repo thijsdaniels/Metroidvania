@@ -14,7 +14,7 @@ namespace Objects.Collectables.Items
         public float maxCharge = 3f;
 
         protected float force = 100f;
-        protected float coolDownDuration = 0.25f;
+        public float coolDownDuration = 0.25f;
 
         [SerializeField] protected BoomerangProjectile projectile;
         [HideInInspector] public int projectileCount;
@@ -32,7 +32,12 @@ namespace Objects.Collectables.Items
 	     */
         public override bool CanBeUsed()
         {
-            if (!owner || projectileCount >= 1)
+            if (!base.CanBeUsed())
+            {
+                return false;
+            }
+
+            if (projectileCount >= 1)
             {
                 return false;
             }
