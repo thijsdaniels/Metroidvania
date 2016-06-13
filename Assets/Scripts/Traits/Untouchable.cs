@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(Collider2D))]
 
-public class Untouchable : MonoBehaviour
+public class Untouchable : Damager
 {
     public enum TargetTag
     {
@@ -13,8 +13,6 @@ public class Untouchable : MonoBehaviour
     };
 
     public TargetTag targetTag;
-
-	public int damage;
 
     public enum DamageEvent
     {
@@ -82,8 +80,7 @@ public class Untouchable : MonoBehaviour
 
 		if (damagable)
         {
-			damagable.TakeDamage(gameObject, damage);
+			damagable.TakeDamage(this, damage);
 		}
 	}
-
 }

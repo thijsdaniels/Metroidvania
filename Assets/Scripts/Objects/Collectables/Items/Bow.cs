@@ -53,7 +53,7 @@ namespace Objects.Collectables.Items
             }
 
             CharacterController2D controller = owner.GetComponent<CharacterController2D>();
-            if (controller.State.IsClimbing())
+            if (controller.State.IsRolling() || controller.State.IsSwimming() || controller.State.IsClimbing())
             {
                 return false;
             }

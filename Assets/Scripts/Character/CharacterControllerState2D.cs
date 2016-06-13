@@ -14,32 +14,82 @@ public class CharacterControllerState2D
 	public bool slopeDown;
 	public float slopeAngle;
 
+    public bool rolling;
     public bool climbing;
+    public bool swimming;
+    public bool aiming;
+    public bool attacking;
 
-	public bool IsGrounded()
+    /**
+     *
+     */
+    public bool IsGrounded()
     {
         return collisionBelow || climbing;
 	}
 
+    /**
+     *
+     */
+    public bool IsRolling()
+    {
+        return rolling;
+    }
+
+    /**
+     *
+     */
     public bool IsClimbing()
     {
         return climbing;
     }
 
-	public bool IsColliding()
+    /**
+     *
+     */
+    public bool IsSwimming()
+    {
+        return swimming;
+    }
+
+    /**
+     *
+     */
+    public bool IsAiming()
+    {
+        return aiming;
+    }
+
+    /**
+     *
+     */
+    public bool IsAttacking()
+    {
+        return attacking;
+    }
+
+    /**
+     *
+     */
+    public bool IsColliding()
     {
 		return collisionRight || collisionLeft || collisionAbove || collisionBelow;
 	}
 
-	public bool IsOnSlope()
+    /**
+     *
+     */
+    public bool IsOnSlope()
     {
 		return slopeUp || slopeDown;
 	}
 
-	public void Reset()
+    /**
+     *
+     */
+    public void Reset()
     {
 		collisionRight = collisionLeft = collisionAbove = collisionBelow = slopeUp = slopeDown = false;
         slopeAngle = 0;
 	}
-
 }

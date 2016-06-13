@@ -13,8 +13,6 @@ namespace Objects.Collectables.Items
         public Fleeting projectile;
         public Vector2 projectileOffset;
 
-        protected Fleeting swordInstance;
-
         /**
 	     * 
 	     */
@@ -26,7 +24,7 @@ namespace Objects.Collectables.Items
             }
 
             CharacterController2D controller = owner.GetComponent<CharacterController2D>();
-            if (controller.State.IsClimbing())
+            if (controller.State.IsRolling() || controller.State.IsSwimming() || controller.State.IsClimbing())
             {
                 return false;
             }
@@ -54,21 +52,8 @@ namespace Objects.Collectables.Items
         {
             SetCoolDown(coolDownDuration);
 
-            if (swordInstance)
-            {
-                Destroy(swordInstance.gameObject);
-            }
-
-            Vector3 position = new Vector3(
-                owner.transform.position.x + (projectileOffset.x * owner.transform.localScale.x),
-                owner.transform.position.y + (projectileOffset.y * owner.transform.localScale.y),
-                owner.transform.position.z
-            );
-
-            swordInstance = Instantiate(projectile, position, Quaternion.identity) as Fleeting;
-
-            swordInstance.transform.localScale = owner.transform.localScale;
-            swordInstance.transform.SetParent(owner.transform);
+            Animator animator = owner.GetComponent<Animator>();
+            animator.SetTrigger("Downward Slash");
         }
     }
 }

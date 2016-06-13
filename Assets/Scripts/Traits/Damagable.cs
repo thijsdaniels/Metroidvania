@@ -22,6 +22,11 @@ public class Damagable : MonoBehaviour
     public Fleeting deathResidue;
     public Vector2 deathResidueOffset = Vector2.zero;
 
+    [HideInInspector]
+    public bool dodging;
+    [HideInInspector]
+    public bool invulnerable;
+
     public void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -46,9 +51,9 @@ public class Damagable : MonoBehaviour
         }
     }
 
-	public void TakeDamage(GameObject cause, int damage)
+    public void TakeDamage(Damager cause, int damage)
     {
-        if (!CanBeHit() || Immune(cause))
+        if (!CanBeHit(cause))
         {
             return;
         }
@@ -65,8 +70,23 @@ public class Damagable : MonoBehaviour
 		}
 	}
 
-    protected bool CanBeHit()
+    protected bool CanBeHit(Damager cause)
     {
+        if (invulnerable)
+        {
+            return false;
+        }
+
+        if (Immune(cause))
+        {
+            return false;
+        }
+        
+        if (cause.dodgeable && dodging)
+        {
+            return false;
+        }
+
         if (currentHitTimeout > 0)
         {
             return false;
@@ -75,7 +95,7 @@ public class Damagable : MonoBehaviour
         return true;
     }
 
-    protected virtual bool Immune(GameObject cause)
+    protected virtual bool Immune(Damager cause)
     {
         return false;
     }

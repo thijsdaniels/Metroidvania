@@ -5,8 +5,12 @@ using Objects.Collectables;
 
 [RequireComponent(typeof(CharacterController2D))]
 
-public class Player : MonoBehaviour {
 
+/**
+ * 
+ */
+public class Player : MonoBehaviour
+{
 	// components
 	public CharacterController2D controller;
     protected Animator animator;
@@ -17,7 +21,7 @@ public class Player : MonoBehaviour {
     public string bButtonLabel;
 
     // listening
-    protected bool isListening = true;
+    protected bool listening = true;
 
     // movement
     private enum Direction {
@@ -28,19 +32,14 @@ public class Player : MonoBehaviour {
 	private float horizontalMovement;
 	private float verticalMovement;
 
-	// walking
-	public float walkSpeed = 4f;
-
     // running
-    private bool running;
 	public float runSpeed = 8f;
-	[Range(0f, 1f)]
-	public float runAcceleration = 0.8f;
 
-	// climbing
-	public float climbSpeed = 4f;
-	[Range(0f, 1f)]
-	public float climbAcceleration = 1f;
+    // rolling
+    public float rollSpeed = 12f;
+
+    // climbing
+    public float climbSpeed = 4f;
 
 	// sound effects
 	public AudioClip leftFootSound;
@@ -88,8 +87,8 @@ public class Player : MonoBehaviour {
 	///// GAME HOOKS /////
 	//////////////////////
 
-	public void Start() {
-
+	public void Start()
+    {
 		// reference components
 		controller = GetComponent<CharacterController2D>();
 		animator = GetComponent<Animator>();
@@ -97,16 +96,18 @@ public class Player : MonoBehaviour {
 
 		// determine the facing direction
 		direction = transform.localScale.x > 0f ? Direction.right : Direction.left;
-
 	}
 
 	public void Update()
     {
         // update button labels
         UpdateButtonLabels();
-        
-		// handle input
-		HandleInput();
+
+        // reset input
+        ResetInput();
+
+        // handle input
+        HandleInput();
 
 		// face direction
 		FaceDirection();
@@ -126,33 +127,54 @@ public class Player : MonoBehaviour {
 	/////////////////
 
     /**
+     * 
      * @todo Move to wherever the appropriate place is. Probably the HUD.
      */
     protected void UpdateButtonLabels()
     {
         aButtonLabel = controller.CanJump() ? "Jump" : null;
-        bButtonLabel = interactable ? interactable.action : null;
+        bButtonLabel = interactable ? interactable.action : controller.CanRoll() ? "Roll" : null;
     }
 
+    /**
+     * 
+     */
     public void StartListening()
     {
-        isListening = true;
+        listening = true;
     }
 
+    /**
+     * 
+     */
     public void StopListening()
     {
-        isListening = false;
+        listening = false;
     }
 
+    /**
+     * 
+     */
     public bool IsListening()
     {
-        return isListening;
+        return listening;
     }
 
-	private void HandleInput() {
+    /**
+     * 
+     */
+    private void ResetInput()
+    {
+        horizontalMovement = verticalMovement = 0;
+    }
 
+    /**
+     * 
+     */
+    private void HandleInput()
+    {
         // skip input if the player isn't listening
-        if (!isListening)
+        if (!listening)
         {
             return;
         }
@@ -249,30 +271,43 @@ public class Player : MonoBehaviour {
             {
 				interactable.SendMessage("OnInteraction", this, SendMessageOptions.RequireReceiver);
 			}
+            else if (controller.CanRoll())
+            {
+                controller.Roll();
+            }
 		}
-
 	}
 
-	//////////////////
-	///// FACING /////
-	//////////////////
+    //////////////////
+    ///// FACING /////
+    //////////////////
 
-	private void FaceDirection() {
-
-		if (horizontalMovement > 0f) {
-			if (direction != Direction.right) {
-				Flip();
-			}
-		} else if (horizontalMovement < 0f) {
-			if (direction != Direction.left) {
+    /**
+     * 
+     */
+    private void FaceDirection()
+    {
+		if (horizontalMovement > 0f)
+        {
+			if (direction != Direction.right)
+            {
 				Flip();
 			}
 		}
-
+        else if (horizontalMovement < 0f)
+        {
+			if (direction != Direction.left)
+            {
+				Flip();
+			}
+		}
 	}
 
-	private void Flip() {
-
+    /**
+     * 
+     */
+    private void Flip()
+    {
 		transform.localScale = new Vector3(
 			-transform.localScale.x,
 			transform.localScale.y,
@@ -280,34 +315,66 @@ public class Player : MonoBehaviour {
 		);
 
 		direction = transform.localScale.x > 0f ? Direction.right : Direction.left;
-
 	}
 
-	//////////////////
-	///// MOVING /////
-	//////////////////
-	
-	private void Move() {
-		
-		var speed = runSpeed;
-		var acceleration = speed * controller.Parameters.friction;
+    //////////////////
+    ///// MOVING /////
+    //////////////////
 
-		if ((horizontalMovement > 0f && controller.velocity.x < speed) || (horizontalMovement < 0f && controller.velocity.x > -speed)) {
-			controller.AddHorizontalVelocity(
-                horizontalMovement * acceleration // * Time.deltaTime // (removed because I heavily decreased the acceleration parameter).
-			);
-		}
-		
-		if (controller.State.IsClimbing()) {
-			controller.SetVerticalVelocity(verticalMovement * climbSpeed);
-		}
-		
+    /**
+     * 
+     */
+    private void Move()
+    {
+        MoveHorizontally();
+
+        MoveVertically();
 	}
+
+    /**
+     * 
+     */
+    private void MoveHorizontally()
+    {
+        if (controller.State.IsClimbing())
+        {
+            return;
+        }
+        else if (controller.State.IsRolling())
+        {
+            if (controller.velocity.x < rollSpeed && controller.velocity.x > -rollSpeed)
+            {
+                float directionCoefficient = transform.localScale.x > 0f ? 1f : -1f;
+                controller.SetHorizontalVelocity(rollSpeed * directionCoefficient);
+            }
+
+            return;
+        }
+
+        float speed = runSpeed;
+        float acceleration = speed * controller.Parameters.friction; // * Time.deltaTime;
+
+        if ((horizontalMovement > 0f && controller.velocity.x < speed) || (horizontalMovement < 0f && controller.velocity.x > -speed))
+        {
+            controller.AddHorizontalVelocity(horizontalMovement * acceleration);
+        }
+    }
+
+    private void MoveVertically()
+    {
+        if (controller.State.IsClimbing())
+        {
+            controller.SetVerticalVelocity(verticalMovement * climbSpeed);
+        }
+    }
 
     //////////////////
     ///// AIMING /////
     //////////////////
 
+    /**
+     * 
+     */
     public void StartAiming()
     {
         if (aiming)
@@ -321,6 +388,9 @@ public class Player : MonoBehaviour {
         Time.timeScale *= this.aimingTimeScale;
     }
 
+    /**
+     * 
+     */
     public void StopAiming()
     {
         if (!aiming)
@@ -334,11 +404,17 @@ public class Player : MonoBehaviour {
         Time.timeScale *= 1 / this.aimingTimeScale;
     }
 
+    /**
+     * 
+     */
     public Vector2 GetAimingDirection()
     {
         return this.aimingDirection;
     }
 
+    /**
+     * 
+     */
     private void SetAimingDirection(Vector2 input)
     {
 		// controller aiming
@@ -355,7 +431,10 @@ public class Player : MonoBehaviour {
 		PositionCrosshair();
 	}
 
-	private void PositionCrosshair()
+    /**
+     * 
+     */
+    private void PositionCrosshair()
     {
 		crosshair.position = transform.position + new Vector3(
 			crosshairOffset.x + crosshairDistance * aimingDirection.x,
@@ -364,18 +443,20 @@ public class Player : MonoBehaviour {
 		);
 	}
 
-	/////////////////////
-	///// ANIMATION /////
-	/////////////////////
+    /////////////////////
+    ///// ANIMATION /////
+    /////////////////////
 
-	private void Animate() {
-		
+    /**
+     * 
+     */
+    private void Animate()
+    {
 		// set gounded animation parameter
 		animator.SetBool("Grounded", controller.State.IsGrounded());
 
         // set moving animation parameter
-        bool moving = Mathf.Abs(horizontalMovement) > 0.1f;
-        animator.SetBool("Moving", moving);
+        animator.SetBool("Moving", Mathf.Abs(horizontalMovement) > 0f);
 		
 		// set the vertical speed animation parameter
 		animator.SetFloat("Vertical Speed", controller.velocity.y);
@@ -383,103 +464,146 @@ public class Player : MonoBehaviour {
         // set the horizontal speed animation parameter
         animator.SetFloat("Horizontal Speed", controller.velocity.x);
 
-        // set gounded animation parameter
-        animator.SetBool("Running", moving && Mathf.Abs(controller.velocity.x) > this.walkSpeed);
-
 		// set climbing animation parameter
 		animator.SetBool("Climbing", controller.State.IsClimbing());
-		
 	}
 
-	/////////////////////////
-	///// SOUND EFFECTS /////
-	/////////////////////////
+    /////////////////////////
+    ///// SOUND EFFECTS /////
+    /////////////////////////
 
-	public void OnJump() {
-		if (jumpSound) {
+    /**
+     * 
+     */
+    public void OnJump()
+    {
+		if (jumpSound)
+        {
 			AudioSource.PlayClipAtPoint(jumpSound, transform.position);
 		}
 	}
 
-	public void OnAirJump() {
-		if (airJumpSound) {
+    /**
+     * 
+     */
+    public void OnAirJump()
+    {
+		if (airJumpSound)
+        {
 			AudioSource.PlayClipAtPoint(airJumpSound, transform.position);
 		}
 	}
 
-	public void OnLand() {
-		if (landSound) {
+    /**
+     * 
+     */
+    public void OnLand()
+    {
+		if (landSound)
+        {
 			AudioSource.PlayClipAtPoint(landSound, transform.position);
 		}
 	}
 
-	public void OnLeftFootstep() {
-		if (leftFootSound) {
+    /**
+     * 
+     */
+    public void OnLeftFootstep()
+    {
+		if (leftFootSound)
+        {
 			AudioSource.PlayClipAtPoint(leftFootSound, transform.position);
 		}
 	}
-	
-	public void OnRightFootstep() {
-		if (rightFootSound) {
+
+    /**
+     * 
+     */
+    public void OnRightFootstep()
+    {
+		if (rightFootSound)
+        {
 			AudioSource.PlayClipAtPoint(rightFootSound, transform.position);
 		}
 	}
 
-	/////////////////
-	///// DEATH /////
-	/////////////////
+    /////////////////
+    ///// DEATH /////
+    /////////////////
 
-	public void OnDeath(Damagable damagable) {
-
-		if (checkpoint && checkpoint.active) {
-
+    /**
+     * 
+     */
+    public void OnDeath(Damagable damagable)
+    {
+		if (checkpoint && checkpoint.active)
+        {
 			checkpoint.Respawn(this);
 
 			damagable.Revive();
-
-		} else {
+		}
+        else
+        {
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
-
 	}
 
-	////////////////////
-	///// CARRYING /////
-	////////////////////
+    ////////////////////
+    ///// CARRYING /////
+    ////////////////////
 
-	public void Grab(GameObject carriable)
+    /**
+     * @todo Move this to a "Carrier" trait.
+     */
+
+    /**
+     * 
+     */
+    public void Grab(GameObject carriable)
 	{
 		var body = carriable.GetComponent<Rigidbody2D>();
-		if (body) {
+		if (body)
+        {
 			body.isKinematic = true;
 		}
 
 		carrying = carriable;
 	}
 
-	public void Carry()
+    /**
+     * 
+     */
+    public void Carry()
 	{
-		if (!carrying) {
+		if (!carrying)
+        {
 			return;
 		}
 
 		carrying.transform.position = transform.position;
 	}
 
-	public GameObject Release()
+    /**
+     * 
+     */
+    public GameObject Release()
 	{
 		var carriable = carrying;
 		carrying = null;
 
 		var body = carriable.GetComponent<Rigidbody2D>();
-		if (body) {
+		if (body)
+        {
 			body.isKinematic = false;
 		}
 
 		return carriable;
 	}
 
-	public void Drop()
+    /**
+     * 
+     */
+    public void Drop()
 	{
 		var carriable = Release();
 
@@ -490,7 +614,18 @@ public class Player : MonoBehaviour {
 		);
 	}
 
-	public void Throw(Vector2 force)
+    ////////////////////
+    ///// THROWING /////
+    ////////////////////
+
+    /**
+     * @todo Move this to a "Thrower" trait (requires Carrier trait).
+     */
+
+    /**
+     * 
+     */
+    public void Throw(Vector2 force)
 	{
 		var carriable = Release();
 
@@ -506,6 +641,13 @@ public class Player : MonoBehaviour {
     ///// EQUIPMENT /////
     /////////////////////
 
+    /**
+     * @todo Move this to an "Equipper" trait.
+     */
+
+    /**
+     * 
+     */
     public void Equip(ItemSlot slot, Item item)
     {
         switch (slot)

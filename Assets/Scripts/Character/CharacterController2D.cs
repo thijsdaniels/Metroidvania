@@ -352,11 +352,73 @@ public class CharacterController2D : MonoBehaviour
 		currentAirJump = 0;
 	}
 
+    ///////////////////
+    ///// ROLLING /////
+    ///////////////////
+
+    /**
+     * @todo Move to the Player, or to a "Roller" trait.
+     */
+
+    /**
+     *
+     */
+    public bool CanRoll()
+    {
+        return !State.IsRolling() && State.IsGrounded() && !State.IsClimbing() && !State.IsSwimming(); // TODO: Maybe just let Mecanim decide when it's OK to roll?
+    }
+
+    /**
+     *
+     */
+    public void Roll()
+    {
+        Animator animator = GetComponent<Animator>();
+
+        if (!animator)
+        {
+            Debug.LogError("Cannot roll without an Animator component.");
+            return;
+        }
+
+        animator.SetTrigger("Roll");
+    }
+
+    /**
+     *
+     */
+    public void OnRollStart()
+    {
+        State.rolling = true;
+
+        Damagable damagable = GetComponent<Damagable>();
+        if (damagable)
+        {
+            damagable.dodging = true;
+        }
+    }
+
+    /**
+     *
+     */
+    public void OnRollEnd()
+    {
+        State.rolling = false;
+
+        Damagable damagable = GetComponent<Damagable>();
+        if (damagable)
+        {
+            damagable.dodging = false;
+        }
+    }
+
     ////////////////////
     ///// CLIMBING /////
     ////////////////////
 
-    // TODO Move all climbing related code to a "Climber Trait" class?
+    /**
+     * @todo Move to the Player, or to a "Climber" trait.
+     */
 
     /**
      *
@@ -427,7 +489,7 @@ public class CharacterController2D : MonoBehaviour
 
     /**
      *
-     * @todo TODO Abstract parts of this method to make it more readable.
+     * @todo Abstract parts of this method to make it more readable.
      */
     private Vector2 DetermineMovement(Vector2 deltaMovement)
     {
