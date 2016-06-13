@@ -15,7 +15,6 @@ public class Player : MonoBehaviour {
     // button labels
     public string aButtonLabel;
     public string bButtonLabel;
-    public string xButtonLabel;
 
     // listening
     protected bool isListening = true;
@@ -26,16 +25,14 @@ public class Player : MonoBehaviour {
 		left
 	}
 	private Direction direction = Direction.right;
-	private float movement;
+	private float horizontalMovement;
 	private float verticalMovement;
 
 	// walking
 	public float walkSpeed = 4f;
-	[Range(0f, 1f)]
-	public float walkAcceleration = 0.6f;
 
-	// running
-	private bool running;
+    // running
+    private bool running;
 	public float runSpeed = 8f;
 	[Range(0f, 1f)]
 	public float runAcceleration = 0.8f;
@@ -52,11 +49,13 @@ public class Player : MonoBehaviour {
 	public AudioClip airJumpSound;
 	public AudioClip landSound;
 
-	// aiming
+    // aiming
+    private bool aiming = false;
 	private Vector2 aimingDirection;
+    private float aimingTimeScale = 0.1f;
 
-	// crosshair
-	public Transform crosshair;
+    // crosshair
+    public Transform crosshair;
 	public Vector2 crosshairOffset;
 	[Range(0f, 3f)]
 	public float crosshairDistance = 1.5f;
@@ -65,6 +64,7 @@ public class Player : MonoBehaviour {
 	public Item primaryItem;
     public Item secondaryItem;
     public Item tertiaryItem;
+    public Item quaternaryItem;
 
     // checkpoints
     public Checkpoint checkpoint;
@@ -80,7 +80,8 @@ public class Player : MonoBehaviour {
     {
         Primary,
         Secondary,
-        Tertiary
+        Tertiary,
+        Quaternary
     }
 
 	//////////////////////
@@ -131,7 +132,6 @@ public class Player : MonoBehaviour {
     {
         aButtonLabel = controller.CanJump() ? "Jump" : null;
         bButtonLabel = interactable ? interactable.action : null;
-        xButtonLabel = "Run";
     }
 
     public void StartListening()
@@ -158,10 +158,7 @@ public class Player : MonoBehaviour {
         }
 
 		// horizontal movement
-		movement = Input.GetAxis("Horizontal Primary");
-
-		// running
-		running = Input.GetButton("Run");
+		horizontalMovement = Input.GetAxis("Horizontal Primary");
 
 		// vertical movement
 		verticalMovement = Input.GetAxis("Vertical Primary");
@@ -171,16 +168,8 @@ public class Player : MonoBehaviour {
 			controller.Jump();
 		}
 
-        // mouse aiming
-        /* Disabled because I started using a controller.
-		var mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		aimingDirection = new Vector2(
-			mousePositionInWorld.x - transform.position.x,
-			mousePositionInWorld.y - transform.position.y
-		).normalized;
-		*/
-
-        Aim(new Vector2(
+        // aiming
+        SetAimingDirection(new Vector2(
             (Input.GetAxis("Vertical Secondary") == 0 && Input.GetAxis("Horizontal Secondary") == 0) ? Input.GetAxis("Horizontal Primary") : Input.GetAxis("Horizontal Secondary"),
             (Input.GetAxis("Vertical Secondary") == 0 && Input.GetAxis("Horizontal Secondary") == 0) ? Input.GetAxis("Vertical Primary") : Input.GetAxis("Vertical Secondary")
         ));
@@ -219,7 +208,7 @@ public class Player : MonoBehaviour {
             }
         }
 
-        // secondary item
+        // tertiary item
         if (tertiaryItem)
         {
             if (Input.GetButtonDown("Item Tertiary"))
@@ -233,6 +222,23 @@ public class Player : MonoBehaviour {
             if (Input.GetButtonUp("Item Tertiary"))
             {
                 tertiaryItem.OnRelease();
+            }
+        }
+
+        // quaternary item
+        if (quaternaryItem)
+        {
+            if (Input.GetButtonDown("Item Quaternary"))
+            {
+                quaternaryItem.OnPress();
+            }
+            if (Input.GetButton("Item Quaternary"))
+            {
+                quaternaryItem.OnHold();
+            }
+            if (Input.GetButtonUp("Item Quaternary"))
+            {
+                quaternaryItem.OnRelease();
             }
         }
 
@@ -253,11 +259,11 @@ public class Player : MonoBehaviour {
 
 	private void FaceDirection() {
 
-		if (movement > 0f) {
+		if (horizontalMovement > 0f) {
 			if (direction != Direction.right) {
 				Flip();
 			}
-		} else if (movement < 0f) {
+		} else if (horizontalMovement < 0f) {
 			if (direction != Direction.left) {
 				Flip();
 			}
@@ -283,14 +289,12 @@ public class Player : MonoBehaviour {
 	
 	private void Move() {
 		
-		var speed = controller.State.IsClimbing() ? climbSpeed : running ? runSpeed : walkSpeed;
-		var acceleration = running ? runAcceleration : walkAcceleration;
+		var speed = runSpeed;
+		var acceleration = speed * controller.Parameters.friction;
 
-		acceleration *= controller.Parameters.traction;
-
-		if ((movement > 0f && controller.velocity.x < speed) || (movement < 0f && controller.velocity.x > -speed)) {
+		if ((horizontalMovement > 0f && controller.velocity.x < speed) || (horizontalMovement < 0f && controller.velocity.x > -speed)) {
 			controller.AddHorizontalVelocity(
-				movement * acceleration // * Time.deltaTime // (removed because I heavily decreased the acceleration parameter).
+                horizontalMovement * acceleration // * Time.deltaTime // (removed because I heavily decreased the acceleration parameter).
 			);
 		}
 		
@@ -300,12 +304,43 @@ public class Player : MonoBehaviour {
 		
 	}
 
-	//////////////////
-	///// AIMING /////
-	//////////////////
+    //////////////////
+    ///// AIMING /////
+    //////////////////
 
-	private void Aim(Vector2 input) {
+    public void StartAiming()
+    {
+        if (aiming)
+        {
+            return;
+        }
 
+        aiming = true;
+
+        crosshair.GetComponent<SpriteRenderer>().enabled = true;
+        Time.timeScale *= this.aimingTimeScale;
+    }
+
+    public void StopAiming()
+    {
+        if (!aiming)
+        {
+            return;
+        }
+
+        aiming = false;
+
+        crosshair.GetComponent<SpriteRenderer>().enabled = false;
+        Time.timeScale *= 1 / this.aimingTimeScale;
+    }
+
+    public Vector2 GetAimingDirection()
+    {
+        return this.aimingDirection;
+    }
+
+    private void SetAimingDirection(Vector2 input)
+    {
 		// controller aiming
 		aimingDirection = input.normalized;
 		
@@ -314,25 +349,19 @@ public class Player : MonoBehaviour {
 			aimingDirection = new Vector2(
 				transform.localScale.x,
 				0f
-				).normalized;
+			).normalized;
 		}
 
 		PositionCrosshair();
-
 	}
 
-	private void PositionCrosshair() {
-
+	private void PositionCrosshair()
+    {
 		crosshair.position = transform.position + new Vector3(
 			crosshairOffset.x + crosshairDistance * aimingDirection.x,
 			crosshairOffset.y + crosshairDistance * aimingDirection.y,
 			transform.position.z
 		);
-
-	}
-
-	public Vector2 GetAim() {
-		return this.aimingDirection;
 	}
 
 	/////////////////////
@@ -343,15 +372,19 @@ public class Player : MonoBehaviour {
 		
 		// set gounded animation parameter
 		animator.SetBool("Grounded", controller.State.IsGrounded());
-		
-		// set moving animation parameter
-		animator.SetBool("Moving", Mathf.Abs(movement) > 0.1f);
+
+        // set moving animation parameter
+        bool moving = Mathf.Abs(horizontalMovement) > 0.1f;
+        animator.SetBool("Moving", moving);
 		
 		// set the vertical speed animation parameter
 		animator.SetFloat("Vertical Speed", controller.velocity.y);
-		
-		// set gounded animation parameter
-		animator.SetBool("Running", running);
+
+        // set the horizontal speed animation parameter
+        animator.SetFloat("Horizontal Speed", controller.velocity.x);
+
+        // set gounded animation parameter
+        animator.SetBool("Running", moving && Mathf.Abs(controller.velocity.x) > this.walkSpeed);
 
 		// set climbing animation parameter
 		animator.SetBool("Climbing", controller.State.IsClimbing());
@@ -488,7 +521,10 @@ public class Player : MonoBehaviour {
             case ItemSlot.Tertiary:
                 tertiaryItem = item;
                 break;
+
+            case ItemSlot.Quaternary:
+                quaternaryItem = item;
+                break;
         }
     }
-
 }

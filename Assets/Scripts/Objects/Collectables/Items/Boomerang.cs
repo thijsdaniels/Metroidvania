@@ -54,9 +54,28 @@ namespace Objects.Collectables.Items
         /**
 	     * 
 	     */
+        public override void OnPress()
+        {
+            if (!IsCooledDown() || !CanBeUsed())
+            {
+                return;
+            }
+
+            Player player = owner.GetComponent<Player>();
+            player.StartAiming();
+        }
+
+        /**
+	     * 
+	     */
         public override void OnHold()
         {
-            Charge(Time.deltaTime * chargeFactor);
+            if (!IsCooledDown() || !CanBeUsed())
+            {
+                return;
+            }
+
+            Charge(Time.unscaledDeltaTime * chargeFactor);
         }
 
         /**
@@ -64,11 +83,6 @@ namespace Objects.Collectables.Items
 	     */
         protected void Charge(float deltaCharge)
         {
-            if (!IsCooledDown() || !CanBeUsed())
-            {
-                return;
-            }
-
             charge = Mathf.Min(maxCharge, charge + deltaCharge);
         }
 
@@ -83,7 +97,9 @@ namespace Objects.Collectables.Items
             }
 
             Player player = owner.GetComponent<Player>();
-            Throw(player.transform.position, player.GetAim());
+            Throw(player.transform.position, player.GetAimingDirection());
+            
+            player.StopAiming();
 
             SetCoolDown(coolDownDuration);
         }

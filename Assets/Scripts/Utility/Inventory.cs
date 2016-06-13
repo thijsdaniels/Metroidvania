@@ -66,6 +66,11 @@ public class Inventory : MonoBehaviour
         {
             Select(cursorPosition, Player.ItemSlot.Tertiary);
         }
+
+        if (Input.GetButtonDown("Item Quaternary"))
+        {
+            Select(cursorPosition, Player.ItemSlot.Quaternary);
+        }
     }
 
     protected void Toggle()

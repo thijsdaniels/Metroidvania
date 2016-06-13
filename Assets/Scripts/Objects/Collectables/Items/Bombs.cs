@@ -75,13 +75,19 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Draw();
+            Bomb bomb = DrawBomb();
+
+            Player player = owner.GetComponent<Player>();
+            player.Grab(bomb.gameObject);
+            player.StartAiming();
+
+            bomb.LightFuse();
         }
 
         /**
 	     * 
 	     */
-        protected void Draw()
+        protected Bomb DrawBomb()
         {
             owner.ammo.bombs.Consume();
 
@@ -90,10 +96,7 @@ namespace Objects.Collectables.Items
             bombCount++;
             bombInstance.origin = this;
 
-            Player player = owner.GetComponent<Player>();
-            player.Grab(bombInstance.gameObject);
-
-            bombInstance.LightFuse();
+            return bombInstance;
         }
 
         /**
@@ -106,7 +109,7 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Charge(Time.deltaTime * chargeFactor);
+            Charge(Time.unscaledDeltaTime * chargeFactor);
         }
 
         /**
@@ -114,11 +117,6 @@ namespace Objects.Collectables.Items
 	     */
         protected void Charge(float deltaCharge)
         {
-            if (!bombInstance)
-            {
-                return;
-            }
-
             charge = Mathf.Min(maxCharge, charge + deltaCharge);
         }
 
@@ -132,22 +130,13 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            this.Throw();
-
-            this.SetCoolDown(this.coolDownDuration);
-        }
-
-        /**
-	     * 
-	     */
-        protected void Throw()
-        {
             Player player = owner.GetComponent<Player>();
-            player.Throw(player.GetAim() * this.charge * this.force);
+            player.Throw(player.GetAimingDirection() * this.charge * this.force);
+            player.StopAiming();
 
             this.bombInstance = null;
-
             this.charge = this.initialCharge;
+            this.SetCoolDown(this.coolDownDuration);
         }
 
         /**

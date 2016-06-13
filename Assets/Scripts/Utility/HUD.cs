@@ -483,16 +483,35 @@ public class HUD : MonoBehaviour
             GUI.color = oldColor;
         }
 
-        if (player.xButtonLabel != null)
+        if (player.quaternaryItem)
         {
-            var xLabelPosition = new Rect(
-                xIconPosition.x,
-                xIconPosition.y,
-                16 * scale,
-                16 * scale
-            );
+            var xButtonActionSprite = player.quaternaryItem.GetComponent<SpriteRenderer>().sprite;
 
-            OutlinedLabel(xLabelPosition, player.xButtonLabel, labelCenterStyle);
+            if (xButtonActionSprite)
+            {
+                Texture2D xButtonActionTexture = xButtonActionSprite.texture;
+                Rect xButtonActionRectangle = xButtonActionSprite.textureRect;
+                Rect xButtonActionCoordinates = new Rect(
+                    xButtonActionRectangle.x / xButtonActionTexture.width,
+                    xButtonActionRectangle.y / xButtonActionTexture.height,
+                    xButtonActionRectangle.width / xButtonActionTexture.width,
+                    xButtonActionRectangle.height / xButtonActionTexture.height
+                );
+
+                GUI.DrawTextureWithTexCoords(new Rect(xIconPosition.x + padding.x * scale, xIconPosition.y + padding.y * scale, size.x - 2 * padding.x * scale, size.y - 2 * padding.y * scale), xButtonActionTexture, xButtonActionCoordinates);
+            }
+
+            if (player.quaternaryItem.GetAmmo() != null)
+            {
+                var yLabelPosition = new Rect(
+                    xIconPosition.x + (4 * scale),
+                    xIconPosition.y + (4 * scale),
+                    16 * scale,
+                    16 * scale
+                );
+
+                OutlinedLabel(yLabelPosition, player.quaternaryItem.GetAmmo().ToString(), labelCenterStyle);
+            }
         }
     }
 

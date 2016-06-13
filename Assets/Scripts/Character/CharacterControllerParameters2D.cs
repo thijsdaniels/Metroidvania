@@ -23,11 +23,6 @@ public class CharacterControllerParameters2D {
 	public float
 		friction = 0.3f;
 
-	// traction
-	[Range(0f, 1f)]
-	public float
-		traction = 1f;
-
 	// slopes
 	[Range(0f, 90f)]
 	public float

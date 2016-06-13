@@ -3,8 +3,11 @@ using System.Collections;
 
 [RequireComponent(typeof(BoxCollider2D))]
 
-public class CharacterController2D : MonoBehaviour {
-
+/**
+ *
+ */
+public class CharacterController2D : MonoBehaviour
+{
 	// debugging
 	public bool debugMode;
 
@@ -56,93 +59,137 @@ public class CharacterController2D : MonoBehaviour {
 	// state
 	public CharacterControllerState2D State = new CharacterControllerState2D();
 
-	//////////////////////
-	///// GAME HOOKS /////
-	//////////////////////
+    //////////////////////
+    ///// GAME HOOKS /////
+    //////////////////////
 
-	public void Awake() {
-
+    /**
+     *
+     */
+    public void Awake()
+    {
 		// reference components
 		boxCollider = GetComponent<BoxCollider2D>();
 
 		// calculate distance between rays
 		CalculateRaySpread();
-
 	}
 
-	public void LateUpdate() {
-
-		// apply gravity
-		ApplyGravity();
-
-		// apply friction
-		ApplyFriction();
-
-		// apply damping
-		ApplyDamping();
-
+    /**
+     *
+     */
+    public void LateUpdate()
+    {
 		// handle movement
 		var combinedVelocity = velocity + externalVelocity;
 		var deltaMovement = DetermineMovement(combinedVelocity * Time.deltaTime);
 		Move(deltaMovement);
 		RestrictVelocity(deltaMovement, externalVelocity * Time.deltaTime);
 
-		// determine what we are standing on
-		DetermineGrounding();
+        // apply gravity
+        ApplyGravity();
+
+        // apply friction
+        ApplyFriction();
+
+        // apply damping
+        ApplyDamping();
+
+        // determine what we are standing on
+        DetermineGrounding();
 
 		// run jump timer
-		if (jumpTimeout > 0) {
+		if (jumpTimeout > 0)
+        {
 			jumpTimeout = Mathf.Max(0, jumpTimeout - Time.deltaTime);
 		}
-
 	}
 
-	/////////////////////////////
-	///// VELOCITY MUTATORS /////
-	/////////////////////////////
-	
-	public void AddVelocity(Vector2 _velocity) {
+    /////////////////////////////
+    ///// VELOCITY MUTATORS /////
+    /////////////////////////////
+
+    /**
+     *
+     */
+    public void AddVelocity(Vector2 _velocity)
+    {
 		velocity += _velocity;
 	}
-	
-	public void AddHorizontalVelocity(float _velocity) {
+
+    /**
+     *
+     */
+    public void AddHorizontalVelocity(float _velocity)
+    {
 		velocity.x += _velocity;
 	}
-	
-	public void AddVerticalVelocity(float _velocity) {
+
+    /**
+     *
+     */
+    public void AddVerticalVelocity(float _velocity)
+    {
 		velocity.y += _velocity;
 	}
-	
-	public void SetVelocity(Vector2 _velocity) {
+
+    /**
+     *
+     */
+    public void SetVelocity(Vector2 _velocity)
+    {
 		velocity = _velocity;
 	}
-	
-	public void SetHorizontalVelocity(float _velocity) {
+
+    /**
+     *
+     */
+    public void SetHorizontalVelocity(float _velocity)
+    {
 		velocity.x = _velocity;
 	}
-	
-	public void SetVerticalVelocity(float _velocity) {
+
+    /**
+     *
+     */
+    public void SetVerticalVelocity(float _velocity)
+    {
 		velocity.y = _velocity;
 	}
 
-	public void AddExternalHorizontalVelocity(float _velocity) {
+    /**
+     *
+     */
+    public void AddExternalHorizontalVelocity(float _velocity)
+    {
 		externalVelocity.x = _velocity;
 	}
 
-	///////////////////
-	///// PHYSICS /////
-	///////////////////
+    ///////////////////
+    ///// PHYSICS /////
+    ///////////////////
 
-	public void OverrideParameters(CharacterControllerParameters2D parameters) {
+    /**
+     *
+     */
+    public void OverrideParameters(CharacterControllerParameters2D parameters)
+    {
 		overrideParameters = parameters;
 	}
 
-	public void ResetParameters() {
+    /**
+     *
+     */
+    public void ResetParameters()
+    {
 		overrideParameters = null;
 	}
 
-	private void ApplyGravity() {
-
+    /**
+     *
+     */
+    private void ApplyGravity()
+    {
 		// bypass gravity when climbing
 		if (State.IsClimbing()) {
 			return;
@@ -150,43 +197,48 @@ public class CharacterController2D : MonoBehaviour {
 
 		// add gravity to the character's velocity
 		AddVerticalVelocity(Parameters.gravity * Time.deltaTime);
-
 	}
 
-	private void ApplyFriction() {
+    /**
+     *
+     */
+	private void ApplyFriction()
+    {
 
-		var restrictedVelocity = velocity.x;
-		if (velocity.x > 0) {
-			restrictedVelocity = Mathf.Max(0, velocity.x - Parameters.friction);
-		} else if (velocity.x < 0) {
-			restrictedVelocity = Mathf.Min(0, velocity.x + Parameters.friction);
-		}
+        SetHorizontalVelocity(velocity.x * (1 - Parameters.friction));
+    }
 
-		SetHorizontalVelocity(restrictedVelocity);
-	}
-
-	private void ApplyDamping() {
+    /**
+     *
+     */
+    private void ApplyDamping()
+    {
 		SetVelocity(velocity * (1 - Parameters.damping));
 	}
 
-	//////////////////////
-	///// RAYCASTING /////
-	//////////////////////
+    //////////////////////
+    ///// RAYCASTING /////
+    //////////////////////
 
-	private void CalculateRaySpread() {
-		
+    /**
+     *
+     */
+    private void CalculateRaySpread()
+    {
 		// calculate horizontal spread of (vertical) rays
 		var colliderWidth = boxCollider.size.x * Mathf.Abs(transform.localScale.x) - (2 * skinThickness);
 		horizontalRaySpread = colliderWidth / (verticalRays - 1);
 		
 		// calculate vertical spread of (horizontal) rays
 		var colliderHeight = boxCollider.size.y * Mathf.Abs(transform.localScale.y) - (2 * skinThickness);
-		verticalRaySpread = colliderHeight / (horizontalRays - 1);
-		
+		verticalRaySpread = colliderHeight / (horizontalRays - 1);	
 	}
-	
-	private void CalculateRayOrigins() {
-		
+
+    /**
+     *
+     */
+    private void CalculateRayOrigins()
+    {
 		var size = new Vector2(
 			boxCollider.size.x * Mathf.Abs(transform.localScale.x),
 			boxCollider.size.y * Mathf.Abs(transform.localScale.y)
@@ -211,13 +263,15 @@ public class CharacterController2D : MonoBehaviour {
 			center.x + size.x / 2 - skinThickness,
 			center.y - size.y / 2 + skinThickness
 		);
-		
 	}
-	
-	void OnDrawGizmos() {
 
-		if (debugMode) {
-
+    /**
+     *
+     */
+    void OnDrawGizmos()
+    {
+		if (debugMode)
+        {
 			Gizmos.DrawWireSphere(new Vector3(
 				raycastOriginTopLeft.x,
 				raycastOriginTopLeft.y,
@@ -235,37 +289,48 @@ public class CharacterController2D : MonoBehaviour {
 				raycastOriginBottomRight.y,
 				0
 			), skinThickness);
-		
 		}
-
 	}
 
-	///////////////////
-	///// JUMPING /////
-	///////////////////
+    ///////////////////
+    ///// JUMPING /////
+    ///////////////////
 
-	public bool CanJump() {
-
-		if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.anywhere) {
+    /**
+     *
+     */
+    public bool CanJump()
+    {
+		if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.anywhere)
+        {
 			return jumpTimeout <= 0;
-
-		} else if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.ground) {
+		}
+        else if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.ground)
+        {
 			return State.IsGrounded() || currentAirJump < airJumps;
-
-		} else {
+		}
+        else
+        {
 			return false;
 		}
-
 	}
 
-	public void Jump() {
-
-		if (!State.IsGrounded()) {
-			if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.ground) {
+    /**
+     *
+     */
+    public void Jump()
+    {
+		if (!State.IsGrounded())
+        {
+			if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.ground)
+            {
 				currentAirJump++;
 			}
+
 			SendMessage("OnAirJump", SendMessageOptions.DontRequireReceiver);
-		} else {
+		}
+        else
+        {
 			SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
 		}
 
@@ -277,43 +342,61 @@ public class CharacterController2D : MonoBehaviour {
         SetVerticalVelocity(Parameters.jumpVelocity);
 
 		jumpTimeout = Parameters.jumpCooldown;
-
 	}
 
-	public void OnLand() {
+    /**
+     *
+     */
+    public void OnLand()
+    {
 		currentAirJump = 0;
 	}
 
-	////////////////////
-	///// CLIMBING /////
-	////////////////////
+    ////////////////////
+    ///// CLIMBING /////
+    ////////////////////
 
-	// TODO Move all climbing related code to a "Climber Trait" class?
+    // TODO Move all climbing related code to a "Climber Trait" class?
 
-	public void AddClimbable(Climbable climbable)
+    /**
+     *
+     */
+    public void AddClimbable(Climbable climbable)
     {
 		climbables++;
 
 		this.climbable = climbable;
 	}
-	
-	public void RemoveClimbable()
+
+    /**
+     *
+     */
+    public void RemoveClimbable()
     {
-		if (climbables > 0) {
+		if (climbables > 0)
+        {
 			climbables--;
 		}
 
-		if (climbables == 0 && State.IsClimbing()) {
+		if (climbables == 0 && State.IsClimbing())
+        {
 			StopClimbing();
 			climbable = null;
 		}
 	}
 
-	public bool CanClimb() {
+    /**
+     *
+     */
+    public bool CanClimb()
+    {
 		return climbables > 0;
 	}
 
-	public void StartClimbing()
+    /**
+     *
+     */
+    public void StartClimbing()
     {
         State.climbing = true;
 
@@ -328,20 +411,26 @@ public class CharacterController2D : MonoBehaviour {
 		);
 	}
 
-	public void StopClimbing()
+    /**
+     *
+     */
+    public void StopClimbing()
     {
 		State.climbing = false;
 
 		SetVerticalVelocity(0);
 	}
 
-	//////////////////
-	///// MOVING /////
-	//////////////////
+    //////////////////
+    ///// MOVING /////
+    //////////////////
 
-	// TODO Abstract parts of this method to make it more readable.
-	private Vector2 DetermineMovement(Vector2 deltaMovement) {
-
+    /**
+     *
+     * @todo TODO Abstract parts of this method to make it more readable.
+     */
+    private Vector2 DetermineMovement(Vector2 deltaMovement)
+    {
 		// remember whether the character is grounded
 		var wasGrounded = State.IsGrounded();
 
@@ -349,8 +438,8 @@ public class CharacterController2D : MonoBehaviour {
 		State.Reset();
 
 		// handle collisions unless otherwise requested
-		if (handleCollisions) {
-
+		if (handleCollisions)
+        {
 			// handle moving platforms
 			HandleMovingPlatforms();
 
@@ -358,12 +447,14 @@ public class CharacterController2D : MonoBehaviour {
 			CalculateRayOrigins();
 
 			// handle slopes
-			if (deltaMovement.y < 0 && wasGrounded) {
+			if (deltaMovement.y < 0 && wasGrounded)
+            {
 				DetermineVerticalSlopeMovement(ref deltaMovement);
 			}
 
 			// handle horizontal movement
-			if (Mathf.Abs(deltaMovement.x) > 0.001f) {
+			if (Mathf.Abs(deltaMovement.x) > 0.001f)
+            {
 				DetermineHorizontalMovement(ref deltaMovement);
 			}
 
@@ -372,29 +463,35 @@ public class CharacterController2D : MonoBehaviour {
 
 			CorrectHorizontalPlacement(ref deltaMovement, true);
 			CorrectHorizontalPlacement(ref deltaMovement, false);
-
 		}
 
 		return deltaMovement;
-
 	}
 
-	private void Move(Vector2 deltaMovement) {
-
+    /**
+     *
+     */
+    private void Move(Vector2 deltaMovement)
+    {
 		// move the player
 		transform.Translate(deltaMovement, Space.World);
-
 	}
 
-	private void RestrictVelocity(Vector2 deltaMovement, Vector2 externalMovement) {
-
+    /**
+     *
+     */
+    private void RestrictVelocity(Vector2 deltaMovement, Vector2 externalMovement)
+    {
 		// subtract the external movement, because we only care about the character's movement
 		deltaMovement -= externalMovement;
 
 		// update the player's velocity to whatever it was limited to
-		if (Time.deltaTime != 0) {
+		if (Time.deltaTime != 0)
+        {
 			velocity = deltaMovement / Time.deltaTime;
-		} else {
+		}
+        else
+        {
 			velocity = deltaMovement; //TODO: is this correct? experiment with pausing the game
 		}
 
@@ -404,13 +501,13 @@ public class CharacterController2D : MonoBehaviour {
 		velocity.y = Mathf.Min(velocity.y, Parameters.maximumVelocity.y);
 
 		// correct velocity while moving up slopes
-		if (State.slopeUp) {
+		if (State.slopeUp)
+        {
 			velocity.y = 0;
 		}
 
 		// clear the external velocity
 		externalVelocity = Vector2.zero;
-
 	}
 
     ///////////////////////////////
@@ -418,48 +515,52 @@ public class CharacterController2D : MonoBehaviour {
     ///////////////////////////////
 
 	/**
-	 * Using additional inner rays, checks if a solid object
-	 * is penetrating the character and if so, moves the
-	 * character away from the object horizontally. This makes
-	 * the player get pushed to the side by, for example,
-	 * moving platforms.
+	 * Using additional inner rays, checks if a solid object is penetrating the character and if so, moves the
+     * character away from the object horizontally. This makes the player get pushed to the side by, for
+     * example, moving platforms.
 	 */
-	private void CorrectHorizontalPlacement(ref Vector2 deltaMovement, bool isRight) {
-
+	private void CorrectHorizontalPlacement(ref Vector2 deltaMovement, bool isRight)
+    {
 		var halfWidth = (boxCollider.size.x * Mathf.Abs(transform.localScale.x)) * 0.5f;
 		var rayOrigin = isRight ? raycastOriginBottomRight : raycastOriginBottomLeft;
 
-		if (isRight) {
+		if (isRight)
+        {
 			rayOrigin.x -= (halfWidth - skinThickness);
-		} else {
+		}
+        else
+        {
 			rayOrigin.x += (halfWidth - skinThickness);
 		}
 
 		var rayDirection = isRight ? Vector2.right : -Vector2.right;
 
 		var offset = 0f;
-		for (var i = 1; i < horizontalRays - 1; i++) {
-
+		for (var i = 1; i < horizontalRays - 1; i++)
+        {
 			var rayVector = new Vector2(rayOrigin.x, rayOrigin.y + (i * verticalRaySpread));
-			if (debugMode) {
+			if (debugMode)
+            {
 				Debug.DrawRay(rayVector, rayDirection * halfWidth, isRight ? Color.cyan : Color.magenta);
 			}
 
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, halfWidth, groundLayerMask);
-			if (!raycastHit) {
+			if (!raycastHit)
+            {
 				continue;
 			}
 
 			offset = isRight ? ((raycastHit.point.x - transform.position.x) - halfWidth) : (halfWidth - (transform.position.x - raycastHit.point.x));
-
 		}
 
 		deltaMovement.x += offset;
-
 	}
 
-	private void DetermineHorizontalMovement(ref Vector2 deltaMovement) {
-
+    /**
+     *
+     */
+    private void DetermineHorizontalMovement(ref Vector2 deltaMovement)
+    {
 		// can't move horizontally while climbing
 		if (State.IsClimbing()) {
 			deltaMovement.x = 0;
@@ -475,8 +576,8 @@ public class CharacterController2D : MonoBehaviour {
 		var rayDistance = skinThickness + Mathf.Abs(deltaMovement.x);
 
 		// draw the rays
-		for (var i = 0; i < horizontalRays; i++) {
-
+		for (var i = 0; i < horizontalRays; i++)
+        {
 			// calculate the position of the ray
 			var rayVector = new Vector2(
 				rayOrigin.x,
@@ -484,7 +585,8 @@ public class CharacterController2D : MonoBehaviour {
 			);
 
 			// visualize the ray
-			if (debugMode) {
+			if (debugMode)
+            {
 				Debug.DrawRay(rayVector, rayDirection * rayDistance, Color.green);
 			}
 
@@ -492,12 +594,14 @@ public class CharacterController2D : MonoBehaviour {
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, groundLayerMask);
 
 			// if no collisions where found, move on to the next ray
-			if (!raycastHit) {
+			if (!raycastHit)
+            {
 				continue;
 			}
 
 			// ??? some stuff for slopes
-			if (i == 0 && DetermineHorizontalSlopeMovement(ref deltaMovement, Vector2.Angle(raycastHit.normal, Vector2.up), movingRight)) {
+			if (i == 0 && DetermineHorizontalSlopeMovement(ref deltaMovement, Vector2.Angle(raycastHit.normal, Vector2.up), movingRight))
+            {
 				break;
 			}
 
@@ -508,25 +612,30 @@ public class CharacterController2D : MonoBehaviour {
 			rayDistance = Mathf.Abs(deltaMovement.x);
 
 			// correct for skin thickness and set collision states
-			if (movingRight) {
+			if (movingRight)
+            {
 				deltaMovement.x -= skinThickness;
 				State.collisionRight = true;
-			} else {
+			}
+            else
+            {
 				deltaMovement.x += skinThickness;
 				State.collisionLeft = true;
 			}
 
 			// if we're right next to the collision already, break out, we don't need the other rays
-			if (rayDistance < skinThickness + 0.0001f) {
+			if (rayDistance < skinThickness + 0.0001f)
+            {
 				break;
 			}
-
 		}
-
 	}
 
-	private void DetermineVerticalMovement(ref Vector2 deltaMovement) {
-
+    /**
+     *
+     */
+    private void DetermineVerticalMovement(ref Vector2 deltaMovement)
+    {
 		var movingUp = deltaMovement.y > 0;
 
 		var rayDistance = skinThickness + Mathf.Abs(deltaMovement.y);
@@ -537,31 +646,39 @@ public class CharacterController2D : MonoBehaviour {
 		
 		var standingOnDistance = float.MaxValue;
 
-		for (var i = 0; i < verticalRays; i++) {
-
+		for (var i = 0; i < verticalRays; i++)
+        {
 			var rayVector = new Vector2(
 				rayOrigin.x + (i * horizontalRaySpread),
 				rayOrigin.y
 			);
 
-			if (debugMode) {
+			if (debugMode)
+            {
 				Debug.DrawRay(rayVector, rayDirection * rayDistance, Color.red);
 			}
 
 			RaycastHit2D raycastHit;
-			if (movingUp || State.IsClimbing()) {
+			if (movingUp || State.IsClimbing())
+            {
 				raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, groundLayerMask);
-			} else {
+			}
+            else
+            {
 				raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, groundLayerMask | oneWayPlatformLayerMask);
 			}
 
-			if (!raycastHit) {
+			if (!raycastHit)
+            {
 				continue;
 			}
 
-			if (!movingUp) {
+			if (!movingUp)
+            {
 				var verticalDistanceToHit = transform.position.y - raycastHit.point.y;
-				if (verticalDistanceToHit < standingOnDistance) {
+
+				if (verticalDistanceToHit < standingOnDistance)
+                {
 					standingOnDistance = verticalDistanceToHit;
 					standingOn = raycastHit.collider.gameObject;
 				}
@@ -572,81 +689,94 @@ public class CharacterController2D : MonoBehaviour {
 			rayDistance = Mathf.Abs(deltaMovement.y);
 
 			// correct for skin thickness and set collision states
-			if (movingUp) {
+			if (movingUp)
+            {
 				deltaMovement.y -= skinThickness;
 				State.collisionAbove = true;
-			} else {
+			}
+            else
+            {
 				deltaMovement.y += skinThickness;
 				State.collisionBelow = true;
 			}
 
-			if (!movingUp && deltaMovement.y > 0.001f) {
+			if (!movingUp && deltaMovement.y > 0.001f)
+            {
 				State.slopeUp = true;
 			}
 
-			if (rayDistance < skinThickness + 0.001f) {
+			if (rayDistance < skinThickness + 0.001f)
+            {
 				break;
 			}
-
 		}
-
 	}
 
-	private void DetermineGrounding() {
-		
-		if (standingOn != null) {
-			
-			activeGlobalPlatformPoint = transform.position;
-			activeLocalPlatformPoint = standingOn.transform.InverseTransformPoint(transform.position);
-			
-			if (previousStandingOn == null) {
+    /**
+     *
+     */
+    private void DetermineGrounding()
+    {
+        if (standingOn != null)
+        {
+            activeGlobalPlatformPoint = transform.position;
+            activeLocalPlatformPoint = standingOn.transform.InverseTransformPoint(transform.position);
 
-				SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
+            if (previousStandingOn == null)
+            {
+                SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
 
-				if (State.IsClimbing()) {
-					StopClimbing();
-				}
+                if (State.IsClimbing())
+                {
+                    StopClimbing();
+                }
+            }
 
-			}
-			
-			if (previousStandingOn != standingOn) {
+            if (previousStandingOn != standingOn)
+            {
+                if (previousStandingOn != null)
+                {
+                    previousStandingOn.SendMessage("OnCharacterControllerExit2D", this, SendMessageOptions.DontRequireReceiver);
+                }
 
-				if (previousStandingOn != null) {
-					previousStandingOn.SendMessage("OnCharacterControllerExit2D", this, SendMessageOptions.DontRequireReceiver);
-				}
-
-				standingOn.SendMessage("OnCharacterControllerEnter2D", this, SendMessageOptions.DontRequireReceiver);
-				previousStandingOn = standingOn;
-
-			} else {
-
-				standingOn.SendMessage("OnCharacterControllerStay2D", this, SendMessageOptions.DontRequireReceiver);
-
-			}
-
-		} else if (previousStandingOn != null) {
-
-			previousStandingOn.SendMessage("OnCharacterControllerExit2D", this, SendMessageOptions.DontRequireReceiver);
-			previousStandingOn = null;
-
-		}
-
+                standingOn.SendMessage("OnCharacterControllerEnter2D", this, SendMessageOptions.DontRequireReceiver);
+                previousStandingOn = standingOn;
+            }
+            else
+            {
+                standingOn.SendMessage("OnCharacterControllerStay2D", this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+        else if (previousStandingOn != null)
+        {
+            previousStandingOn.SendMessage("OnCharacterControllerExit2D", this, SendMessageOptions.DontRequireReceiver);
+            previousStandingOn = null;
+        }
 	}
 
     ////////////////////////////
     ///// COLLISION EVENTS /////
     ////////////////////////////
 
+    /**
+     *
+     */
     public void OnTriggerEnter2D(Collider2D other)
     {
         other.SendMessage("OnCharacterControllerEnter2D", this, SendMessageOptions.DontRequireReceiver);
     }
 
+    /**
+     *
+     */
     public void OnTriggerStay2D(Collider2D other)
     {
         other.SendMessage("OnCharacterControllerStay2D", this, SendMessageOptions.DontRequireReceiver);
     }
 
+    /**
+     *
+     */
     public void OnTriggerExit2D(Collider2D other)
     {
         other.SendMessage("OnCharacterControllerExit2D", this, SendMessageOptions.DontRequireReceiver);
@@ -656,45 +786,55 @@ public class CharacterController2D : MonoBehaviour {
     ///// MOVING PLATFORMS /////
     ////////////////////////////
 
-    private void HandleMovingPlatforms() {
-		
-		if (standingOn != null) {
-			
+    /**
+     *
+     */
+    private void HandleMovingPlatforms()
+    {
+		if (standingOn != null)
+        {
 			var newGlobalPlatformPoint = standingOn.transform.TransformPoint(activeLocalPlatformPoint);
 			var moveDistance = newGlobalPlatformPoint - activeGlobalPlatformPoint;
 			
-			if (moveDistance != Vector3.zero) {
+			if (moveDistance != Vector3.zero)
+            {
 				transform.Translate(moveDistance, Space.World);
 			}
 			
 			platformVelocity = (newGlobalPlatformPoint - activeGlobalPlatformPoint) / Time.deltaTime;
-			
-		} else {
+		}
+        else
+        {
 			platformVelocity = Vector2.zero;
 		}
 		
 		standingOn = null;
-		
 	}
 
-	//////////////////
-	///// SLOPES /////
-	//////////////////
+    //////////////////
+    ///// SLOPES /////
+    //////////////////
 
-	private bool DetermineHorizontalSlopeMovement(ref Vector2 deltaMovement, float angle, bool movingRight) {
-
-		if (Mathf.RoundToInt(angle) == 90) {
+    /**
+     *
+     */
+    private bool DetermineHorizontalSlopeMovement(ref Vector2 deltaMovement, float angle, bool movingRight)
+    {
+		if (Mathf.RoundToInt(angle) == 90)
+        {
 			return false;
 		}
 
 		// if the slope is too steep, break out
-		if (angle > Parameters.slopeLimit) {
+		if (angle > Parameters.slopeLimit)
+        {
 			deltaMovement.x = 0;
 			return true;
 		}
 
 		// if we're moving up (by some threshold)
-		if (deltaMovement.y > 0.07f) {
+		if (deltaMovement.y > 0.07f)
+        {
 			return true;
 		}
 
@@ -710,34 +850,40 @@ public class CharacterController2D : MonoBehaviour {
 
 		// return that we modified the movement
 		return true;
-
 	}
 
-	private void DetermineVerticalSlopeMovement(ref Vector2 deltaMovement) {
-
+    /**
+     *
+     */
+    private void DetermineVerticalSlopeMovement(ref Vector2 deltaMovement)
+    {
 		var center = (raycastOriginBottomLeft.x + raycastOriginBottomRight.x) / 2;
 		var direction = -Vector2.up;
 
 		var slopeDistance = slopeLimitTangent * (raycastOriginBottomRight.x - center);
 		var slopeRayVector = new Vector2(center, raycastOriginBottomLeft.y);
 
-		if (debugMode) {
+		if (debugMode)
+        {
 			Debug.DrawRay(slopeRayVector, direction * slopeDistance, Color.yellow);
 		}
 
 		var raycastHit = Physics2D.Raycast(slopeRayVector, direction, slopeDistance, groundLayerMask);
-		if (!raycastHit) {
+		if (!raycastHit)
+        {
 			return;
 		}
 
 		var movingDownSlope = Mathf.Sign(raycastHit.normal.x) == Mathf.Sign(deltaMovement.x);
-		if (!movingDownSlope) {
+		if (!movingDownSlope)
+        {
 			return;
 		}
 
 		// check if we're not on something perpendicular to us (why?)
 		var angle = Vector2.Angle(raycastHit.normal, Vector2.up);
-		if (Mathf.Abs(angle) < 0.001f) {
+		if (Mathf.Abs(angle) < 0.001f)
+        {
 			return;
 		}
 
@@ -745,7 +891,5 @@ public class CharacterController2D : MonoBehaviour {
 		State.slopeAngle = angle;
 
 		deltaMovement.y = raycastHit.point.y - slopeRayVector.y;
-
 	}
-
 }
