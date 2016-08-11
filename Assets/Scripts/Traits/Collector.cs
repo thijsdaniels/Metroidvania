@@ -7,7 +7,6 @@ using Objects.Collectables;
 
 public class Collector : MonoBehaviour
 {
-    [Serializable]
     public struct Ammo
     {
         public bool enabled { get; private set; }
@@ -78,7 +77,6 @@ public class Collector : MonoBehaviour
         }
     }
 
-    [Serializable]
     public struct AmmoCollection
     {
         public Ammo arrows;

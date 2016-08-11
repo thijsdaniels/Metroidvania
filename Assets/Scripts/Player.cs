@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     public float rollSpeed = 12f;
 
     // climbing
+    private float climbingThreshold = 0.5f;
     public float climbSpeed = 4f;
 
 	// sound effects
@@ -47,6 +48,8 @@ public class Player : MonoBehaviour
 	public AudioClip jumpSound;
 	public AudioClip airJumpSound;
 	public AudioClip landSound;
+    public AudioClip leftClimbSound;
+    public AudioClip rightClimbSound;
 
     // aiming
     private bool aiming = false;
@@ -366,6 +369,25 @@ public class Player : MonoBehaviour
         {
             controller.SetVerticalVelocity(verticalMovement * climbSpeed);
         }
+        else
+        {
+            if (Mathf.Abs(verticalMovement) > this.climbingThreshold && controller.CanClimb())
+            {
+                if (controller.State.IsGrounded())
+                {
+                    if (controller.standingOn.gameObject.tag != "Climbable Top" && verticalMovement < 0)
+                    {
+                        return;
+                    }
+                    else if (controller.standingOn.gameObject.tag == "Climbable Top" && verticalMovement > 0)
+                    {
+                        return;
+                    }
+                }
+
+                controller.StartClimbing();
+            }
+        }
     }
 
     //////////////////
@@ -526,6 +548,28 @@ public class Player : MonoBehaviour
 			AudioSource.PlayClipAtPoint(rightFootSound, transform.position);
 		}
 	}
+
+    /**
+     * 
+     */
+    public void OnLeftClimb()
+    {
+        if (leftClimbSound)
+        {
+            AudioSource.PlayClipAtPoint(leftClimbSound, transform.position);
+        }
+    }
+
+    /**
+     * 
+     */
+    public void OnRightClimb()
+    {
+        if (rightClimbSound)
+        {
+            AudioSource.PlayClipAtPoint(rightClimbSound, transform.position);
+        }
+    }
 
     /////////////////
     ///// DEATH /////

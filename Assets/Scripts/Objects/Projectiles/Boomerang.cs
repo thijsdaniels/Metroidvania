@@ -36,7 +36,7 @@ namespace Objects.Projectiles
         /**
          * 
          */
-        public void Update()
+        public void FixedUpdate()
         {
             Spin();
             ReturnToOwner();

@@ -26,7 +26,7 @@ public class Arrow : MonoBehaviour {
 	/**
 	 * 
 	 */
-	public void Update()
+	public void FixedUpdate()
 	{
         PointInDirection();
 	}

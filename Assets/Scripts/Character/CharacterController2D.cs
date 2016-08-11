@@ -301,6 +301,11 @@ public class CharacterController2D : MonoBehaviour
      */
     public bool CanJump()
     {
+        if (State.IsClimbing())
+        {
+            return false;
+        }
+
 		if (Parameters.jumpMode == CharacterControllerParameters2D.JumpMode.anywhere)
         {
 			return jumpTimeout <= 0;
@@ -309,10 +314,8 @@ public class CharacterController2D : MonoBehaviour
         {
 			return State.IsGrounded() || currentAirJump < airJumps;
 		}
-        else
-        {
-			return false;
-		}
+
+		return false;
 	}
 
     /**
