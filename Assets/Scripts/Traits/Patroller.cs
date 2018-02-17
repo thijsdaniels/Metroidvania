@@ -1,136 +1,187 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Character;
+using UnityEngine;
 
-public class Patroller : MonoBehaviour {
+namespace Traits
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(CharacterController2D))]
+    public class Patroller : MonoBehaviour
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        private Rigidbody2D Body;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private CharacterController2D Controller;
 
-	private Rigidbody2D body;
-	private CharacterController2D controller;
+        /// <summary>
+        /// 
+        /// </summary>
+        public float WalkSpeed;
+        public bool AvoidCollisions;
+        public bool AvoidGaps;
 
-	public float walkSpeed;
-	public bool avoidCollisions;
-	public bool avoidGaps;
+        /// <summary>
+        /// 
+        /// </summary>
+        public Vector2 CollisionSightStart;
+        public Vector2 CollisionSightEnd;
 
-	public Vector2 collisionSightStart;
-	public Vector2 collisionSightEnd;
+        /// <summary>
+        /// 
+        /// </summary>
+        public Vector2 GapSightStart;
+        public Vector2 GapSightEnd;
 
-	public Vector2 gapSightStart;
-	public Vector2 gapSightEnd;
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool Stopped;
 
-    private bool stopped;
-
-	public void Start() {
-		body = GetComponent<Rigidbody2D>();
-		controller = GetComponent<CharacterController2D>();
-	}
-
-	public void Update() {
-
-		// turn around if a collision is ahead
-		if (avoidCollisions && CollisionAhead()) {
-			TurnAround();
-		}
-
-		// turn around if a collision is ahead
-		if (avoidGaps && GapAhead()) {
-			TurnAround();
-		}
-
-		// move
-		Move();
-
-	}
-
-	protected bool CollisionAhead() {
-
-		// correct sight start for position and direction
-		var correctedSightStart = new Vector2(
-			transform.position.x + collisionSightStart.x * transform.localScale.x,
-			transform.position.y + collisionSightStart.y * transform.localScale.y
-		);
-
-		// correct sight end for position and direction
-		var correctedSightEnd = new Vector2(
-			transform.position.x + collisionSightEnd.x * transform.localScale.x,
-			transform.position.y + collisionSightEnd.y * transform.localScale.y
-		);
-
-		// visualize the line of sight
-		Debug.DrawLine(correctedSightStart, correctedSightEnd, Color.green);
-
-		// check if the line of sight collides with the gound layer
-		return Physics2D.Linecast(
-			correctedSightStart,
-			correctedSightEnd,
-			controller.groundLayerMask | 1 << LayerMask.NameToLayer("Enemies")
-		);
-
-	}
-
-	protected bool GapAhead() {
-
-		// don't scan for gaps in the air
-		if (controller && !controller.State.IsGrounded()) {
-			return false;
-		}
-		
-		// correct sight start for position and direction
-		var correctedSightStart = new Vector2(
-			transform.position.x + gapSightStart.x * transform.localScale.x,
-			transform.position.y + gapSightStart.y * transform.localScale.y
-		);
-		
-		// correct sight end for position and direction
-		var correctedSightEnd = new Vector2(
-			transform.position.x + gapSightEnd.x * transform.localScale.x,
-			transform.position.y + gapSightEnd.y * transform.localScale.y
-		);
-		
-		// visualize the line of sight
-		Debug.DrawLine(correctedSightStart, correctedSightEnd, Color.green);
-		
-		// check if the line of sight does not collide with the gound layer
-		return !Physics2D.Linecast(
-			correctedSightStart,
-			correctedSightEnd,
-			controller.groundLayerMask | controller.oneWayPlatformLayerMask
-		);
-		
-	}
-
-	protected void TurnAround() {
-
-		transform.localScale = new Vector3(
-			transform.localScale.x * -1,
-			transform.localScale.y,
-			transform.localScale.z
-		);
-
-	}
-
-	protected void Move() {
-
-        var velocity = Vector2.zero;
-
-        if (!stopped)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
         {
-            velocity = new Vector2(
-                walkSpeed * transform.localScale.x,
-                body.velocity.y
+            Body = GetComponent<Rigidbody2D>();
+            Controller = GetComponent<CharacterController2D>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Update()
+        {
+            // turn around if a collision is ahead
+            if (AvoidCollisions && CollisionAhead())
+            {
+                TurnAround();
+            }
+
+            // turn around if a collision is ahead
+            if (AvoidGaps && GapAhead())
+            {
+                TurnAround();
+            }
+
+            // move
+            Move();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected bool CollisionAhead()
+        {
+            // correct sight start for position and direction
+            var correctedSightStart = new Vector2(
+                transform.position.x + CollisionSightStart.x * transform.localScale.x,
+                transform.position.y + CollisionSightStart.y * transform.localScale.y
+            );
+
+            // correct sight end for position and direction
+            var correctedSightEnd = new Vector2(
+                transform.position.x + CollisionSightEnd.x * transform.localScale.x,
+                transform.position.y + CollisionSightEnd.y * transform.localScale.y
+            );
+
+            // visualize the line of sight
+            Debug.DrawLine(correctedSightStart, correctedSightEnd, Color.green);
+
+            // check if the line of sight collides with the gound layer
+            return Physics2D.Linecast(
+                correctedSightStart,
+                correctedSightEnd,
+                Controller.GroundLayerMask | 1 << LayerMask.NameToLayer("Enemies")
             );
         }
-		
-		body.velocity = velocity;
 
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected bool GapAhead()
+        {
+            // don't scan for gaps in the air
+            if (Controller && !Controller.State.IsGrounded())
+            {
+                return false;
+            }
 
-    public void OnFlinch()
-    {
-        stopped = true;
+            // correct sight start for position and direction
+            var correctedSightStart = new Vector2(
+                transform.position.x + GapSightStart.x * transform.localScale.x,
+                transform.position.y + GapSightStart.y * transform.localScale.y
+            );
+
+            // correct sight end for position and direction
+            var correctedSightEnd = new Vector2(
+                transform.position.x + GapSightEnd.x * transform.localScale.x,
+                transform.position.y + GapSightEnd.y * transform.localScale.y
+            );
+
+            // visualize the line of sight
+            Debug.DrawLine(correctedSightStart, correctedSightEnd, Color.green);
+
+            // check if the line of sight does not collide with the gound layer
+            return !Physics2D.Linecast(
+                correctedSightStart,
+                correctedSightEnd,
+                Controller.GroundLayerMask | Controller.OneWayPlatformLayerMask
+            );
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void TurnAround()
+        {
+            transform.localScale = new Vector3(
+                transform.localScale.x * -1,
+                transform.localScale.y,
+                transform.localScale.z
+            );
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Move()
+        {
+            var velocity = Vector2.zero;
+
+            if (!Stopped)
+            {
+                velocity = new Vector2(
+                    WalkSpeed * transform.localScale.x,
+                    Body.velocity.y
+                );
+            }
+
+            Body.velocity = velocity;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnFlinch()
+        {
+            Stopped = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnFlinchEnd()
+        {
+            Stopped = false;
+        }
     }
-
-    public void OnFlinchEnd()
-    {
-        stopped = false;
-    }
-
 }

@@ -1,154 +1,190 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Stalker : MonoBehaviour {
-
-	public enum MoveMode {
-		linear,
-		interpolated
-	}
-
-	public Transform target;
-	public Vector2 targetOffset;
-	public bool startOnTarget;
-    public bool faceTarget;
-
-	public bool followXAxis;
-	public bool followYAxis;
-	public MoveMode moveMode = MoveMode.linear;
-
-	public bool asleep;
-	public float wakeDistance;
-	private float wakeDistanceSquared;
-
-    private bool stopped;
-
-	[Range(0, 30)]
-	public float
-		speed;
-
-    /**
-     *
-     */
-	void Awake()
+namespace Traits
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Stalker : MonoBehaviour
     {
-		wakeDistanceSquared = wakeDistance * wakeDistance;
-		if (target && startOnTarget) {
-			transform.position = GetTargetPosition();
-		}
-	}
-
-    /**
-     *
-     */
-    void Update()
-    {
-		if (!target || stopped) {
-			return;
-		}
-
-		if (!asleep) {
-			Move();
-		} else {
-			Sleep();
-		}
-	}
-
-    /**
-     *
-     */
-    void Sleep()
-    {
-		var distanceSquared = (transform.position - target.position).sqrMagnitude;
-
-		if (distanceSquared < wakeDistanceSquared) {
-            WakeUp();
-		}
-	}
-
-    /**
-     *
-     */
-    protected void WakeUp()
-    {
-        asleep = false;
-
-        gameObject.SendMessage("OnWakeUp", null, SendMessageOptions.DontRequireReceiver);
-    }
-
-    /**
-     *
-     */
-    protected void FallAsleep()
-    {
-        asleep = true;
-
-        gameObject.SendMessage("OnFallAsleep", null, SendMessageOptions.DontRequireReceiver);
-    }
-
-    /**
-     *
-     */
-    protected void Move()
-    {
-        if (this.faceTarget)
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum MoveModes
         {
-            transform.localScale = new Vector3(
-                Mathf.Abs(transform.localScale.x) * GetTargetPosition().x > transform.position.x ? 1 : -1,
-                transform.localScale.y,
-                transform.localScale.z
+            Linear,
+            Interpolated
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Transform Target;
+        public Vector2 TargetOffset;
+        public bool StartOnTarget;
+        public bool FaceTarget;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool FollowXAxis;
+        public bool FollowYAxis;
+        public MoveModes MoveMode = MoveModes.Linear;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Asleep;
+        public float WakeDistance;
+        private float WakeDistanceSquared;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool Stopped;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Range(0, 30)] public float Speed;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void Awake()
+        {
+            WakeDistanceSquared = WakeDistance * WakeDistance;
+            
+            if (Target && StartOnTarget)
+            {
+                transform.position = GetTargetPosition();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void Update()
+        {
+            if (!Target || Stopped)
+            {
+                return;
+            }
+
+            if (!Asleep)
+            {
+                Move();
+            }
+            else
+            {
+                Sleep();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void Sleep()
+        {
+            var distanceSquared = (transform.position - Target.position).sqrMagnitude;
+
+            if (distanceSquared < WakeDistanceSquared)
+            {
+                WakeUp();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void WakeUp()
+        {
+            Asleep = false;
+
+            gameObject.SendMessage("OnWakeUp", null, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void FallAsleep()
+        {
+            Asleep = true;
+
+            gameObject.SendMessage("OnFallAsleep", null, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Move()
+        {
+            if (this.FaceTarget)
+            {
+                transform.localScale = new Vector3(
+                    Mathf.Abs(transform.localScale.x) * GetTargetPosition().x > transform.position.x ? 1 : -1,
+                    transform.localScale.y,
+                    transform.localScale.z
+                );
+            }
+
+
+            if (MoveMode == MoveModes.Linear)
+            {
+                transform.position = Vector3.MoveTowards(
+                    transform.position,
+                    GetTargetPosition(),
+                    Speed * Time.deltaTime
+                );
+            }
+            else if (MoveMode == MoveModes.Interpolated)
+            {
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    GetTargetPosition(),
+                    Speed * Time.deltaTime
+                );
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected Vector3 GetTargetPosition()
+        {
+            return new Vector3(
+                FollowXAxis ? Target.position.x + TargetOffset.x : transform.position.x,
+                FollowYAxis ? Target.position.y + TargetOffset.y : transform.position.y,
+                transform.position.z
             );
         }
 
-
-        if (moveMode == MoveMode.linear)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnDrawGizmos()
         {
-			transform.position = Vector3.MoveTowards(
-				transform.position,
-				GetTargetPosition(),
-				speed * Time.deltaTime
-			);
-		}
-        else if (moveMode == MoveMode.interpolated)
+            if (Asleep)
+            {
+                Gizmos.DrawWireSphere(transform.position, WakeDistance);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnFlinch()
         {
-			transform.position = Vector3.Lerp(
-				transform.position,
-				GetTargetPosition(),
-				speed * Time.deltaTime
-			);
-		}
-	}
+            Stopped = true;
+        }
 
-    /**
-     *
-     */
-    protected Vector3 GetTargetPosition()
-    {
-		return new Vector3(
-			followXAxis ? target.position.x + targetOffset.x : transform.position.x,
-			followYAxis ? target.position.y + targetOffset.y : transform.position.y,
-			transform.position.z
-		);
-	}
-
-    /**
-     *
-     */
-    public void OnDrawGizmos()
-    {
-		if (asleep) {
-			Gizmos.DrawWireSphere(transform.position, wakeDistance);
-		}
-	}
-
-    public void OnFlinch()
-    {
-        stopped = true;
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnFlinchEnd()
+        {
+            Stopped = false;
+        }
     }
-
-    public void OnFlinchEnd()
-    {
-        stopped = false;
-    }
-
 }

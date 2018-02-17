@@ -1,110 +1,197 @@
-﻿using System;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Character;
 using Objects.Collectables;
+using UnityEngine;
 
-[RequireComponent(typeof(Player))]
-
-public class Collector : MonoBehaviour
+namespace Traits
 {
-    public struct Ammo
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(Player))]
+    public class Collector : MonoBehaviour
     {
-        public bool enabled { get; private set; }
-        public int current { get; private set; }
-        public int maximum { get; private set; }
-
-        public Ammo(int current, int maximum)
+        /// <summary>
+        /// 
+        /// </summary>
+        public struct Ammo
         {
-            this.enabled = true;
-            this.current = current;
-            this.maximum = maximum;
+            /// <summary>
+            /// 
+            /// </summary>
+            public bool Enabled { get; private set; }
+            
+            /// <summary>
+            /// 
+            /// </summary>
+            public int Current { get; private set; }
+            
+            /// <summary>
+            /// 
+            /// </summary>
+            public int Maximum { get; private set; }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="current"></param>
+            /// <param name="maximum"></param>
+            public Ammo(int current, int maximum)
+            {
+                Enabled = true;
+                Current = current;
+                Maximum = maximum;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="current"></param>
+            /// <param name="maximum"></param>
+            /// <param name="enabled"></param>
+            public Ammo(int current, int maximum, bool enabled)
+            {
+                Enabled = enabled;
+                Current = current;
+                Maximum = maximum;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString()
+            {
+                return Current.ToString();
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public void Enable()
+            {
+                Enabled = true;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public bool Available()
+            {
+                return Available(1);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public bool Available(int value)
+            {
+                return Current >= value;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public float Ratio()
+            {
+                return (float) Current / Maximum;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public void Consume()
+            {
+                Consume(1);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            public void Consume(int value)
+            {
+                Current = Mathf.Max(Current - value, 0);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            public void Add(int value)
+            {
+                Current = Mathf.Min(Current + value, Maximum);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public void Restore()
+            {
+                Current = Maximum;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            public void Upgrade(int value)
+            {
+                Maximum += value;
+            }
         }
 
-        public Ammo(int current, int maximum, bool enabled)
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Coins;
+    
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Keys;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Item> Items;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Ammo Arrows;
+            
+        /// <summary>
+        /// 
+        /// </summary>
+        public Ammo Bombs;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Ammo Mana = new Ammo(30, 30);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool HasItem(Item item)
         {
-            this.enabled = enabled;
-            this.current = current;
-            this.maximum = maximum;
+            return Items.Contains(item);
         }
 
-        public override string ToString()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collectable"></param>
+        public void Collect(Collectable collectable)
         {
-            return current.ToString();
+            collectable.SendMessage("OnCollect", this, SendMessageOptions.RequireReceiver);
         }
-
-        public void Enable()
-        {
-            enabled = true;
-        }
-
-        public bool Available()
-        {
-            return Available(1);
-        }
-
-        public bool Available(int value)
-        {
-            return current >= value;
-        }
-
-        public float Ratio()
-        {
-            return (float) current / maximum;
-        }
-
-        public void Consume()
-        {
-            Consume(1);
-        }
-
-        public void Consume(int value)
-        {
-            current = Mathf.Max(current - value, 0);
-        }
-
-        public void Add(int value) {
-            current = Mathf.Min(current + value, maximum);
-        }
-
-        public void Restore()
-        {
-            current = maximum;
-        }
-
-        public void Upgrade(int value)
-        {
-            maximum += value;
-        }
-    }
-
-    public struct AmmoCollection
-    {
-        public Ammo arrows;
-        public Ammo bombs;
-
-        public AmmoCollection(Ammo arrows, Ammo bombs)
-        {
-            this.arrows = arrows;
-            this.bombs = bombs;
-        }
-    }
-
-    public int coins;
-	public int keys;
-
-	public List<Item> items;
-
-    public AmmoCollection ammo = new AmmoCollection();
-
-    public Ammo mana = new Ammo(30, 30);
-
-	public bool hasItem(Item item)
-	{
-		return items.Contains(item);
-	}
-
-    public void Collect(Collectable collectable)
-    {
-        collectable.SendMessage("OnCollect", this, SendMessageOptions.RequireReceiver);
     }
 }

@@ -1,35 +1,45 @@
+using Character;
 using UnityEngine;
-using BoomerangProjectile = Objects.Projectiles.Boomerang;
 
 namespace Objects.Collectables.Items
 {
-    /**
-     * 
-     */
+    /// <summary>
+    /// 
+    /// </summary>
     public class Boomerang : Item
     {
-        protected float charge;
-        public float initialCharge = 2f;
-        public float chargeFactor = 1f;
-        public float maxCharge = 3f;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float CurrentCharge;
+        public float InitialCharge = 2f;
+        public float ChargeFactor = 1f;
+        public float MaxCharge = 3f;
 
-        protected float force = 100f;
-        public float coolDownDuration = 0.25f;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected const float Force = 100f;
+        public float CoolDownDuration = 0.25f;
 
-        [SerializeField] protected BoomerangProjectile projectile;
-        [HideInInspector] public int projectileCount;
+        /// <summary>
+        /// 
+        /// </summary>
+        [SerializeField] protected Projectiles.Boomerang Projectile;
+        [HideInInspector] public int ProjectileCount;
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public void Start()
         {
-            charge = initialCharge;
+            CurrentCharge = InitialCharge;
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool CanBeUsed()
         {
             if (!base.CanBeUsed())
@@ -37,12 +47,13 @@ namespace Objects.Collectables.Items
                 return false;
             }
 
-            if (projectileCount >= 1)
+            if (ProjectileCount >= 1)
             {
                 return false;
             }
 
-            CharacterController2D controller = owner.GetComponent<CharacterController2D>();
+            CharacterController2D controller = Owner.GetComponent<CharacterController2D>();
+            
             if (controller.State.IsRolling() || controller.State.IsSwimming() || controller.State.IsClimbing())
             {
                 return false;
@@ -51,9 +62,9 @@ namespace Objects.Collectables.Items
             return true;
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnPress()
         {
             if (!IsCooledDown() || !CanBeUsed())
@@ -61,13 +72,14 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Player player = owner.GetComponent<Player>();
+            Player player = Owner.GetComponent<Player>();
+            
             player.StartAiming();
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnHold()
         {
             if (!IsCooledDown() || !CanBeUsed())
@@ -75,20 +87,21 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Charge(Time.unscaledDeltaTime * chargeFactor);
+            Charge(Time.unscaledDeltaTime * ChargeFactor);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaCharge"></param>
         protected void Charge(float deltaCharge)
         {
-            charge = Mathf.Min(maxCharge, charge + deltaCharge);
+            CurrentCharge = Mathf.Min(MaxCharge, CurrentCharge + deltaCharge);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnRelease()
         {
             if (!IsCooledDown() || !CanBeUsed())
@@ -96,29 +109,32 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Player player = owner.GetComponent<Player>();
-            Throw(player.transform.position, player.GetAimingDirection());
+            Player player = Owner.GetComponent<Player>();
             
+            Throw(player.transform.position, player.GetAimingDirection());
+
             player.StopAiming();
 
-            SetCoolDown(coolDownDuration);
+            SetCoolDown(CoolDownDuration);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="direction"></param>
         protected void Throw(Vector3 origin, Vector2 direction)
         {
-            BoomerangProjectile projectileInstance = Instantiate(projectile, origin, Quaternion.identity) as BoomerangProjectile;
+            Projectiles.Boomerang projectileInstance = Instantiate(Projectile, origin, Quaternion.identity);
 
-            projectileCount++;
-            projectileInstance.owner = owner;
-            projectileInstance.boomerangItem = this;
+            ProjectileCount++;
+            projectileInstance.Owner = Owner;
+            projectileInstance.BoomerangItem = this;
 
             Rigidbody2D projectileBody = projectileInstance.GetComponent<Rigidbody2D>();
-            projectileBody.AddForce(direction * charge * force);
+            projectileBody.AddForce(direction * CurrentCharge * Force);
 
-            charge = initialCharge;
+            CurrentCharge = InitialCharge;
         }
     }
 }

@@ -1,14 +1,25 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Character;
+using UnityEngine;
 
-public class ConveyorPlatform : MonoBehaviour
+namespace Objects.Platforms
 {
-	[Range(-10, 10)]
-	public float
-		velocity;
-
-	void OnCharacterControllerStay2D(CharacterController2D other)
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ConveyorPlatform : MonoBehaviour
     {
-		other.AddExternalHorizontalVelocity(velocity);
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        [Range(-10, 10)] public float Velocity;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        void OnCharacterControllerStay2D(CharacterController2D other)
+        {
+            other.AddExternalHorizontalVelocity(Velocity);
+        }
+    }
 }

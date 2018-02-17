@@ -1,22 +1,39 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class PixelArtCamera : MonoBehaviour {
-
-	public float pixelsPerUnit;
-	public int size;
-
-	void Awake()
+namespace Utility
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class PixelArtCamera : MonoBehaviour
     {
-        this.SetOrthographicSize();
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        public float PixelsPerUnit;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Size;
 
-    public void SetOrthographicSize()
-    {
-        float pixelPerfectSize = Mathf.Pow(2, size);
-        Camera camera = GetComponent<Camera>();
+        /// <summary>
+        /// 
+        /// </summary>
+        void Awake()
+        {
+            SetOrthographicSize();
+        }
 
-        camera.orthographicSize = (1 / pixelPerfectSize) * ((Screen.height / 2f) / pixelsPerUnit);
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SetOrthographicSize()
+        {
+            float pixelPerfectSize = Mathf.Pow(2, Size);
+            Camera camera = GetComponent<Camera>();
+
+            camera.orthographicSize = (1 / pixelPerfectSize) * ((Screen.height / 2f) / PixelsPerUnit);
+        }
     }
-
 }

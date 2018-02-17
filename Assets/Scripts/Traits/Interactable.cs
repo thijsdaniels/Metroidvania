@@ -1,33 +1,64 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Character;
+using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
-
-public class Interactable : MonoBehaviour {
-
-    public string action;
-
-	void OnTriggerEnter2D(Collider2D other)
+namespace Traits
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(Collider2D))]
+    public class Interactable : MonoBehaviour
     {
-		var player = other.GetComponent<Player>();
-
-		if (player)
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Action;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Enable()
         {
-			player.interactable = this;
-		}
-	}
-
-	void OnTriggerExit2D(Collider2D other)
-    {
-		var player = other.GetComponent<Player>();
-		
-		if (player)
+            GetComponent<Collider2D>().enabled = true;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Disable()
         {
-			if (player.interactable == this)
+            GetComponent<Collider2D>().enabled = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        public void OnTriggerEnter2D(Collider2D other)
+        {
+            var player = other.GetComponent<Player>();
+
+            if (player)
             {
-				player.interactable = null;
-			}
-		}
-	}
+                player.Interactable = this;
+            }
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        public void OnTriggerExit2D(Collider2D other)
+        {
+            var player = other.GetComponent<Player>();
+
+            if (player)
+            {
+                if (player.Interactable == this)
+                {
+                    player.Interactable = null;
+                }
+            }
+        }
+    }
 }

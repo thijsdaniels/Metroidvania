@@ -1,10 +1,20 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Objects.Obstacles;
 
-public class Explodable : Damagable
+namespace Traits
 {
-    protected override bool Immune(Damager cause)
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Explodable : Damagable
     {
-        return !cause.GetComponent<Explosion>();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cause"></param>
+        /// <returns></returns>
+        protected override bool Immune(Damager cause)
+        {
+            return !cause.GetComponent<Explosion>();
+        }
     }
 }

@@ -1,20 +1,35 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Explosion : MonoBehaviour
+namespace Objects.Obstacles
 {
-    public AudioClip sound;
-
-    public void Start()
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Explosion : MonoBehaviour
     {
-        if (sound)
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioClip Sound;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
         {
-            AudioSource.PlayClipAtPoint(sound, transform.position);
+            if (Sound)
+            {
+                AudioSource.PlayClipAtPoint(Sound, transform.position);
+            }
         }
-    }
 
-    public void OnTriggerEnter2D(Collider2D other)
-    {
-        other.SendMessage("OnExplosionEnter", this, SendMessageOptions.DontRequireReceiver);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        public void OnTriggerEnter2D(Collider2D other)
+        {
+            other.SendMessage("OnExplosionEnter", this, SendMessageOptions.DontRequireReceiver);
+        }
     }
 }

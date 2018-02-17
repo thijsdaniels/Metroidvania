@@ -1,75 +1,93 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Flame : MonoBehaviour
+namespace Objects.Obstacles
 {
-    private ParticleSystem[] emitters;
-    public bool lit = true;
-
-    public void Awake()
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Flame : MonoBehaviour
     {
-        this.emitters = gameObject.GetComponentsInChildren<ParticleSystem>();
+        /// <summary>
+        /// 
+        /// </summary>
+        private ParticleSystem[] Emitters;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Lit = true;
 
-        if (this.lit)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Awake()
         {
-            this.Light();
+            Emitters = gameObject.GetComponentsInChildren<ParticleSystem>();
+
+            if (Lit)
+            {
+                Light();
+            }
+            else
+            {
+                Extinguish();
+            }
         }
-        else
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Light()
         {
-            this.Extinguish();
+            Lit = true;
+
+            foreach (ParticleSystem emitter in Emitters)
+            {
+                emitter.Play();
+            }
         }
-    }
 
-    /**
-     *
-     */
-    public void Light()
-    {
-        this.lit = true;
-
-        foreach (ParticleSystem emitter in emitters)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Extinguish()
         {
-            emitter.Play();
+            Lit = false;
+
+            foreach (ParticleSystem emitter in Emitters)
+            {
+                emitter.Stop();
+            }
         }
-    }
 
-    /**
-     *
-     */
-    public void Extinguish()
-    {
-        this.lit = false;
-
-        foreach (ParticleSystem emitter in emitters)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool IsLit()
         {
-            emitter.Stop();
+            return Lit;
         }
-    }
 
-    /**
-     *
-     */
-    public bool IsLit()
-    {
-        return this.lit;
-    }
-
-    /**
-     *
-     */
-    public void OnTriggerEnter2D(Collider2D other)
-    {
-        if (this.IsLit())
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        public void OnTriggerEnter2D(Collider2D other)
         {
-            other.SendMessage("OnFlameEnter", this, SendMessageOptions.DontRequireReceiver);
+            if (IsLit())
+            {
+                other.SendMessage("OnFlameEnter", this, SendMessageOptions.DontRequireReceiver);
+            }
         }
-    }
 
-    /**
-     *
-     */
-    public void OnFlameEnter(Flame other)
-    {
-        this.Light();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        public void OnFlameEnter(Flame other)
+        {
+            Light();
+        }
     }
 }

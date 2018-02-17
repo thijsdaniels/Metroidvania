@@ -1,53 +1,71 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Traits;
+using UnityEngine;
 
-[RequireComponent(typeof(Stalker))]
-
-public class ZoneBound : MonoBehaviour
+namespace Utility
 {
-    public float margin = 0.5f;
-
-    public void LateUpdate()
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(Stalker))]
+    public class ZoneBound : MonoBehaviour
     {
-        float vSize = Camera.main.orthographicSize;
-        float hSize = vSize * Screen.width / Screen.height;
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Margin = 0.5f;
 
-        Rect cameraExtents = new Rect(
-            Camera.main.transform.position.x - hSize,
-            Camera.main.transform.position.y - vSize,
-            hSize * 2,
-            vSize * 2
-        );
-
-        Rect zoneExtents = ZoneManager.GetCurrentZone().GetExtents();
-
-        float overshootLeft = zoneExtents.x - cameraExtents.x - margin;
-        float overshootRight = (cameraExtents.x + cameraExtents.width) - (zoneExtents.x + zoneExtents.width) - margin;
-        float overshootTop = zoneExtents.y - cameraExtents.y - margin;
-        float overshootBottom = (cameraExtents.y + cameraExtents.height) - (zoneExtents.y + zoneExtents.height) - margin;
-
-        Vector3 newPosition = Camera.main.transform.position;
-
-        if (overshootLeft > 0)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void LateUpdate()
         {
-            newPosition.x += overshootLeft;
-        }
+            Zone zone = ZoneManager.GetCurrentZone();
 
-        if (overshootRight > 0)
-        {
-            newPosition.x -= overshootRight;
-        }
+            if (zone == null)
+            {
+                return;
+            }
 
-        if (overshootBottom > 0)
-        {
-            newPosition.y -= overshootBottom;
-        }
+            float vSize = Camera.main.orthographicSize;
+            float hSize = vSize * Screen.width / Screen.height;
 
-        if (overshootTop > 0)
-        {
-            newPosition.y += overshootTop;
-        }
+            Rect cameraExtents = new Rect(
+                Camera.main.transform.position.x - hSize,
+                Camera.main.transform.position.y - vSize,
+                hSize * 2,
+                vSize * 2
+            );
 
-        Camera.main.transform.position = newPosition;
+            Rect zoneExtents = zone.GetExtents();
+
+            float overshootLeft = zoneExtents.x - cameraExtents.x - Margin;
+            float overshootRight = (cameraExtents.x + cameraExtents.width) - (zoneExtents.x + zoneExtents.width) - Margin;
+            float overshootTop = zoneExtents.y - cameraExtents.y - Margin;
+            float overshootBottom = (cameraExtents.y + cameraExtents.height) - (zoneExtents.y + zoneExtents.height) - Margin;
+
+            Vector3 newPosition = Camera.main.transform.position;
+
+            if (overshootLeft > 0)
+            {
+                newPosition.x += overshootLeft;
+            }
+
+            if (overshootRight > 0)
+            {
+                newPosition.x -= overshootRight;
+            }
+
+            if (overshootBottom > 0)
+            {
+                newPosition.y -= overshootBottom;
+            }
+
+            if (overshootTop > 0)
+            {
+                newPosition.y += overshootTop;
+            }
+
+            Camera.main.transform.position = newPosition;
+        }
     }
 }

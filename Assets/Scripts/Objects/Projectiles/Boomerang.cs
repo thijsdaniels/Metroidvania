@@ -1,109 +1,120 @@
 ﻿using UnityEngine;
-using System.Collections;
-using BoomerangItem = Objects.Collectables.Items.Boomerang;
+using Traits;
 
 namespace Objects.Projectiles
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Fleeting))]
-
-    /**
-     * 
-     */
     public class Boomerang : MonoBehaviour
     {
-        [HideInInspector] public Collector owner;
-        [HideInInspector] public BoomerangItem boomerangItem;
+        /// <summary>
+        /// 
+        /// </summary>
+        [HideInInspector] public Collector Owner;
+        [HideInInspector] public Collectables.Items.Boomerang BoomerangItem;
 
-        protected Rigidbody2D body;
-        protected float previousDistance;
-        protected bool returning;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected Rigidbody2D Body;
+        protected float PreviousDistance;
+        protected bool Returning;
 
-        public float returnDistanceFactor = 0.25f;
-        public float returnForceFactor = 2f;
+        /// <summary>
+        /// 
+        /// </summary>
+        public float ReturnDistanceFactor = 0.25f;
+        public float ReturnForceFactor = 2f;
 
-        public float rotationsPerSecond = 2f;
+        /// <summary>
+        /// 
+        /// </summary>
+        public float RotationsPerSecond = 2f;
 
-        /**
-         * 
-         */
+        /// <summary>
+        /// 
+        /// </summary>
         public void Start()
         {
-            body = GetComponent<Rigidbody2D>();
+            Body = GetComponent<Rigidbody2D>();
         }
 
-        /**
-         * 
-         */
+        /// <summary>
+        /// 
+        /// </summary>
         public void FixedUpdate()
         {
             Spin();
             ReturnToOwner();
         }
 
-        /**
-         * 
-         */
+        /// <summary>
+        /// 
+        /// </summary>
         protected void Spin()
         {
-            transform.Rotate(new Vector3(0, 0, 360 * rotationsPerSecond * Time.deltaTime));
+            transform.Rotate(new Vector3(0, 0, 360 * RotationsPerSecond * Time.deltaTime));
         }
 
-        /**
-         * 
-         */
+        /// <summary>
+        /// 
+        /// </summary>
         protected void ReturnToOwner()
         {
-            if (!owner)
+            if (!Owner)
             {
                 return;
             }
 
-            Vector3 difference = owner.transform.position - transform.position;
+            Vector3 difference = Owner.transform.position - transform.position;
 
-            if (!returning)
+            if (!Returning)
             {
                 float distance = difference.magnitude;
 
-                if (distance < previousDistance)
+                if (distance < PreviousDistance)
                 {
-                    returning = true;
+                    Returning = true;
                     GetComponent<Collider2D>().isTrigger = true;
                 }
                 else
                 {
-                    previousDistance = distance;
+                    PreviousDistance = distance;
                 }
             }
 
-            Vector3 direction = difference.normalized + difference * returnDistanceFactor;
+            Vector3 direction = difference.normalized + difference * ReturnDistanceFactor;
 
             Vector2 force = new Vector2(
                 direction.x,
                 direction.y
-            ) * returnForceFactor;
+            ) * ReturnForceFactor;
 
-            body.AddForce(force);
+            Body.AddForce(force);
         }
 
-        /**
-         *
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collider"></param>
         public void OnTriggerExit2D(Collider2D collider)
         {
-            if (collider.tag == "Player")
+            if (collider.CompareTag("Player"))
             {
                 GetComponent<Fleeting>().Activate();
             }
         }
 
-        /**
-         *
-         */
+        /// <summary>
+        /// 
+        /// </summary>
         protected void OnFleetingEnd()
         {
-            boomerangItem.projectileCount--;
+            BoomerangItem.ProjectileCount--;
         }
     }
 }

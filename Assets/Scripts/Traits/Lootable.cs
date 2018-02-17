@@ -1,53 +1,94 @@
+using Character;
 using UnityEngine;
 
-[RequireComponent(typeof(Interactable))]
+namespace Traits
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(Interactable))]
+    public class Lootable : MonoBehaviour
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        private Animator Animator;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private Interactable Interactable;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool Looted;
 
-public class Lootable : MonoBehaviour {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Collectable Loot;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool DestroyOnLoot;
 
-	private Animator animator;
-    private Interactable interactable;
-	private bool looted = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        void Start()
+        {
+            Animator = GetComponent<Animator>();
+            Interactable = GetComponent<Interactable>();
 
-	public Collectable loot;
-	public bool destroyOnLoot = false;
+            if (Animator && Looted)
+            {
+                Animator.SetTrigger("Looted");
+            }
+        }
 
-	void Start() {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        public void OnInteraction(Player player)
+        {
+            var collector = player.gameObject.GetComponent<Collector>();
 
-		animator = GetComponent<Animator>();
-        interactable = GetComponent<Interactable>();
+            if (!Looted && collector)
+            {
+                CollectLoot(collector);
+            }
+        }
 
-		if (animator && looted) {
-			animator.SetTrigger("Looted");
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collector"></param>
+        private void CollectLoot(Collector collector)
+        {
+            if (Animator)
+            {
+                Animator.SetTrigger("Looted");
+            }
 
-	}
+            if (Loot)
+            {
+                collector.Collect(Instantiate(Loot));
+                Loot = null;
+            }
 
-	public void OnInteraction(Player player)
-	{
-		var collector = player.gameObject.GetComponent<Collector>();
+            Looted = true;
 
-		if (!looted && collector) {
-			Loot(collector);
-		}
-	}
-
-	private void Loot(Collector collector)
-	{
-		if (animator) {
-			animator.SetTrigger("Looted");
-		}
-
-		if (loot) {
-			collector.Collect(Instantiate(loot));
-			loot = null;
-		}
-
-        interactable.action = null;
-
-		looted = true;
-
-		if (destroyOnLoot) {
-			Destroy(gameObject);
-		}
-	}
+            if (DestroyOnLoot)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Interactable.Disable();
+            }
+        }
+    }
 }

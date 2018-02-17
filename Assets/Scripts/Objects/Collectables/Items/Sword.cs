@@ -1,40 +1,21 @@
-﻿using UnityEngine;
-using BoomerangProjectile = Objects.Projectiles.Boomerang;
+﻿using Character;
+using UnityEngine;
 
 namespace Objects.Collectables.Items
 {
-    /**
-     * 
-     */
+    /// <summary>
+    /// 
+    /// </summary>
     public class Sword : Item
     {
-        public float coolDownDuration = 0.25f;
+        /// <summary>
+        /// 
+        /// </summary>
+        public float CoolDownDuration = 0.25f;
 
-        public Fleeting projectile;
-        public Vector2 projectileOffset;
-
-        /**
-	     * 
-	     */
-        public override bool CanBeUsed()
-        {
-            if (!base.CanBeUsed())
-            {
-                return false;
-            }
-
-            CharacterController2D controller = owner.GetComponent<CharacterController2D>();
-            if (controller.State.IsRolling() || controller.State.IsSwimming() || controller.State.IsClimbing())
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnPress()
         {
             if (!IsCooledDown() || !CanBeUsed())
@@ -45,14 +26,15 @@ namespace Objects.Collectables.Items
             Swing();
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         protected void Swing()
         {
-            SetCoolDown(coolDownDuration);
+            SetCoolDown(CoolDownDuration);
 
-            Animator animator = owner.GetComponent<Animator>();
+            Animator animator = Owner.GetComponent<Animator>();
+            
             animator.SetTrigger("Downward Slash");
         }
     }

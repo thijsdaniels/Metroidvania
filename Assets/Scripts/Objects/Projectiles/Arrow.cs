@@ -1,92 +1,109 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using Traits;
+using UnityEngine;
 
-/**
- * 
- */
-public class Arrow : MonoBehaviour {
-
-	private Vector3 lastPosition;
-
-	public float despawnDelay = 1.5f;
-    public float timeoutDelay = 30f;
-
-    public int requiredMana = 0;
-
-	/**
-	 * 
-	 */
-	public void Awake()
-	{
-        StartCoroutine(Timeout());
-
-        lastPosition = transform.position;
-	}
-
-	/**
-	 * 
-	 */
-	public void FixedUpdate()
-	{
-        PointInDirection();
-	}
-
-    /**
-     *
-     */
-    protected void PointInDirection()
+namespace Objects.Projectiles
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Arrow : MonoBehaviour
     {
-        Vector3 direction = gameObject.transform.position - lastPosition;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Vector3 LastPosition;
 
-        if (direction != Vector3.zero)
+        /// <summary>
+        /// 
+        /// </summary>
+        public float DespawnDelay = 1.5f;
+        public float TimeoutDelay = 30f;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int RequiredMana;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Awake()
         {
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            StartCoroutine(Timeout());
+
+            LastPosition = transform.position;
         }
 
-        lastPosition = transform.position;
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        public void FixedUpdate()
+        {
+            PointInDirection();
+        }
 
-	/**
-	 * 
-	 */
-	//public void OnTriggerEnter2D(Collider2D other)
-	//{
-	//	if (other.isTrigger || other.gameObject.tag == "Player") {
-	//		return;
-	//	}
-    //
-	//	OnHit();
-	//}
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void PointInDirection()
+        {
+            Vector3 direction = gameObject.transform.position - LastPosition;
 
-	/**
-	 * 
-	 */
-	protected void OnFleetingDelay()
-	{
-		var body = GetComponent<Rigidbody2D>();
-		body.isKinematic = true;
+            if (direction != Vector3.zero)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            }
 
-		Destroy(gameObject.GetComponent<Untouchable>());
-	}
+            LastPosition = transform.position;
+        }
 
-	/**
-	 * 
-	 */
-	//protected IEnumerator Despawn()
-	//{
-	//	yield return new WaitForSeconds(despawnDelay);
-    //
-	//	Destroy(gameObject);
-	//}
+//        /// <summary>
+//        /// 
+//        /// </summary>
+//        /// <param name="other"></param>
+//        public void OnTriggerEnter2D(Collider2D other)
+//        {
+//            if (other.isTrigger || other.gameObject.CompareTag("Player"))
+//            {
+//                return;
+//            }
+//
+//            OnHit();
+//        }
 
-    /**
-	 * 
-	 */
-    protected IEnumerator Timeout()
-    {
-        yield return new WaitForSeconds(timeoutDelay);
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void OnFleetingDelay()
+        {
+            var body = GetComponent<Rigidbody2D>();
+            body.isKinematic = true;
 
-        Destroy(gameObject);
+            Destroy(gameObject.GetComponent<Untouchable>());
+        }
+
+//        /// <summary>
+//        /// 
+//        /// </summary>
+//        /// <returns></returns>
+//        protected IEnumerator Despawn()
+//        {
+//        	yield return new WaitForSeconds(despawnDelay);
+//        
+//        	Destroy(gameObject);
+//        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected IEnumerator Timeout()
+        {
+            yield return new WaitForSeconds(TimeoutDelay);
+
+            Destroy(gameObject);
+        }
     }
 }

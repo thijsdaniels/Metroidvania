@@ -1,181 +1,258 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Windows.Speech;
 
-public class Damagable : MonoBehaviour
+namespace Traits
 {
-	public int initialHealth;
-	public int currentHealth { get; protected set; }
-	public int maximumHealth;
-
-    public bool flinch;
-    protected Animator animator;
-
-	public bool destroyOnDeath = true;
-
-	public AudioClip hitSound;
-    public float hitTimeout;
-    protected float currentHitTimeout;
-    protected SpriteRenderer spriteRenderer;
-    protected Color originalColor;
-
-    public AudioClip deathSound;
-    public Fleeting deathResidue;
-    public Vector2 deathResidueOffset = Vector2.zero;
-
-    [HideInInspector]
-    public bool dodging;
-    [HideInInspector]
-    public bool invulnerable;
-
-    public void Awake()
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Damagable : MonoBehaviour
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int InitialHealth;
+        public int CurrentHealth { get; protected set; }
+        public int MaximumHealth;
 
-	public void Start()
-    {
-		currentHealth = initialHealth;
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Flinch;
+        protected Animator Animator;
 
-    public void Update()
-    {
-        if (currentHitTimeout > 0)
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool DestroyOnDeath = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioClip HitSound;
+        public float HitTimeout;
+        protected float CurrentHitTimeout;
+        protected SpriteRenderer SpriteRenderer;
+        protected Color OriginalColor;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioClip DeathSound;
+        public Fleeting DeathResidue;
+        public Vector2 DeathResidueOffset = Vector2.zero;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [HideInInspector] public bool Dodging;
+        [HideInInspector] public bool Invulnerable;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Awake()
         {
-            currentHitTimeout = Mathf.Max(0, currentHitTimeout - Time.deltaTime);
+            SpriteRenderer = GetComponent<SpriteRenderer>();
+            Animator = GetComponent<Animator>();
+        }
 
-            if (currentHitTimeout <= 0 && spriteRenderer && originalColor != null)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
+        {
+            CurrentHealth = InitialHealth;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Update()
+        {
+            if (CurrentHitTimeout > 0)
             {
-                spriteRenderer.color = originalColor;
+                CurrentHitTimeout = Mathf.Max(0, CurrentHitTimeout - Time.deltaTime);
+
+                if (CurrentHitTimeout <= 0 && SpriteRenderer)
+                {
+                    SpriteRenderer.color = OriginalColor;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cause"></param>
+        /// <param name="damage"></param>
+        public void TakeDamage(Damager cause, int damage)
+        {
+            if (!CanBeHit(cause))
+            {
+                return;
+            }
+
+            CurrentHealth = Mathf.Max(0, CurrentHealth - damage);
+
+            if (CurrentHealth > 0)
+            {
+                Hit();
+            }
+            else
+            {
+                Die();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cause"></param>
+        /// <returns></returns>
+        protected bool CanBeHit(Damager cause)
+        {
+            if (Invulnerable)
+            {
+                return false;
+            }
+
+            if (Immune(cause))
+            {
+                return false;
+            }
+
+            if (cause.Dodgeable && Dodging)
+            {
+                return false;
+            }
+
+            if (CurrentHitTimeout > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cause"></param>
+        /// <returns></returns>
+        protected virtual bool Immune(Damager cause)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Kill()
+        {
+            CurrentHealth = 0;
+            
+            Die();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="amount"></param>
+        public void Heal(int amount)
+        {
+            CurrentHealth = Mathf.Min(MaximumHealth, CurrentHealth + amount);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Restore()
+        {
+            CurrentHealth = MaximumHealth;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Revive()
+        {
+            CurrentHealth = InitialHealth;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Hit()
+        {
+            SendMessage("OnHit", null, SendMessageOptions.DontRequireReceiver);
+
+            if (HitSound)
+            {
+                AudioSource.PlayClipAtPoint(HitSound, transform.position);
+            }
+
+            if (Flinch)
+            {
+                Animator.SetTrigger("Flinch");
+            }
+
+            if (HitTimeout > 0)
+            {
+                CurrentHitTimeout = HitTimeout;
+
+                if (SpriteRenderer)
+                {
+                    OriginalColor = SpriteRenderer.color;
+                    Color newColor = new Color(OriginalColor.r, OriginalColor.g, OriginalColor.b, OriginalColor.a * 0.5f);
+                    SpriteRenderer.color = newColor;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void OnFlinchAnimationStart()
+        {
+            SendMessage("OnFlinch", null, SendMessageOptions.RequireReceiver);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void OnFlinchAnimationEnd()
+        {
+            SendMessage("OnFlinchEnd", null, SendMessageOptions.RequireReceiver);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Die()
+        {
+            SendMessage("OnDeath", this, SendMessageOptions.DontRequireReceiver);
+
+            if (DeathSound)
+            {
+                AudioSource.PlayClipAtPoint(DeathSound, transform.position);
+            }
+
+            if (DeathResidue)
+            {
+                Vector3 deathResiduePosition = new Vector3(
+                    transform.position.x + transform.localScale.x / 2 + DeathResidueOffset.x,
+                    transform.position.y + transform.localScale.y / 2 + DeathResidueOffset.y,
+                    transform.position.z
+                );
+                
+                Instantiate(DeathResidue, deathResiduePosition, Quaternion.identity);
+            }
+
+            if (DestroyOnDeath)
+            {
+                Destroy(gameObject);
             }
         }
     }
-
-    public void TakeDamage(Damager cause, int damage)
-    {
-        if (!CanBeHit(cause))
-        {
-            return;
-        }
-		
-		currentHealth = Mathf.Max(0, currentHealth - damage);
-
-		if (currentHealth > 0)
-        {
-			Hit();
-		}
-        else
-        {
-			Die();
-		}
-	}
-
-    protected bool CanBeHit(Damager cause)
-    {
-        if (invulnerable)
-        {
-            return false;
-        }
-
-        if (Immune(cause))
-        {
-            return false;
-        }
-        
-        if (cause.dodgeable && dodging)
-        {
-            return false;
-        }
-
-        if (currentHitTimeout > 0)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected virtual bool Immune(Damager cause)
-    {
-        return false;
-    }
-
-	public void Kill()
-    {
-		currentHealth = 0;
-		Die();
-	}
-
-	public void Heal(int amount)
-    {
-		currentHealth = Mathf.Min(maximumHealth, currentHealth + amount);
-	}
-
-	public void Restore()
-    {
-		currentHealth = maximumHealth;
-	}
-
-	public void Revive()
-    {
-		currentHealth = initialHealth;
-	}
-
-	protected void Hit()
-    {
-		SendMessage("OnHit", null, SendMessageOptions.DontRequireReceiver);
-
-		if (hitSound)
-        {
-			AudioSource.PlayClipAtPoint(hitSound, transform.position);
-		}
-
-        if (flinch)
-        {
-            animator.SetTrigger("Flinch");
-        }
-
-        if (hitTimeout > 0)
-        {
-            currentHitTimeout = hitTimeout;
-
-            if (spriteRenderer)
-            {
-                originalColor = spriteRenderer.color;
-                Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, originalColor.a * 0.5f);
-                spriteRenderer.color = newColor;
-            }
-        }
-	}
-
-    private void OnFlinchAnimationStart()
-    {
-        SendMessage("OnFlinch", null, SendMessageOptions.RequireReceiver);
-    }
-
-    private void OnFlinchAnimationEnd()
-    {
-        SendMessage("OnFlinchEnd", null, SendMessageOptions.RequireReceiver);
-    }
-
-	protected void Die()
-    {
-		SendMessage("OnDeath", this, SendMessageOptions.DontRequireReceiver);
-
-		if (deathSound)
-        {
-			AudioSource.PlayClipAtPoint(deathSound, transform.position);
-		}
-
-        if (deathResidue)
-        {
-            Vector3 deathResiduePosition = new Vector3(transform.position.x + deathResidueOffset.x, transform.position.y + deathResidueOffset.y, transform.position.z);
-            Instantiate(deathResidue, deathResiduePosition, Quaternion.identity);
-        }
-
-		if (destroyOnDeath)
-        {
-			Destroy(gameObject);
-		}
-	}
 }

@@ -1,71 +1,86 @@
-﻿using UnityEngine;
-using Objects.Collectables.Items;
+﻿using Objects.Collectables.Items;
+using Objects.Obstacles;
+using Traits;
+using UnityEngine;
 
-/**
- * 
- */
-public class Bomb : MonoBehaviour
+namespace Objects.Projectiles
 {
-	private bool fuseLit;
-	public float fuseLength = 5f;
-
-	public Fleeting explosion;
-
-    [HideInInspector]
-    public Bombs origin;
-
-	/**
-	 * 
-	 */
-	public void Update()
+	/// <summary>
+	/// 
+	/// </summary>
+	public class Bomb : MonoBehaviour
 	{
-		if (fuseLit)
-        {
-            fuseLength -= Time.deltaTime;
+		/// <summary>
+		/// 
+		/// </summary>
+		private bool FuseLit;
+		public float FuseLength = 5f;
 
-			if (fuseLength <= 0)
-            {
-				Explode();
+		/// <summary>
+		/// 
+		/// </summary>
+		public Fleeting Explosion;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[HideInInspector] public Bombs Origin;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Update()
+		{
+			if (FuseLit)
+			{
+				FuseLength -= Time.deltaTime;
+
+				if (FuseLength <= 0)
+				{
+					Explode();
+				}
 			}
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void LightFuse()
+		{
+			FuseLit = true;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Explode()
+		{
+			if (Origin)
+			{
+				Origin.BombCount--;
+			}
+
+			Instantiate(Explosion, transform.position, Quaternion.identity);
+
+			Destroy(gameObject);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="flame"></param>
+		public void OnFlameEnter(Flame flame)
+		{
+			FuseLength = 0f;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="explosion"></param>
+		public void OnExplosionEnter(Explosion explosion)
+		{
+			FuseLength = 0.15f;
+		}
 	}
-
-	/**
-	 * 
-	 */
-	public void LightFuse()
-    {
-        fuseLit = true;
-	}
-
-	/**
-	 * 
-	 */
-	public void Explode()
-	{
-        if (origin)
-        {
-            origin.bombCount--;
-        }
-
-		Instantiate(explosion, transform.position, Quaternion.identity);
-
-		Destroy(gameObject);
-	}
-
-    /**
-     *
-     */
-    public void OnFlameEnter(Flame flame)
-    {
-        this.fuseLength = 0f;
-    }
-
-    /**
-     *
-     */
-    public void OnExplosionEnter(Explosion explosion)
-    {
-        this.fuseLength = 0.15f;
-    }
 }

@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6f12a34c-77b9-4579-bca7-99bb323f4e19" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Assets/Editor/NineTile.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Assets/Editor/NineTile.cs.meta" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Collectables/Items/Boomerang.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Collectables/Items/Boomerang.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Collectables/Items/Bow - Fire Arrows.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Collectables/Items/Bow - Fire Arrows.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Collectables/Key.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Collectables/Key.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Containers/Iron Chest.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Containers/Iron Chest.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Environment/Checkpoint.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Environment/Checkpoint.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Door (Locked).prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Door (Locked).prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Door Switch.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Door Switch.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Door.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Door.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Explodable Block 1.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Explodable Block 1.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Explodable Block 2.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Explodable Block 2.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Explodable Block Big 1.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Explodable Block Big 1.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Push Block.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Obstacles/Push Block.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Player.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Player.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Projectiles/Boomerang.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Projectiles/Boomerang.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Projectiles/Fire Arrow.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Projectiles/Fire Arrow.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Background Floor 1.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Background Floor 1.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Background Wall 1.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Background Wall 1.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Background Wall 3.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Background Wall 3.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Floor 1.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Floor 1.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Wall 1.prefab" afterPath="$PROJECT_DIR$/Assets/Prefabs/Tiles/Elliot Quest/Wall 1.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scenes/Demo.unity" afterPath="$PROJECT_DIR$/Assets/Scenes/Demo.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scenes/Staging/Native Tilemap.unity" afterPath="$PROJECT_DIR$/Assets/Scenes/Staging/Native Tilemap.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scenes/Staging/Obstacles/Door Key.unity" afterPath="$PROJECT_DIR$/Assets/Scenes/Staging/Obstacles/Door Key.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scenes/Staging/Obstacles/Door Switch.unity" afterPath="$PROJECT_DIR$/Assets/Scenes/Staging/Obstacles/Door Switch.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scenes/Staging/Obstacles/Explodable Ground.unity" afterPath="$PROJECT_DIR$/Assets/Scenes/Staging/Obstacles/Explodable Ground.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Sprites/Pyxel/Mockups/Forest.pyxel" afterPath="$PROJECT_DIR$/Assets/Sprites/Pyxel/Mockups/Forest.pyxel" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Background/Rock Backdrop.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Background/Rock Backdrop.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Background/Rock Background.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Background/Rock Background.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Flowers.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Flowers.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Grass.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Grass.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Reeds.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Reeds.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Rocks.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Rocks.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Waterfall (Top).prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Waterfall (Top).prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Waterfall.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Decor/Waterfall.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Liquids/Lava.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Liquids/Lava.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Liquids/Water.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Liquids/Water.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ladder - Top.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ladder - Top.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ledge - Left Extension.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ledge - Left Extension.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ledge - Left.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ledge - Left.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ledge - Right Extension.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ledge - Right Extension.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ledge - Right.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Ledge - Right.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Signpost.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Signpost.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Spikes.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Spikes.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Stick.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Stick.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Torch - Lit.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Torch - Lit.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Torch - Unlit.prefab" afterPath="$PROJECT_DIR$/Assets/TileTool2D/Resources/Tiles/Objects/Torch - Unlit.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Tiles/Decoration/Grass.asset" afterPath="$PROJECT_DIR$/Assets/Tiles/Decoration/Grass.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Tiles/Platforms/Dirt.asset" afterPath="$PROJECT_DIR$/Assets/Tiles/Platforms/Dirt.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Tiles/Terrain/Dirt.asset" afterPath="$PROJECT_DIR$/Assets/Tiles/Terrain/Dirt.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Tiles/Terrain/Grassy Dirt.asset" afterPath="$PROJECT_DIR$/Assets/Tiles/Terrain/Grassy Dirt.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Tiles/Terrain/Grassy Rock.asset" afterPath="$PROJECT_DIR$/Assets/Tiles/Terrain/Grassy Rock.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Tiles/Terrain/Icy Dirt.asset" afterPath="$PROJECT_DIR$/Assets/Tiles/Terrain/Icy Dirt.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" afterPath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectSettings/InputManager.asset" afterPath="$PROJECT_DIR$/ProjectSettings/InputManager.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Editor/MorphTile.cs" afterPath="$PROJECT_DIR$/Assets/Editor/MorphTile.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Editor/TerrainTile.cs" afterPath="$PROJECT_DIR$/Assets/Editor/TerrainTile.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Obstacles/Flame.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Obstacles/Flame.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Tiles/Decoration/Grass.asset.meta" afterPath="$PROJECT_DIR$/Assets/Tiles/Decoration/Grass.asset.meta" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileColors">
+    <fileColor scope="Non-Project Files (Material Default)" color="2E3C43" />
+    <fileColor scope="Non-Project Files (Material Darker)" color="323232" />
+    <fileColor scope="Non-Project Files (Material Lighter)" color="eae8e8" />
+    <fileColor scope="Non-Project Files (Material Palenight)" color="2f2e43" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="JumpPlatform.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Platforms/JumpPlatform.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PhysicsPlatform2D.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Platforms/PhysicsPlatform2D.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TracerCog.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Platforms/TracerCog.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Climbable.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Traits/Climbable.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Collectable.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Traits/Collectable.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="161">
+              <caret line="7" column="44" lean-forward="false" selection-start-line="7" selection-start-column="44" selection-end-line="7" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Collector.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Traits/Collector.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Tracer.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Traits/Tracer.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PhysicsVolume2D.cs.meta" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Volumes/PhysicsVolume2D.cs.meta">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Flame.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Obstacles/Flame.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="138">
+              <caret line="6" column="20" lean-forward="false" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Obstacles/Flame.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PhpServers">
+    <servers />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="x" value="1440" />
+    <option name="y" value="-338" />
+    <option name="width" value="2560" />
+    <option name="height" value="1440" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Metroidvania" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Metroidvania" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="Metroidvania" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Metroidvania" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Assets" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="Metroidvania" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Metroidvania" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Assets" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Scripts" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="Metroidvania" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Metroidvania" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Assets" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Scripts" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Objects" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="Metroidvania" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Metroidvania" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Assets" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Scripts" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Objects" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Obstacles" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="HbShouldOpenHtmlAsHb" value="" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6f12a34c-77b9-4579-bca7-99bb323f4e19" name="Default" comment="" />
+      <created>1509104073713</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1509104073713</updated>
+      <workItem from="1509104075128" duration="1673000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1673000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="1440" y="-338" width="2560" height="1440" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24980143" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Player.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-11264">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Character/CharacterController2D.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-20515">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Character/CharacterControllerParameters2D.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Character/CharacterControllerState2D.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Enemies/Bat.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Enemies/EvilBush.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Enemies/Projectile.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="805">
+          <caret line="35" column="25" lean-forward="false" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Collectables.meta">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Collectables/Coin.cs.meta">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Collectables/Coin.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Collectables/Item.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1182">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Collectables/Key.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Obstacles/Switch.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Platforms/ConveyorPlatform.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Platforms/JumpPlatform.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Platforms/PhysicsPlatform2D.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Obstacles/Flame.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="6" column="20" lean-forward="false" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Volumes/PhysicsVolume2D.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="13" column="23" lean-forward="true" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Volumes/PhysicsVolume2D.cs.meta">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Traits/Tracer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Traits/Collector.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Traits/Collectable.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="7" column="44" lean-forward="false" selection-start-line="7" selection-start-column="44" selection-end-line="7" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Traits/Climbable.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Platforms/TracerCog.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

@@ -1,50 +1,61 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-/**
- * 
- */
-public class ZoneManager : MonoBehaviour
+namespace Utility
 {
-    private static Zone currentZone;
-    private static Zone previousZone;
-
-    /**
-     * 
-     */
-    public static void SetCurrentZone(Zone nextZone)
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ZoneManager : MonoBehaviour
     {
-        if (currentZone)
+        /// <summary>
+        /// 
+        /// </summary>
+        private static Zone CurrentZone;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private static Zone PreviousZone;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nextZone"></param>
+        public static void SetCurrentZone(Zone nextZone)
         {
-            currentZone.SendMessage("OnLeave", nextZone, SendMessageOptions.RequireReceiver);
-            previousZone = currentZone;
+            if (CurrentZone)
+            {
+                CurrentZone.SendMessage("OnLeave", nextZone, SendMessageOptions.RequireReceiver);
+                PreviousZone = CurrentZone;
+            }
+
+            if (!CurrentZone)
+            {
+                nextZone.SendMessage("OnFirstEnter", null, SendMessageOptions.RequireReceiver);
+            }
+            else
+            {
+                nextZone.SendMessage("OnEnter", CurrentZone, SendMessageOptions.RequireReceiver);
+            }
+
+            CurrentZone = nextZone;
         }
 
-        if (!currentZone)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static Zone GetCurrentZone()
         {
-            nextZone.SendMessage("OnFirstEnter", null, SendMessageOptions.RequireReceiver);
+            return CurrentZone;
         }
-        else
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void RestorePreviousZone()
         {
-            nextZone.SendMessage("OnEnter", currentZone, SendMessageOptions.RequireReceiver);
+            SetCurrentZone(PreviousZone);
         }
-
-        currentZone = nextZone;
-    }
-
-    /**
-     * 
-     */
-    public static Zone GetCurrentZone()
-    {
-        return currentZone;
-    }
-
-    /**
-     * 
-     */
-    public static void RestorePreviousZone()
-    {
-        SetCurrentZone(previousZone);
     }
 }

@@ -1,47 +1,80 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
-public class Projectile : MonoBehaviour {
+namespace Enemies
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Projectile : MonoBehaviour
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        private Rigidbody2D Body;
 
-	private Rigidbody2D body;
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Speed;
 
-	public float speed;
-	public float fuseDuration;
+        /// <summary>
+        /// 
+        /// </summary>
+        public float FuseDuration;
 
-	void Start() {
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
+        {
+            Body = GetComponent<Rigidbody2D>();
 
-		body = GetComponent<Rigidbody2D>();
+            if (FuseDuration > 0)
+            {
+                StartCoroutine(OnFuseLit());
+            }
+        }
 
-		if (fuseDuration > 0) {
-			StartCoroutine(OnFuseLit());
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Update()
+        {
+            var velocity = new Vector3(
+                Speed * transform.localScale.x,
+                Body.velocity.y
+            );
 
-	}
+            Body.velocity = velocity;
+        }
 
-	void Update() {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        public void OnTriggerEnter2D(Collider2D other)
+        {
+            OnHit();
+        }
 
-		var velocity = new Vector3(
-			speed * transform.localScale.x,
-			body.velocity.y
-		);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator OnFuseLit()
+        {
+            yield return new WaitForSeconds(FuseDuration);
 
-		body.velocity = velocity;
+            OnHit();
+        }
 
-	}
-
-	void OnTriggerEnter2D(Collider2D other) {
-		OnHit();
-	}
-
-	IEnumerator OnFuseLit() {
-
-		yield return new WaitForSeconds(fuseDuration);
-
-		OnHit();
-
-	}
-
-	void OnHit() {
-		Destroy(gameObject);
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        void OnHit()
+        {
+            Destroy(gameObject);
+        }
+    }
 }

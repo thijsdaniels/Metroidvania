@@ -1,26 +1,48 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Traits;
+using UnityEngine;
+using Utility;
 
-[RequireComponent(typeof(Tracer))]
-
-public class TracerCog : MonoBehaviour
+namespace Objects.Platforms
 {
-    public float degreesPerSecond = 90f;
-
-    private float rotation;
-
-    public void Update()
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(Tracer))]
+    public class TracerCog : MonoBehaviour
     {
-        transform.Rotate(0, 0, this.rotation * Time.deltaTime);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        public float DegreesPerSecond = 90f;
 
-    public void OnTracerContinue(Path.Direction direction)
-    {
-        this.rotation = degreesPerSecond * (direction.Equals(Path.Direction.Forward) ? 1 : -1);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        private float Rotation;
 
-    public void OnTracerPause()
-    {
-        this.rotation = 0f;
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Update()
+        {
+            transform.Rotate(0, 0, Rotation * Time.deltaTime);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="direction"></param>
+        public void OnTracerContinue(Path.Directions direction)
+        {
+            Rotation = DegreesPerSecond * (direction.Equals(Path.Directions.Forward) ? 1 : -1);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnTracerPause()
+        {
+            Rotation = 0f;
+        }
     }
 }

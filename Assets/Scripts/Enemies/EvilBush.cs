@@ -1,77 +1,116 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
-public class EvilBush : MonoBehaviour {
+namespace Enemies
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class EvilBush : MonoBehaviour
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        private Animator Animator;
 
-	private Animator animator;
+        /// <summary>
+        /// 
+        /// </summary>
+        public Transform Target;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public float AttackDelay;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public Projectile Projectile;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public float ProjectileSpeed;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioClip ShootSound;
 
-	public Transform target;
-	public float attackDelay;
-	public Projectile projectile;
-	public float projectileSpeed;
-	public AudioClip shootSound;
-	
-	void Start() {
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
+        {
+            // get a reference to the animator
+            Animator = GetComponent<Animator>();
 
-		// get a reference to the animator
-		animator = GetComponent<Animator>();
+            // start the attack co-routine
+            if (AttackDelay > 0)
+            {
+                StartCoroutine(OnAttack());
+            }
+        }
 
-		// start the attack co-routine
-		if (attackDelay > 0) {
-			StartCoroutine(OnAttack());
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator OnAttack()
+        {
+            // wait out the attack interval
+            yield return new WaitForSeconds(AttackDelay);
 
-	}
-	
-	void Update() {
-		
-	}
+            // shoot a projectile
+            Attack();
 
-	IEnumerator OnAttack() {
+            // restart the attack co-routine
+            StartCoroutine(OnAttack());
+        }
 
-		// wait out the attack interval
-		yield return new WaitForSeconds(attackDelay);
+        /// <summary>
+        /// 
+        /// </summary>
+        private void Attack()
+        {
+            if (Target)
+            {
+                Animator.SetTrigger("Attack");
+            }
+        }
 
-		// shoot a projectile
-		Attack();
+        /// <summary>
+        /// 
+        /// </summary>
+        private void OnShoot()
+        {
+            if (!Target || !Projectile)
+            {
+                return;
+            }
+        
+            // create a projectile
+            Projectile projectileInstance = Instantiate(Projectile, transform.position, Quaternion.identity);
 
-		// restart the attack co-routine
-		StartCoroutine(OnAttack());
+            // determine the direction to the target
+            int direction = Target.position.x > transform.position.x ? 1 : -1;
 
-	}
+            // flip the projectile in the target's direction
+            projectileInstance.transform.localScale = new Vector3(
+                projectileInstance.transform.localScale.x * direction,
+                projectileInstance.transform.localScale.y,
+                projectileInstance.transform.localScale.z
+            );
 
-	void Attack() {
-		if (target) {
-			animator.SetTrigger("Attack");
-		}
-	}
+            // set the projectile's speed
+            projectileInstance.Speed = ProjectileSpeed;
 
-	void OnShoot() {
-
-		if (target && projectile) {
-
-			// create a projectile
-			Projectile projectileInstance = Instantiate(projectile, transform.position, Quaternion.identity) as Projectile;
-
-			// determine the direction to the target
-			var direction = target.position.x > transform.position.x ? 1 : -1;
-
-			// flip the projectile in the target's direction
-			projectileInstance.transform.localScale = new Vector3(
-				projectileInstance.transform.localScale.x * direction,
-				projectileInstance.transform.localScale.y,
-				projectileInstance.transform.localScale.z
-			);
-
-			// set the projectile's speed
-			projectileInstance.speed = projectileSpeed;
-
-			// play the shoot sound
-			if (shootSound) {
-				AudioSource.PlayClipAtPoint(shootSound, transform.position);
-			}
-
-		}
-	}
-
+            // play the shoot sound
+            if (ShootSound)
+            {
+                AudioSource.PlayClipAtPoint(ShootSound, transform.position);
+            }
+        }
+    }
 }

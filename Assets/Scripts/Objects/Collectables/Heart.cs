@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Traits;
 
 namespace Objects.Collectables
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [RequireComponent(typeof(Collectable))]
-
     public class Heart : MonoBehaviour
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collector"></param>
         public void OnCollect(Collector collector)
         {
-            var damagable = collector.GetComponent<Damagable>();
+            Damagable damagable = collector.GetComponent<Damagable>();
 
             if (damagable)
             {

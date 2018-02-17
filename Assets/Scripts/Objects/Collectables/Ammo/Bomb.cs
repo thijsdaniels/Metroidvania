@@ -1,17 +1,27 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Traits;
 
 namespace Objects.Collectables.Ammo
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [RequireComponent(typeof(Collectable))]
-
     public class Bomb : MonoBehaviour
     {
-        public int value;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Value;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collector"></param>
         public void OnCollect(Collector collector)
         {
-            collector.ammo.bombs.Add(value);
+            collector.Bombs.Add(Value);
+            
             Destroy(gameObject);
         }
     }

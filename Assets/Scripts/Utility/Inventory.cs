@@ -1,293 +1,369 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Character;
 using Objects.Collectables;
+using Traits;
+using UnityEngine;
 
-[RequireComponent(typeof(Player))]
-[RequireComponent(typeof(CharacterController2D))]
-[RequireComponent(typeof(Collector))]
-
-public class Inventory : MonoBehaviour
+namespace Utility
 {
-    protected Player player;
-    protected CharacterController2D controller;
-    protected Collector collector;
-
-    protected Vector2 itemGrid = new Vector2(6, 3);
-    protected Vector2 itemMargin = new Vector2(48, 32);
-    protected Vector2 itemSize = new Vector2(16, 16);
-    protected Vector2 itemSpacing = new Vector2(8, 8);
-    protected Vector2 itemPadding = new Vector2(2, 2);
-
-    protected float scale;
-    protected bool isOpen = false;
-    protected float oldTimeScale;
-
-    protected Vector2 cursorPosition = Vector2.zero;
-    protected float cursorDeadZone = 0.5f;
-    protected bool cursorLocked;
-
-    public void Start()
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(Player))]
+    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Collector))]
+    public class Inventory : MonoBehaviour
     {
-        player = GetComponent<Player>();
-        controller = GetComponent<CharacterController2D>();
-        collector = GetComponent<Collector>();
+        /// <summary>
+        /// 
+        /// </summary>
+        protected Player Player;
+        protected CharacterController2D Controller;
+        protected Collector Collector;
 
-        scale = Camera.main.orthographicSize;
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected Vector2 ItemGrid = new Vector2(6, 3);
+        protected Vector2 ItemMargin = new Vector2(48, 32);
+        protected Vector2 ItemSize = new Vector2(16, 16);
+        protected Vector2 ItemSpacing = new Vector2(8, 8);
+        protected Vector2 ItemPadding = new Vector2(2, 2);
 
-    public void Update()
-    {
-        if (Input.GetButtonDown("Inventory"))
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float Scale;
+        protected bool IsOpen;
+        protected float OldTimeScale;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected Vector2 CursorPosition = Vector2.zero;
+        protected float CursorDeadZone = 0.5f;
+        protected bool CursorLocked;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
         {
-            Toggle();
+            Player = GetComponent<Player>();
+            Controller = GetComponent<CharacterController2D>();
+            Collector = GetComponent<Collector>();
+
+            Scale = Camera.main.orthographicSize;
         }
 
-        if (!isOpen)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Update()
         {
-            return;
-        }
-
-        MoveCursor(new Vector2(
-            Input.GetAxis("Horizontal Primary"),
-            Input.GetAxis("Vertical Primary") * -1
-        ));
-
-        if (Input.GetButtonDown("Item Primary"))
-        {
-            Select(cursorPosition, Player.ItemSlot.Primary);
-        }
-
-        if (Input.GetButtonDown("Item Secondary"))
-        {
-            Select(cursorPosition, Player.ItemSlot.Secondary);
-        }
-
-        if (Input.GetButtonDown("Item Tertiary"))
-        {
-            Select(cursorPosition, Player.ItemSlot.Tertiary);
-        }
-
-        if (Input.GetButtonDown("Item Quaternary"))
-        {
-            Select(cursorPosition, Player.ItemSlot.Quaternary);
-        }
-    }
-
-    protected void Toggle()
-    {
-        if (!isOpen)
-        {
-            if (CanOpen())
+            if (Input.GetButtonDown("Inventory"))
             {
-                Open();
+                Toggle();
+            }
+
+            if (!IsOpen)
+            {
+                return;
+            }
+
+            MoveCursor(new Vector2(
+                Input.GetAxis("Horizontal Primary"),
+                Input.GetAxis("Vertical Primary") * -1
+            ));
+
+            if (Input.GetButtonDown("Item Primary"))
+            {
+                Select(CursorPosition, Player.ItemSlots.Primary);
+            }
+
+            if (Input.GetButtonDown("Item Secondary"))
+            {
+                Select(CursorPosition, Player.ItemSlots.Secondary);
+            }
+
+            if (Input.GetButtonDown("Item Tertiary"))
+            {
+                Select(CursorPosition, Player.ItemSlots.Tertiary);
+            }
+
+            if (Input.GetButtonDown("Item Quaternary"))
+            {
+                Select(CursorPosition, Player.ItemSlots.Quaternary);
             }
         }
-        else
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Toggle()
         {
-            Close();
-        }
-    }
-
-    protected bool CanOpen()
-    {
-        return controller.State.IsGrounded();
-    }
-
-    protected void Open()
-    {
-        if (isOpen)
-        {
-            return;
-        }
-
-        oldTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
-
-        player.StopListening();
-
-        isOpen = true;
-    }
-
-    protected void Close()
-    {
-        if (!isOpen)
-        {
-            return;
-        }
-
-        Time.timeScale = oldTimeScale;
-
-        player.StartListening();
-
-        isOpen = false;
-    }
-
-    public void OnGUI()
-    {
-        if (!isOpen)
-        {
-            return;
-        }
-
-        DrawBackground();
-
-        DrawSlots();
-
-        DrawCursor(cursorPosition);
-
-        DrawItems();
-    }
-
-    protected void DrawBackground()
-    {
-        GUI.depth = 4;
-
-        Rect position = new Rect(0f, 0f, Camera.main.pixelWidth, Camera.main.pixelHeight);
-        Color color = new Color(0f, 0f, 0f, 0.5f);
-
-        Texture2D texture = new Texture2D(1, 1);
-        texture.SetPixel(0, 0, color);
-        texture.Apply();
-
-        GUI.skin.box.normal.background = texture;
-
-        GUI.Box(position, GUIContent.none);
-    }
-
-    protected void DrawCursor(Vector2 position)
-    {
-        GUI.depth = 1;
-
-        Color color = new Color(0.26f, 0.58f, 0.66f, 0.5f);
-
-        Texture2D texture = new Texture2D(1, 1);
-        texture.SetPixel(0, 0, color);
-        texture.Apply();
-
-        GUI.skin.box.normal.background = texture;
-
-        Vector2 positionOnCamera = PositionToCameraSpace(position);
-
-        GUI.Box(new Rect((positionOnCamera.x - itemPadding.x) * scale, (positionOnCamera.y - itemPadding.y) * scale, (itemSize.x + (itemPadding.x * 2)) * scale, (itemSize.y + (itemPadding.y * 2)) * scale), GUIContent.none);
-    }
-
-    protected void DrawSlots()
-    {
-        for (int y = 0; y < itemGrid.y; y++)
-        {
-            for (int x = 0; x < itemGrid.x; x++)
+            if (!IsOpen)
             {
-                DrawSlot(new Vector2(x, y));
-            }
-        }
-    }
-
-    protected void DrawItems()
-    {
-        for (int y = 0; y < itemGrid.y; y++)
-        {
-            for (int x = 0; x < itemGrid.x; x++)
-            {
-                int index = y * (int) itemGrid.x + x;
-
-                if (collector.items.Count > index)
+                if (CanOpen())
                 {
-                    DrawItem(collector.items[index], new Vector2(x, y));
+                    Open();
+                }
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected bool CanOpen()
+        {
+            return Controller.State.IsGrounded();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Open()
+        {
+            if (IsOpen)
+            {
+                return;
+            }
+
+            OldTimeScale = Time.timeScale;
+            Time.timeScale = 0f;
+
+            Player.StopListening();
+
+            IsOpen = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Close()
+        {
+            if (!IsOpen)
+            {
+                return;
+            }
+
+            Time.timeScale = OldTimeScale;
+
+            Player.StartListening();
+
+            IsOpen = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnGUI()
+        {
+            if (!IsOpen)
+            {
+                return;
+            }
+
+            DrawBackground();
+
+            DrawSlots();
+
+            DrawCursor(CursorPosition);
+
+            DrawItems();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void DrawBackground()
+        {
+            GUI.depth = 4;
+
+            Rect position = new Rect(0f, 0f, Camera.main.pixelWidth, Camera.main.pixelHeight);
+            Color color = new Color(0f, 0f, 0f, 0.5f);
+
+            Texture2D texture = new Texture2D(1, 1);
+            texture.SetPixel(0, 0, color);
+            texture.Apply();
+
+            GUI.skin.box.normal.background = texture;
+
+            GUI.Box(position, GUIContent.none);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="position"></param>
+        protected void DrawCursor(Vector2 position)
+        {
+            GUI.depth = 1;
+
+            Color color = new Color(0.26f, 0.58f, 0.66f, 0.5f);
+
+            Texture2D texture = new Texture2D(1, 1);
+            texture.SetPixel(0, 0, color);
+            texture.Apply();
+
+            GUI.skin.box.normal.background = texture;
+
+            Vector2 positionOnCamera = PositionToCameraSpace(position);
+
+            GUI.Box(new Rect((positionOnCamera.x - ItemPadding.x) * Scale, (positionOnCamera.y - ItemPadding.y) * Scale, (ItemSize.x + (ItemPadding.x * 2)) * Scale, (ItemSize.y + (ItemPadding.y * 2)) * Scale), GUIContent.none);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void DrawSlots()
+        {
+            for (int y = 0; y < ItemGrid.y; y++)
+            {
+                for (int x = 0; x < ItemGrid.x; x++)
+                {
+                    DrawSlot(new Vector2(x, y));
                 }
             }
         }
-    }
 
-    protected void DrawSlot(Vector2 position)
-    {
-        if (position == cursorPosition)
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void DrawItems()
         {
-            return;
+            for (int y = 0; y < ItemGrid.y; y++)
+            {
+                for (int x = 0; x < ItemGrid.x; x++)
+                {
+                    int index = y * (int) ItemGrid.x + x;
+
+                    if (Collector.Items.Count > index)
+                    {
+                        DrawItem(Collector.Items[index], new Vector2(x, y));
+                    }
+                }
+            }
         }
 
-        GUI.depth = 2;
-
-        Color color = new Color(0f, 0f, 0f, 0.5f);
-
-        Texture2D texture = new Texture2D(1, 1);
-        texture.SetPixel(0, 0, color);
-        texture.Apply();
-
-        GUI.skin.box.normal.background = texture;
-
-        Vector2 positionOnCamera = PositionToCameraSpace(position);
-
-        GUI.Box(new Rect((positionOnCamera.x - itemPadding.x) * scale, (positionOnCamera.y - itemPadding.y) * scale, (itemSize.x + (itemPadding.x * 2)) * scale, (itemSize.y + (itemPadding.y * 2)) * scale), GUIContent.none);
-    }
-
-    protected void DrawItem(Item item, Vector2 position)
-    {
-        GUI.depth = 0;
-
-        SpriteRenderer spriteRenderer = item.GetComponent<SpriteRenderer>();
-
-        if (!spriteRenderer || !spriteRenderer.sprite)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="position"></param>
+        protected void DrawSlot(Vector2 position)
         {
-            Debug.LogError("Cannot render " + item + " at position (" + position.x + "," + position.y + "), because its sprite is not set.");
-            return;
+            if (position == CursorPosition)
+            {
+                return;
+            }
+
+            GUI.depth = 2;
+
+            Color color = new Color(0f, 0f, 0f, 0.5f);
+
+            Texture2D texture = new Texture2D(1, 1);
+            texture.SetPixel(0, 0, color);
+            texture.Apply();
+
+            GUI.skin.box.normal.background = texture;
+
+            Vector2 positionOnCamera = PositionToCameraSpace(position);
+
+            GUI.Box(new Rect((positionOnCamera.x - ItemPadding.x) * Scale, (positionOnCamera.y - ItemPadding.y) * Scale, (ItemSize.x + (ItemPadding.x * 2)) * Scale, (ItemSize.y + (ItemPadding.y * 2)) * Scale), GUIContent.none);
         }
 
-        Texture2D texture = spriteRenderer.sprite.texture;
-        Rect rectangle = spriteRenderer.sprite.textureRect;
-        Rect coordinates = new Rect(
-            rectangle.x / texture.width,
-            rectangle.y / texture.height,
-            rectangle.width / texture.width,
-            rectangle.height / texture.height
-        );
-
-        Vector2 positionOnCamera = PositionToCameraSpace(position);
-
-        GUI.DrawTextureWithTexCoords(new Rect(positionOnCamera.x * scale, positionOnCamera.y * scale, itemSize.x * scale, itemSize.y * scale), texture, coordinates);
-    }
-
-    protected Vector2 PositionToCameraSpace(Vector2 position)
-    {
-        return new Vector2(
-            itemMargin.x + position.x * (itemSize.x + itemSpacing.x),
-            itemMargin.y + position.y * (itemSize.y + itemSpacing.y)
-        );
-    }
-
-    protected void MoveCursor(Vector2 input)
-    {
-        input = new Vector2(
-            Mathf.Clamp(Mathf.Round(input.x), -1, 1),
-            Mathf.Clamp(Mathf.Round(input.y), -1, 1)
-        );
-
-        if (input.magnitude == 0)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="position"></param>
+        protected void DrawItem(Item item, Vector2 position)
         {
-            cursorLocked = false;
-            return;
+            GUI.depth = 0;
+
+            SpriteRenderer spriteRenderer = item.GetComponent<SpriteRenderer>();
+
+            if (!spriteRenderer || !spriteRenderer.sprite)
+            {
+                Debug.LogError("Cannot render " + item + " at position (" + position.x + "," + position.y + "), because its sprite is not set.");
+                return;
+            }
+
+            Texture2D texture = spriteRenderer.sprite.texture;
+            Rect rectangle = spriteRenderer.sprite.textureRect;
+            Rect coordinates = new Rect(
+                rectangle.x / texture.width,
+                rectangle.y / texture.height,
+                rectangle.width / texture.width,
+                rectangle.height / texture.height
+            );
+
+            Vector2 positionOnCamera = PositionToCameraSpace(position);
+
+            GUI.DrawTextureWithTexCoords(new Rect(positionOnCamera.x * Scale, positionOnCamera.y * Scale, ItemSize.x * Scale, ItemSize.y * Scale), texture, coordinates);
         }
 
-        if (cursorLocked)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        protected Vector2 PositionToCameraSpace(Vector2 position)
         {
-            return;
+            return new Vector2(
+                ItemMargin.x + position.x * (ItemSize.x + ItemSpacing.x),
+                ItemMargin.y + position.y * (ItemSize.y + ItemSpacing.y)
+            );
         }
 
-        cursorPosition = new Vector2(
-            Mathf.Repeat(cursorPosition.x + input.x, itemGrid.x),
-            Mathf.Repeat(cursorPosition.y + input.y, itemGrid.y)
-        );
-
-        cursorLocked = true;
-    }
-
-    protected void Select(Vector2 position, Player.ItemSlot slot)
-    {
-        int index = (int) (position.y * itemGrid.x + position.x);
-
-        if (collector.items.Count > index)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        protected void MoveCursor(Vector2 input)
         {
-            Item item = collector.items[index];
-            player.Equip(slot, item);
+            input = new Vector2(
+                Mathf.Clamp(Mathf.Round(input.x), -1, 1),
+                Mathf.Clamp(Mathf.Round(input.y), -1, 1)
+            );
+
+            if (input.magnitude == 0)
+            {
+                CursorLocked = false;
+                return;
+            }
+
+            if (CursorLocked)
+            {
+                return;
+            }
+
+            CursorPosition = new Vector2(
+                Mathf.Repeat(CursorPosition.x + input.x, ItemGrid.x),
+                Mathf.Repeat(CursorPosition.y + input.y, ItemGrid.y)
+            );
+
+            CursorLocked = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="slot"></param>
+        protected void Select(Vector2 position, Player.ItemSlots slot)
+        {
+            int index = (int) (position.y * ItemGrid.x + position.x);
+
+            if (Collector.Items.Count > index)
+            {
+                Item item = Collector.Items[index];
+                Player.Equip(slot, item);
+            }
         }
     }
 }

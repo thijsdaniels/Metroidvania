@@ -1,116 +1,182 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Traits;
+using UnityEngine;
 
-public class Door : MonoBehaviour {
-
-	private Animator animator;
-	private Collider2D myCollider;
-
-	public enum AccessMode {
-		Proximity,
-		Remote,
-		Locked
-	}
-
-	public AccessMode accessMode = AccessMode.Proximity;
-
-	public AudioClip openSound;
-	public AudioClip closeSound;
-
-    void Awake()
+namespace Objects.Obstacles
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Door : MonoBehaviour
     {
-		animator = GetComponent<Animator>();
-        myCollider = GetComponent<Collider2D>();
+        /// <summary>
+        /// 
+        /// </summary>
+        private Animator Animator;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private Collider2D Collider;
 
-        if (accessMode != AccessMode.Locked)
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum AccessModes
         {
-            animator.SetTrigger("Unlock");
+            Proximity,
+            Remote,
+            Locked
         }
 
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        public AccessModes AccessMode = AccessModes.Proximity;
 
-	public void Open()
-    {
-		animator.SetBool("Open", true);
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioClip OpenSound;
+        public AudioClip CloseSound;
 
-	public void Close()
-    {
-		animator.SetBool("Open", false);
-	}
-
-	void OnOpenStart()
-    {
-		if (openSound)
+        /// <summary>
+        /// 
+        /// </summary>
+        void Awake()
         {
-			AudioSource.PlayClipAtPoint(openSound, transform.position);
-		}
-	}
+            Animator = GetComponent<Animator>();
+            Collider = GetComponent<Collider2D>();
 
-	void OnOpenEnd()
-    {
-        myCollider.enabled = false;
-	}
-
-	void OnCloseStart()
-    {
-		if (closeSound)
-        {
-			AudioSource.PlayClipAtPoint(closeSound, transform.position);
-		}
-
-        myCollider.enabled = true;
-    }
-
-	void OnCloseEnd()
-    {
-        
-	}
-
-	void OnTriggerEnter2D(Collider2D other)
-    {
-		if (accessMode == AccessMode.Locked)
-        {
-			var collector = other.gameObject.GetComponent<Collector>();
-
-			if (collector && collector.keys > 0)
+            if (AccessMode != AccessModes.Locked)
             {
-                collector.keys--;
-                Unlock();
-			}
-		}
-        else if (accessMode == AccessMode.Proximity && other.tag == "Player")
+                Animator.SetTrigger("Unlock");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Open()
         {
-			Open();
-		}
-	}
+            Animator.SetBool("Open", true);
+        }
 
-    protected void Unlock()
-    {
-        animator.SetTrigger("Unlock");
-        Open();
-        accessMode = AccessMode.Proximity;
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Close()
+        {
+            Animator.SetBool("Open", false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void OnOpenStart()
+        {
+            if (OpenSound)
+            {
+                AudioSource.PlayClipAtPoint(OpenSound, transform.position);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void OnOpenEnd()
+        {
+            Collider.enabled = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void OnCloseStart()
+        {
+            if (CloseSound)
+            {
+                AudioSource.PlayClipAtPoint(CloseSound, transform.position);
+            }
+
+            Collider.enabled = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void OnCloseEnd()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (AccessMode == AccessModes.Locked)
+            {
+                var collector = other.gameObject.GetComponent<Collector>();
+
+                if (collector && collector.Keys > 0)
+                {
+                    collector.Keys--;
+                    
+                    Unlock();
+                }
+            }
+            else if (AccessMode == AccessModes.Proximity && other.tag == "Player")
+            {
+                Open();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Unlock()
+        {
+            Animator.SetTrigger("Unlock");
+            
+            Open();
+            
+            AccessMode = AccessModes.Proximity;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        void OnTriggerExit2D(Collider2D other)
+        {
+            if (AccessMode == AccessModes.Proximity && other.tag == "Player")
+            {
+                Close();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        public void OnSwitchPressed(Switch other)
+        {
+            if (AccessMode == AccessModes.Remote)
+            {
+                Open();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        public void OnSwitchDepressed(Switch other)
+        {
+            if (AccessMode == AccessModes.Remote)
+            {
+                Close();
+            }
+        }
     }
-
-	void OnTriggerExit2D(Collider2D other)
-    {
-		if (accessMode == AccessMode.Proximity && other.tag == "Player") {
-			Close();
-		}
-	}
-
-	public void OnSwitchPressed(Switch other)
-    {
-		if (accessMode == AccessMode.Remote) {
-			Open();
-		}
-	}
-
-	public void OnSwitchDepressed(Switch other)
-    {
-		if (accessMode == AccessMode.Remote) {
-			Close();
-		}
-	}
-
 }

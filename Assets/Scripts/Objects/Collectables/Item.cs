@@ -1,102 +1,138 @@
+using Character;
 using UnityEngine;
-using System.Collections;
+using Traits;
 
 namespace Objects.Collectables
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [RequireComponent(typeof(Collectable))]
     [RequireComponent(typeof(SpriteRenderer))]
-
-    /**
-     * 
-     */
-    abstract public class Item : MonoBehaviour
+    public abstract class Item : MonoBehaviour
     {
-        protected float coolDown = 0f;
-        protected Collector owner;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float CoolDown;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        protected Collector Owner;
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public void Update()
         {
             if (!IsCooledDown())
             {
-                CoolDown(Time.deltaTime);
+                CoolDownBy(Time.deltaTime);
             }
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool IsCooledDown()
         {
-            return coolDown <= 0f;
+            return CoolDown <= 0f;
         }
 
-        /**
-	     * 
-	     */
-        protected void CoolDown(float deltaCooldown)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaCooldown"></param>
+        protected void CoolDownBy(float deltaCooldown)
         {
-            coolDown = Mathf.Max(0f, coolDown - deltaCooldown);
+            CoolDown = Mathf.Max(0f, CoolDown - deltaCooldown);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="duration"></param>
         protected void SetCoolDown(float duration)
         {
-            coolDown = duration;
+            CoolDown = duration;
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collector"></param>
         public virtual void OnCollect(Collector collector)
         {
-            if (collector.hasItem(this))
+            if (collector.HasItem(this))
             {
                 return;
             }
 
-            collector.items.Add(this);
+            collector.Items.Add(this);
 
-            owner = collector;
+            Owner = collector;
 
-            //this.gameObject.SetActive(false); // TODO: Find a way to remove the object instance from the game world while still allowing the item to be used.
+            /*
+             * TODO: Find a way to remove the object instance from the game world while still allowing the item to be
+             */
+            // this.gameObject.SetActive(false);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual bool CanBeUsed()
         {
-            if (!owner)
+            if (!Owner)
             {
                 return false;
+            }
+            
+            CharacterController2D controller = Owner.GetComponent<CharacterController2D>();
+            
+            if (controller)
+            {
+                if (
+                    controller.State.IsRolling() ||
+                    controller.State.IsSwimming() ||
+                    controller.State.IsClimbing() ||
+                    controller.State.IsSliding())
+                {
+                    return false;
+                }
             }
 
             return true;
         }
 
-        /**
-	     * 
-	     */
-        public virtual void OnPress() { }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnPress()
+        {
+        }
 
-        /**
-	     * 
-	     */
-        public virtual void OnHold() { }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnHold()
+        {
+        }
 
-        /**
-	     * 
-	     */
-        public virtual void OnRelease() { }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnRelease()
+        {
+        }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual Collector.Ammo? GetAmmo()
         {
             return null;

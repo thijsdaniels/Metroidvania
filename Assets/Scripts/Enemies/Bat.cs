@@ -1,31 +1,39 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Bat : MonoBehaviour
+namespace Enemies
 {
-    private Animator animator;
-
-    /**
-     *
-     */
-    public void Start()
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Bat : MonoBehaviour
     {
-        animator = GetComponent<Animator>();
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        private Animator Animator;
 
-    /**
-     *
-     */
-    public void OnWakeUp()
-    {
-        animator.SetBool("Asleep", false);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
+        {
+            Animator = GetComponent<Animator>();
+        }
 
-    /**
-     *
-     */
-    public void OnFallAsleep()
-    {
-        animator.SetBool("Asleep", true);
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnWakeUp()
+        {
+            Animator.SetBool("Asleep", false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnFallAsleep()
+        {
+            Animator.SetBool("Asleep", true);
+        }
     }
 }

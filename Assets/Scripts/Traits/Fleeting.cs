@@ -1,169 +1,224 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
+using UnityEngine;
 
-public class Fleeting : MonoBehaviour
+namespace Traits
 {
-    public enum Mode
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Fleeting : MonoBehaviour
     {
-        Animator,
-        ParticleSystem,
-        Collision
-    }
-
-    public Mode mode = Mode.Animator;
-    public float delay = 0f;
-
-    new private ParticleSystem particleSystem;
-    public LayerMask collisionLayerMask;
-    public bool active = true;
-
-    /**
-     * 
-     */
-    public void Start()
-    {
-        switch(mode)
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum Modes
         {
-
-            case Mode.ParticleSystem:
-
-                particleSystem = GetComponent<ParticleSystem>();
-
-                if (!particleSystem)
-                {
-                    Debug.LogWarning("Fleeting mode 'ParticleSystem' requires a ParticleSystem component.");
-                }
-
-                break;
-
-            case Mode.Animator:
-
-                if (!GetComponent<Animator>())
-                {
-                    Debug.LogWarning("Fleeting mode 'Animator' requires a Animator component.");
-                }
-
-                break;
-
-            case Mode.Collision:
-
-                if (!GetComponent<Collider2D>())
-                {
-                    Debug.LogWarning("Fleeting mode 'Collision' requires a Collider component.");
-                }
-
-                break;
-
+            Animator,
+            ParticleSystem,
+            Collision
         }
 
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Modes Mode = Modes.Animator;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Delay;
 
-    /**
-     * 
-     */
-    public void Update()
-    {
-        if (!active)
+        /// <summary>
+        /// 
+        /// </summary>
+        private ParticleSystem ParticleSystem;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public LayerMask CollisionLayerMask;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Active = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
         {
-            return;
+            switch (Mode)
+            {
+                case Modes.ParticleSystem:
+                {
+                    ParticleSystem = GetComponent<ParticleSystem>();
+
+                    if (!ParticleSystem)
+                    {
+                        Debug.LogWarning("Fleeting mode 'ParticleSystem' requires a ParticleSystem component.");
+                    }
+
+                    break;
+                }
+                case Modes.Animator:
+                {
+                    if (!GetComponent<Animator>())
+                    {
+                        Debug.LogWarning("Fleeting mode 'Animator' requires a Animator component.");
+                    }
+
+                    break;
+                }
+                case Modes.Collision:
+                {
+                    if (!GetComponent<Collider2D>())
+                    {
+                        Debug.LogWarning("Fleeting mode 'Collision' requires a Collider component.");
+                    }
+
+                    break;
+                }
+                default:
+                {
+                    throw new ArgumentOutOfRangeException(nameof(Mode), Mode.ToString(), "Invalid Mode.");
+                }
+            }
         }
 
-        if (!mode.Equals(Mode.ParticleSystem) || !particleSystem)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void Update()
         {
-            return;
+            if (!Active)
+            {
+                return;
+            }
+
+            switch (Mode)
+            {
+                case Modes.Animator:
+                {
+                    break;
+                }
+                case Modes.ParticleSystem:
+                {
+                    if (!ParticleSystem)
+                    {
+                        throw new Exception("Cannot use Modes.ParticlesSystem without a ParticleSystem.");
+                    }
+                    
+                    if (!ParticleSystem.IsAlive())
+                    {
+                        SendMessage("OnFleetingDelay", null, SendMessageOptions.RequireReceiver);
+                
+                        ParticleSystem = null;
+                    }
+
+                    break;
+                }
+                case Modes.Collision:
+                {
+                    break;
+                }
+                default:
+                {
+                    throw new ArgumentOutOfRangeException(nameof(Mode), Mode.ToString(), "Invalid Mode.");
+                }
+            }
         }
 
-        if (!particleSystem.IsAlive())
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Activate()
         {
+            Active = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnAnimationEnd()
+        {
+            if (!Active)
+            {
+                return;
+            }
+
+            if (!Mode.Equals(Modes.Animator))
+            {
+                return;
+            }
+
             SendMessage("OnFleetingDelay", null, SendMessageOptions.RequireReceiver);
-            particleSystem = null;
         }
-    }
 
-    public void Activate()
-    {
-        active = true;
-    }
-
-    /**
-     * 
-     */
-    public void OnAnimationEnd()
-	{
-        if (!active)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collision"></param>
+        public void OnCollisionEnter2D(Collision2D collision)
         {
-            return;
+            if (!Active)
+            {
+                return;
+            }
+
+            if (!Mode.Equals(Modes.Collision))
+            {
+                return;
+            }
+
+            if (CollisionLayerMask == (CollisionLayerMask | 1 << collision.gameObject.layer))
+            {
+                SendMessage("OnFleetingDelay", null, SendMessageOptions.RequireReceiver);
+            }
         }
 
-        if (!mode.Equals(Mode.Animator))
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collider"></param>
+        public void OnTriggerEnter2D(Collider2D collider)
         {
-            return;
+            if (!Active)
+            {
+                return;
+            }
+
+            if (!Mode.Equals(Modes.Collision))
+            {
+                return;
+            }
+
+            if (CollisionLayerMask == (CollisionLayerMask | 1 << collider.gameObject.layer))
+            {
+                SendMessage("OnFleetingDelay", null, SendMessageOptions.RequireReceiver);
+            }
         }
 
-        SendMessage("OnFleetingDelay", null, SendMessageOptions.RequireReceiver);
-	}
-    
-    /**
-     *
-     */
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!active)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected IEnumerator OnFleetingDelay()
         {
-            return;
+            yield return new WaitForSeconds(Delay);
+
+            SendMessage("OnFleetingEnd", null, SendMessageOptions.RequireReceiver);
         }
 
-        if (!mode.Equals(Mode.Collision))
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnFleetingEnd()
         {
-            return;
+            Destroy(gameObject);
         }
-
-        if (((1 << collision.gameObject.layer) & collisionLayerMask) == 0)
-        {
-            return;
-        }
-
-        SendMessage("OnFleetingDelay", null, SendMessageOptions.RequireReceiver);
-    }
-
-    /**
-     *
-     */
-    public void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!active)
-        {
-            return;
-        }
-
-        if (!mode.Equals(Mode.Collision))
-        {
-            return;
-        }
-
-        if (((1 << other.gameObject.layer) & collisionLayerMask) == 0)
-        {
-            return;
-        }
-
-        SendMessage("OnFleetingDelay", null, SendMessageOptions.RequireReceiver);
-    }
-
-    /**
-     *
-     */
-    protected IEnumerator OnFleetingDelay()
-    {
-        yield return new WaitForSeconds(delay);
-
-        SendMessage("OnFleetingEnd", null, SendMessageOptions.RequireReceiver);
-    }
-
-    /**
-     *
-     */
-    public void OnFleetingEnd()
-    {
-        Destroy(gameObject);
     }
 }

@@ -1,54 +1,82 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Character;
+using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
-[RequireComponent(typeof(Interactable))]
-
-public class Climbable : MonoBehaviour
+namespace Traits
 {
-    public float offset;
-
-    private Interactable interactable;
-
-    public void Start()
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(Interactable))]
+    public class Climbable : MonoBehaviour
     {
-        interactable = GetComponent<Interactable>();
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Offset;
 
-	public void OnCharacterControllerEnter2D(CharacterController2D controller)
-    {
-		controller.AddClimbable(this);
+        /// <summary>
+        /// 
+        /// </summary>
+        private Interactable Interactable;
 
-        if (controller.State.IsClimbing())
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
         {
-            interactable.action = "Drop";
+            Interactable = GetComponent<Interactable>();
         }
-        else
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controller"></param>
+        public void OnCharacterControllerEnter2D(CharacterController2D controller)
         {
-            interactable.action = "Climb";
+            controller.AddClimbable(this);
+
+            if (controller.State.IsClimbing())
+            {
+                Interactable.Action = "Drop";
+            }
+            else
+            {
+                Interactable.Action = "Climb";
+            }
         }
-	}
 
-    public void OnCharacterControllerExit2D(CharacterController2D controller)
-    {
-		controller.RemoveClimbable();
-	}
-
-    public void OnInteraction(Player player)
-    {
-        CharacterController2D controller = player.GetComponent<CharacterController2D>();
-
-        if (controller)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controller"></param>
+        public void OnCharacterControllerExit2D(CharacterController2D controller)
         {
+            controller.RemoveClimbable();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        public void OnInteraction(Player player)
+        {
+            CharacterController2D controller = player.GetComponent<CharacterController2D>();
+
+            if (!controller)
+            {
+                return;
+            }
+
             if (!controller.State.IsClimbing() && controller.CanClimb())
             {
                 controller.StartClimbing();
-                interactable.action = "Drop";
+                Interactable.Action = "Drop";
             }
             else if (controller.State.IsClimbing())
             {
                 controller.StopClimbing();
-                interactable.action = "Climb";
+                Interactable.Action = "Climb";
             }
         }
     }

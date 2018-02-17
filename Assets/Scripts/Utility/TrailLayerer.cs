@@ -1,24 +1,45 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-[RequireComponent(typeof(TrailRenderer))]
-public class TrailLayerer : MonoBehaviour
+namespace Utility
 {
-    protected TrailRenderer trailRenderer;
-
-    public string sortingLayerName = "Default";
-    public int sortingOrder = 0;
-
-    public void Start()
+    /// <summary>
+    /// 
+    /// </summary>
+    [RequireComponent(typeof(TrailRenderer))]
+    public class TrailLayerer : MonoBehaviour
     {
-        trailRenderer = GetComponent<TrailRenderer>();
+        /// <summary>
+        /// 
+        /// </summary>
+        protected TrailRenderer TrailRenderer;
 
-        Apply();
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string SortingLayerName = "Default";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int SortingOrder;
 
-    protected void Apply()
-    {
-        trailRenderer.sortingLayerName = sortingLayerName;
-        trailRenderer.sortingOrder = sortingOrder;
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
+        {
+            TrailRenderer = GetComponent<TrailRenderer>();
+
+            Apply();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Apply()
+        {
+            TrailRenderer.sortingLayerName = SortingLayerName;
+            TrailRenderer.sortingOrder = SortingOrder;
+        }
     }
 }

@@ -1,55 +1,102 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Switch : MonoBehaviour {
+namespace Objects.Obstacles
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Switch : MonoBehaviour
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        private Animator Animator;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private int CollisionCount;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool Pressed;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public GameObject Target;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Sticky;
 
-	private Animator animator;
-	private int collisionCount;
-	private bool pressed;
+        /// <summary>
+        /// 
+        /// </summary>
+        void Start()
+        {
+            Animator = GetComponent<Animator>();
+        }
 
-	public GameObject target;
-	public bool sticky;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            // if (!other.isTrigger)
+            // {
+                CollisionCount++;
+            
+                if (!Pressed)
+                {
+                    OnPress();
+                }
+            // }
+        }
 
-	void Start() {
-		animator = GetComponent<Animator>();
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        void OnTriggerExit2D(Collider2D other)
+        {
+            if (Sticky)
+            {
+                return;
+            }
 
-	void OnTriggerEnter2D(Collider2D other) {
+            // if (!other.isTrigger)
+            // {
+                CollisionCount--;
+                
+                if (Pressed && CollisionCount <= 0)
+                {
+                    OnDepress();
+                }
+            //}
+        }
 
-		//if (!other.isTrigger) {
-			collisionCount++;
-			if (!pressed) {
-				OnPress();
-			}
-		//}
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnPress()
+        {
+            Pressed = true;
+            Animator.SetBool("Pressed", true);
+            Target.SendMessage("OnSwitchPressed", this, SendMessageOptions.RequireReceiver);
+        }
 
-	}
-
-	void OnTriggerExit2D(Collider2D other) {
-
-		if (sticky) {
-			return;
-		}
-
-		//if (!other.isTrigger) {
-			collisionCount--;
-			if (pressed && collisionCount <= 0) {
-				OnDepress();
-			}
-		//}
-
-	}
-
-	public void OnPress() {
-		pressed = true;
-		animator.SetBool("Pressed", true);
-		target.SendMessage("OnSwitchPressed", this, SendMessageOptions.RequireReceiver);
-	}
-
-	public void OnDepress() {
-		pressed = false;
-		animator.SetBool("Pressed", false);
-		target.SendMessage("OnSwitchDepressed", this, SendMessageOptions.RequireReceiver);
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnDepress()
+        {
+            Pressed = false;
+            Animator.SetBool("Pressed", false);
+            Target.SendMessage("OnSwitchDepressed", this, SendMessageOptions.RequireReceiver);
+        }
+    }
 }

@@ -1,16 +1,27 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Layer : MonoBehaviour
+namespace Utility
 {
-    public float depth = 0f;
-
-	public void Start()
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Layer : MonoBehaviour
     {
-        transform.position = new Vector3(
-            transform.position.x,
-            transform.position.y,
-            depth
-        );
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Depth;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
+        {
+            transform.position = new Vector3(
+                transform.position.x,
+                transform.position.y,
+                Depth
+            );
+        }
+    }
 }

@@ -1,49 +1,66 @@
-﻿using UnityEngine;
+﻿using Character;
+using Objects.Projectiles;
+using Traits;
+using UnityEngine;
 
 namespace Objects.Collectables.Items
 {
-    /**
-     * 
-     */
+    /// <summary>
+    /// 
+    /// </summary>
     public class Bombs : Item
     {
-        protected float charge;
-        public float initialCharge = 1.5f;
-        public float chargeFactor = 3f;
-        public float maxCharge = 3f;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float CurrentCharge;
+        public float InitialCharge = 1.5f;
+        public float ChargeFactor = 3f;
+        public float MaxCharge = 3f;
 
-        protected float force = 25f;
-        public float coolDownDuration = 0.25f;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected const float Force = 25f;
+        public float CoolDownDuration = 0.25f;
 
-        public Bomb bomb;
-        protected Bomb bombInstance;
+        /// <summary>
+        /// 
+        /// </summary>
+        public Bomb Bomb;
+        protected Bomb BombInstance;
 
-        [HideInInspector] public int bombCount;
-        [SerializeField] private int maxBombCount = 3;
+        /// <summary>
+        /// 
+        /// </summary>
+        [HideInInspector] public int BombCount;
+        [SerializeField] private int MaxBombCount = 3;
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public void Start()
         {
-            charge = initialCharge;
+            CurrentCharge = InitialCharge;
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collector"></param>
         public override void OnCollect(Collector collector)
         {
             base.OnCollect(collector);
 
-            owner.ammo.bombs.Upgrade(20);
-            owner.ammo.bombs.Restore();
-            owner.ammo.bombs.Enable();
+            Owner.Bombs.Upgrade(20);
+            Owner.Bombs.Restore();
+            Owner.Bombs.Enable();
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool CanBeUsed()
         {
             if (!base.CanBeUsed())
@@ -51,12 +68,13 @@ namespace Objects.Collectables.Items
                 return false;
             }
 
-            if (!owner.ammo.bombs.Available() || bombCount >= maxBombCount)
+            if (!Owner.Bombs.Available() || BombCount >= MaxBombCount)
             {
                 return false;
             }
 
-            CharacterController2D controller = owner.GetComponent<CharacterController2D>();
+            CharacterController2D controller = Owner.GetComponent<CharacterController2D>();
+            
             if (controller.State.IsRolling() || controller.State.IsSwimming() || controller.State.IsClimbing())
             {
                 return false;
@@ -65,86 +83,91 @@ namespace Objects.Collectables.Items
             return true;
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnPress()
         {
-            if (bombInstance || !IsCooledDown() || !CanBeUsed())
+            if (BombInstance || !IsCooledDown() || !CanBeUsed())
             {
                 return;
             }
 
             Bomb bomb = DrawBomb();
 
-            Player player = owner.GetComponent<Player>();
+            Player player = Owner.GetComponent<Player>();
+            
             player.Grab(bomb.gameObject);
             player.StartAiming();
 
             bomb.LightFuse();
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected Bomb DrawBomb()
         {
-            owner.ammo.bombs.Consume();
+            Owner.Bombs.Consume();
 
-            bombInstance = Instantiate(bomb, owner.transform.position, Quaternion.identity) as Bomb;
+            BombInstance = Instantiate(Bomb, Owner.transform.position, Quaternion.identity) as Bomb;
 
-            bombCount++;
-            bombInstance.origin = this;
+            BombCount++;
+            BombInstance.Origin = this;
 
-            return bombInstance;
+            return BombInstance;
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnHold()
         {
-            if (!bombInstance)
+            if (!BombInstance)
             {
                 return;
             }
 
-            Charge(Time.unscaledDeltaTime * chargeFactor);
+            Charge(Time.unscaledDeltaTime * ChargeFactor);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaCharge"></param>
         protected void Charge(float deltaCharge)
         {
-            charge = Mathf.Min(maxCharge, charge + deltaCharge);
+            CurrentCharge = Mathf.Min(MaxCharge, CurrentCharge + deltaCharge);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnRelease()
         {
-            if (!this.bombInstance)
+            if (!BombInstance)
             {
                 return;
             }
 
-            Player player = owner.GetComponent<Player>();
-            player.Throw(player.GetAimingDirection() * this.charge * this.force);
+            Player player = Owner.GetComponent<Player>();
+            
+            player.Throw(player.GetAimingDirection() * CurrentCharge * Force);
             player.StopAiming();
 
-            this.bombInstance = null;
-            this.charge = this.initialCharge;
-            this.SetCoolDown(this.coolDownDuration);
+            BombInstance = null;
+            CurrentCharge = InitialCharge;
+            SetCoolDown(CoolDownDuration);
         }
 
-        /**
-         *
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override Collector.Ammo? GetAmmo()
         {
-            return owner.ammo.bombs;
+            return Owner.Bombs;
         }
     }
 }

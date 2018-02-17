@@ -1,101 +1,155 @@
 ﻿using System;
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
-public class Path : MonoBehaviour {
-
-	public List<Transform> points;
-
-	public enum LoopMode
+namespace Utility
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Path : MonoBehaviour
     {
-		pingPong,
-		loop
-	}
-	public LoopMode loopMode;
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Transform> Points;
 
-    public enum Direction
-    {
-        Forward,
-        Backward
-    }
-    private Direction direction = Direction.Forward;
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum LoopModes
+        {
+            PingPong,
+            Loop
+        }
 
-	public void Start() {
-		points = points.Where(e => e != null).ToList();
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        public LoopModes LoopMode;
 
-	public IEnumerator<Transform> PointsEnumerator() {
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum Directions
+        {
+            Forward,
+            Backward
+        }
 
-		if (points == null || points.Count < 1) {
-			yield break;
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        private Directions Direction = Directions.Forward;
 
-		this.direction = Direction.Forward;
-		var index = 0;
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
+        {
+            Points = Points.Where(e => e != null).ToList();
+        }
 
-		while (true) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<Transform> PointsEnumerator()
+        {
+            if (Points == null || Points.Count < 1)
+            {
+                yield break;
+            }
 
-			yield return points[index];
+            Direction = Directions.Forward;
+            int index = 0;
 
-			if (points.Count == 1) {
-				continue;
-			}
+            while (true)
+            {
+                yield return Points[index];
 
-			if (loopMode == LoopMode.pingPong) {
-
-				if (index <= 0) {
-                    this.direction = Direction.Forward;
-                } else if (index >= points.Count - 1) {
-                    this.direction = Direction.Backward;
+                if (Points.Count == 1)
+                {
+                    continue;
                 }
 
-				index = index + (this.direction.Equals(Direction.Forward) ? 1 : -1);
+                if (LoopMode == LoopModes.PingPong)
+                {
+                    if (index <= 0)
+                    {
+                        Direction = Directions.Forward;
+                    }
+                    else if (index >= Points.Count - 1)
+                    {
+                        Direction = Directions.Backward;
+                    }
 
-			} else if (loopMode == LoopMode.loop) {
+                    index = index + (Direction.Equals(Directions.Forward) ? 1 : -1);
+                }
+                else if (LoopMode == LoopModes.Loop)
+                {
+                    if (index >= Points.Count - 1)
+                    {
+                        index = 0;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
+            }
+        }
 
-				if (index >= points.Count - 1) {
-					index = 0;
-				} else {
-					index++;
-				}
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnDrawGizmos()
+        {
+            Points = Points.Where(e => e != null).ToList();
 
-			}
+            if (Points.Count < 2)
+            {
+                return;
+            }
 
-		}
+            switch (LoopMode)
+            {
+                case LoopModes.PingPong:
+                {
+                    for (var i = 0; i < Points.Count - 1; i++)
+                    {
+                        Gizmos.DrawLine(Points[i].position, Points[i + 1].position);
+                    }
 
-	}
+                    break;
+                }
+                case LoopModes.Loop:
+                {
+                    for (var i = 0; i < Points.Count; i++)
+                    {
+                        Transform from = Points[i];
+                        Transform to = i < Points.Count - 1 ? Points[i + 1] : Points[0];
+                        
+                        Gizmos.DrawLine(from.position, to.position);
+                    }
 
-	public void OnDrawGizmos() {
+                    break;
+                }
+                default:
+                {
+                    throw new ArgumentOutOfRangeException(nameof(LoopMode), LoopMode.ToString(), "Invalid LoopMode.");
+                }
+            }
+        }
 
-		points = points.Where(e => e != null).ToList();
-
-		if (points.Count < 2) {
-			return;
-		}
-
-		if (loopMode == LoopMode.pingPong) {
-
-			for (var i = 0; i < points.Count - 1; i++) {
-				Gizmos.DrawLine(points[i].position, points[i + 1].position);
-			}
-
-		} else if (loopMode == LoopMode.loop) {
-
-			for (var i = 0; i < points.Count; i++) {
-				var fromPoint = points[i];
-				var toPoint = i < points.Count - 1 ? points[i + 1] : points[0];
-				Gizmos.DrawLine(fromPoint.position, toPoint.position);
-			}
-
-		}
-
-	}
-
-    public Direction GetDirection()
-    {
-        return this.direction;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Directions GetDirection()
+        {
+            return Direction;
+        }
     }
-
 }

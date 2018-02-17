@@ -1,36 +1,61 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ParallaxScrolling : MonoBehaviour
+namespace Utility
 {
-	public Transform[] backgrounds;
-	public float scale;
-	public float depth;
+	/// <summary>
+	/// 
+	/// </summary>
+	public class ParallaxScrolling : MonoBehaviour
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public Transform[] Backgrounds;
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		public float Scale;
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		public float Depth;
 
-	private Vector3 lastPosition;
+		/// <summary>
+		/// 
+		/// </summary>
+		private Vector3 LastPosition;
 
-	public void Awake()
-    {
-		lastPosition = transform.position;
-	}
-
-	public void Update()
-    {
-		var parallax = (lastPosition - transform.position) * -scale;
-
-		for (var i = 0; i < backgrounds.Length; i++) {
-
-			var currentPosition = backgrounds[i].position;
-			var targetPosition = currentPosition + parallax * (i * depth + 1);
-
-			backgrounds[i].position = Vector3.Lerp(
-				currentPosition,
-				targetPosition,
-				Time.deltaTime
-			);
-
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Awake()
+		{
+			LastPosition = transform.position;
 		}
 
-		lastPosition = transform.position;
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Update()
+		{
+			var parallax = (LastPosition - transform.position) * -Scale;
+
+			for (int i = 0; i < Backgrounds.Length; i++) {
+
+				Vector3 currentPosition = Backgrounds[i].position;
+				Vector3 targetPosition = currentPosition + parallax * (i * Depth + 1);
+
+				Backgrounds[i].position = Vector3.Lerp(
+					currentPosition,
+					targetPosition,
+					Time.deltaTime
+				);
+
+			}
+
+			LastPosition = transform.position;
+		}
 	}
 }

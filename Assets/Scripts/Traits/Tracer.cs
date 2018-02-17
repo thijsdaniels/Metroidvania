@@ -1,90 +1,116 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using Utility;
 
-public class Tracer : MonoBehaviour
+namespace Traits
 {
-	public enum MoveMode
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Tracer : MonoBehaviour
     {
-		linear,
-		interpolated
-	}
-
-	public MoveMode moveMode = MoveMode.linear;
-	public Path path;
-	public float speed = 1;
-	public float proximityThreshold = 0.001f;
-    public float pauseDuration = 1f;
-
-	private IEnumerator<Transform> currentPoint;
-    private bool paused = false;
-
-	public void Start()
-    {
-		if (path == null)
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum MoveModes
         {
-			Debug.LogError("Path cannot be null", gameObject);
-		}
-
-		currentPoint = path.PointsEnumerator();
-		currentPoint.MoveNext();
-
-		if (currentPoint.Current == null)
-        {
-			return;
-		}
-
-		// move to first point
-		transform.position = currentPoint.Current.position;
-	}
-
-	public void Update()
-    {
-        if (paused)
-        {
-            return;
+            Linear,
+            Interpolated
         }
 
-		if (currentPoint == null || currentPoint.Current == null)
+        /// <summary>
+        /// 
+        /// </summary>
+        public MoveModes MoveMode = MoveModes.Linear;
+        public Path Path;
+        public float Speed = 1;
+        public float ProximityThreshold = 0.001f;
+        public float PauseDuration = 1f;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private IEnumerator<Transform> CurrentPoint;
+        private bool Paused;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Start()
         {
-			return;
-		}
+            if (Path == null)
+            {
+                Debug.LogError("No path set for tracer.", gameObject);
+                return;
+            }
 
-		if (moveMode == MoveMode.linear)
+            CurrentPoint = Path.PointsEnumerator();
+            CurrentPoint.MoveNext();
+
+            if (CurrentPoint.Current == null)
+            {
+                return;
+            }
+
+            // move to first point
+            transform.position = CurrentPoint.Current.position;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Update()
         {
-			transform.position = Vector3.MoveTowards(
-				transform.position,
-				currentPoint.Current.position,
-				speed * Time.deltaTime
-			);
-		}
-        else if (moveMode == MoveMode.interpolated)
+            if (Paused)
+            {
+                return;
+            }
+
+            if (CurrentPoint == null || CurrentPoint.Current == null)
+            {
+                return;
+            }
+
+            if (MoveMode == MoveModes.Linear)
+            {
+                transform.position = Vector3.MoveTowards(
+                    transform.position,
+                    CurrentPoint.Current.position,
+                    Speed * Time.deltaTime
+                );
+            }
+            else if (MoveMode == MoveModes.Interpolated)
+            {
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    CurrentPoint.Current.position,
+                    Speed * Time.deltaTime
+                );
+            }
+
+            float distanceSquared = (transform.position - CurrentPoint.Current.position).sqrMagnitude;
+
+            if (distanceSquared < ProximityThreshold * ProximityThreshold)
+            {
+                StartCoroutine(PointReached());
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator PointReached()
         {
-			transform.position = Vector3.Lerp(
-				transform.position,
-				currentPoint.Current.position,
-				speed * Time.deltaTime
-			);
-		}
+            Paused = true;
+            SendMessage("OnTracerPause", null, SendMessageOptions.DontRequireReceiver);
 
-		var distanceSquared = (transform.position - currentPoint.Current.position).sqrMagnitude;
+            yield return new WaitForSeconds(PauseDuration);
+            CurrentPoint.MoveNext();
 
-		if (distanceSquared < proximityThreshold * proximityThreshold)
-        {
-            StartCoroutine(this.PointReached());
-		}
-
-	}
-
-    IEnumerator PointReached()
-    {
-        this.paused = true;
-        this.SendMessage("OnTracerPause", null, SendMessageOptions.DontRequireReceiver);
-
-        yield return new WaitForSeconds(this.pauseDuration);
-        currentPoint.MoveNext();
-
-        this.paused = false;
-        this.SendMessage("OnTracerContinue", this.path.GetDirection(), SendMessageOptions.DontRequireReceiver);
+            Paused = false;
+            SendMessage("OnTracerContinue", Path.GetDirection(), SendMessageOptions.DontRequireReceiver);
+        }
     }
 }

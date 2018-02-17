@@ -1,8 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public abstract class Damager : MonoBehaviour
+namespace Traits
 {
-    public int damage;
-    public bool dodgeable;
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract class Damager : MonoBehaviour
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Damage;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Dodgeable;
+    }
 }

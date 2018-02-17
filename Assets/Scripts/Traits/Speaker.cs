@@ -1,98 +1,131 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Character;
+using UnityEngine;
 
-public class Speaker : MonoBehaviour
+namespace Traits
 {
-	public string[] speech;
-	public Vector2 speechOffset;
-	public Vector2 speechSize = new Vector2(320, 100);
-	public float speechDistance = 5f;
-	public bool autoSpeak;
-
-	private int speechIndex = -1;
-	private Player listener;
-
-	public void OnTriggerEnter2D(Collider2D collider)
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Speaker : MonoBehaviour
     {
-		if (autoSpeak)
-        {
-			var player = collider.GetComponent<Player>();
+        /// <summary>
+        /// 
+        /// </summary>
+        public string[] Speech;
+        public Vector2 SpeechOffset = new Vector2(0, 0.5f);
+        public Vector2 SpeechSize = new Vector2(320, 100);
+        public float SpeechDistance = 5f;
+        public bool AutoSpeak;
 
-			if (player)
+        /// <summary>
+        /// 
+        /// </summary>
+        private int SpeechIndex = -1;
+        private Player Listener;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collider"></param>
+        public void OnTriggerEnter2D(Collider2D collider)
+        {
+            if (AutoSpeak)
             {
-				StartSpeaking(player);
-			}
-		}
-	}
+                var player = collider.GetComponent<Player>();
 
-	public void OnInteraction(Player player)
-    {
-		if (!IsSpeaking())
-        {
-			StartSpeaking(player);
-		}
-        else if (speechIndex < speech.Length - 1)
-        {
-			ContinueSpeaking();
-		}
-        else
-        {
-			FinishSpeaking();
-		}
-	}
-
-	private void StartSpeaking(Player player)
-    {
-		listener = player;
-		speechIndex = 0;
-	}
-
-	private void ContinueSpeaking()
-    {
-		speechIndex++;
-	}
-
-	private void FinishSpeaking()
-    {
-		speechIndex = -1;
-	}
-
-	public bool IsSpeaking()
-    {
-		return speechIndex > -1;
-	}
-
-	public void OnGUI()
-    {
-        if (!IsSpeaking())
-        {
-            return;
+                if (player)
+                {
+                    StartSpeaking(player);
+                }
+            }
         }
 
-		float distance2D = Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(listener.transform.position.x, listener.transform.position.y));
-		if (distance2D > speechDistance)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        public void OnInteraction(Player player)
         {
-			FinishSpeaking();
-			return;
-		}
+            if (!IsSpeaking())
+            {
+                StartSpeaking(player);
+            }
+            else if (SpeechIndex < Speech.Length - 1)
+            {
+                ContinueSpeaking();
+            }
+            else
+            {
+                FinishSpeaking();
+            }
+        }
 
-		Vector3 positionOnCamera = Camera.main.WorldToScreenPoint(transform.position + new Vector3(speechOffset.x, speechOffset.y, 0));
-		Rect textBoxPosition = new Rect(positionOnCamera.x - speechSize.x / 2, Screen.height - positionOnCamera.y - speechSize.y, speechSize.x, speechSize.y);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        private void StartSpeaking(Player player)
+        {
+            Listener = player;
+            SpeechIndex = 0;
+        }
 
-		Texture2D speechBackground = new Texture2D(1, 1);
-		speechBackground.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.5f));
-		speechBackground.Apply();
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ContinueSpeaking()
+        {
+            SpeechIndex++;
+        }
 
-		GUIStyle speechStyle = GUI.skin.GetStyle("Box");
-        speechStyle.padding = new RectOffset(20, 20, 20, 20);
-		speechStyle.normal.background = speechBackground;
-		speechStyle.alignment = TextAnchor.MiddleCenter;
-		speechStyle.wordWrap = true;
+        /// <summary>
+        /// 
+        /// </summary>
+        private void FinishSpeaking()
+        {
+            SpeechIndex = -1;
+        }
 
-		GUI.Box(
-			textBoxPosition,
-			speech[speechIndex],
-			speechStyle
-		);
-	}
+        public bool IsSpeaking()
+        {
+            return SpeechIndex > -1;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnGUI()
+        {
+            if (!IsSpeaking())
+            {
+                return;
+            }
+
+            float distance2D = Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(Listener.transform.position.x, Listener.transform.position.y));
+            if (distance2D > SpeechDistance)
+            {
+                FinishSpeaking();
+                return;
+            }
+
+            Vector3 positionOnCamera = Camera.main.WorldToScreenPoint(transform.position + new Vector3(SpeechOffset.x, SpeechOffset.y, 0));
+            Rect textBoxPosition = new Rect(positionOnCamera.x - SpeechSize.x / 2, Screen.height - positionOnCamera.y - SpeechSize.y, SpeechSize.x, SpeechSize.y);
+
+            Texture2D speechBackground = new Texture2D(1, 1);
+            speechBackground.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.5f));
+            speechBackground.Apply();
+
+            GUIStyle speechStyle = GUI.skin.GetStyle("Box");
+            speechStyle.padding = new RectOffset(20, 20, 20, 20);
+            speechStyle.normal.background = speechBackground;
+            speechStyle.alignment = TextAnchor.MiddleCenter;
+            speechStyle.wordWrap = true;
+
+            GUI.Box(
+                textBoxPosition,
+                Speech[SpeechIndex],
+                speechStyle
+            );
+        }
+    }
 }

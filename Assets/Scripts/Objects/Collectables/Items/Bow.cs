@@ -1,45 +1,59 @@
+using Character;
+using Objects.Projectiles;
+using Traits;
 using UnityEngine;
 
 namespace Objects.Collectables.Items
 {
-    /**
-     * 
-     */
+    /// <summary>
+    /// 
+    /// </summary>
     public class Bow : Item
     {
-        protected float charge;
-        public float initialCharge = 0.5f;
-        public float chargeFactor = 3f;
-        public float maxCharge = 3f;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float CurrentCharge;
+        public float InitialCharge = 0.5f;
+        public float ChargeFactor = 3f;
+        public float MaxCharge = 3f;
 
-        protected float force = 50f;
-        public float coolDownDuration = 0.25f;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected const float Force = 50f;
+        public float CoolDownDuration = 0.25f;
 
-        public Arrow arrow;
+        /// <summary>
+        /// 
+        /// </summary>
+        public Arrow Arrow;
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public void Start()
         {
-            charge = initialCharge;
+            CurrentCharge = InitialCharge;
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collector"></param>
         public override void OnCollect(Collector collector)
         {
             base.OnCollect(collector);
 
-            owner.ammo.arrows.Upgrade(30);
-            owner.ammo.arrows.Restore();
-            owner.ammo.arrows.Enable();
+            Owner.Arrows.Upgrade(30);
+            Owner.Arrows.Restore();
+            Owner.Arrows.Enable();
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool CanBeUsed()
         {
             if (!base.CanBeUsed())
@@ -47,13 +61,7 @@ namespace Objects.Collectables.Items
                 return false;
             }
 
-            if (!owner.ammo.arrows.Available() || !owner.mana.Available(arrow.requiredMana))
-            {
-                return false;
-            }
-
-            CharacterController2D controller = owner.GetComponent<CharacterController2D>();
-            if (controller.State.IsRolling() || controller.State.IsSwimming() || controller.State.IsClimbing())
+            if (!Owner.Arrows.Available() || !Owner.Mana.Available(Arrow.RequiredMana))
             {
                 return false;
             }
@@ -61,9 +69,9 @@ namespace Objects.Collectables.Items
             return true;
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnPress()
         {
             if (!IsCooledDown() || !CanBeUsed())
@@ -71,13 +79,14 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Player player = owner.GetComponent<Player>();
+            Player player = Owner.GetComponent<Player>();
+            
             player.StartAiming();
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnHold()
         {
             if (!IsCooledDown() || !CanBeUsed())
@@ -85,20 +94,21 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Charge(Time.unscaledDeltaTime * chargeFactor);
+            Charge(Time.unscaledDeltaTime * ChargeFactor);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deltaCharge"></param>
         protected void Charge(float deltaCharge)
         {
-            charge = Mathf.Min(maxCharge, charge + deltaCharge);
+            CurrentCharge = Mathf.Min(MaxCharge, CurrentCharge + deltaCharge);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnRelease()
         {
             if (!IsCooledDown() || !CanBeUsed())
@@ -106,36 +116,41 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Player player = owner.GetComponent<Player>();
+            Player player = Owner.GetComponent<Player>();
+            
             Shoot(player.transform.position, player.GetAimingDirection());
 
             player.StopAiming();
 
-            SetCoolDown(coolDownDuration);
+            SetCoolDown(CoolDownDuration);
         }
 
-        /**
-	     * 
-	     */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="direction"></param>
         protected void Shoot(Vector3 origin, Vector2 direction)
         {
-            owner.ammo.arrows.Consume();
-            owner.mana.Consume(arrow.requiredMana);
+            Owner.Arrows.Consume();
+            Owner.Mana.Consume(Arrow.RequiredMana);
 
-            Arrow arrowInstance = Instantiate(arrow, origin, Quaternion.identity) as Arrow;
+            Arrow arrowInstance = Instantiate(Arrow, origin, Quaternion.identity) as Arrow;
 
             Rigidbody2D arrowBody = arrowInstance.GetComponent<Rigidbody2D>();
-            arrowBody.AddForce(direction * charge * force);
+            
+            arrowBody.AddForce(direction * CurrentCharge * Force);
 
-            charge = initialCharge;
+            CurrentCharge = InitialCharge;
         }
 
-        /**
-         *
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override Collector.Ammo? GetAmmo()
         {
-            return owner.ammo.arrows;
+            return Owner.Arrows;
         }
     }
 }

@@ -1,12 +1,25 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Character;
+using UnityEngine;
 
-public class JumpPlatform : MonoBehaviour {
+namespace Objects.Platforms
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class JumpPlatform : MonoBehaviour
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public float JumpVelocity = 10f;
 
-	public float jumpVelocity = 10f;
-
-	void OnCharacterControllerEnter2D(CharacterController2D other) {
-		other.SetVerticalVelocity(jumpVelocity);
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        void OnCharacterControllerEnter2D(CharacterController2D other)
+        {
+            other.SetVerticalVelocity(JumpVelocity);
+        }
+    }
 }
