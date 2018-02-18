@@ -51,10 +51,10 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="player"></param>
-        public void OnInteraction(Player player)
+        /// <param name="interactor"></param>
+        public void OnInteraction(Interactor interactor)
         {
-            var collector = player.gameObject.GetComponent<Collector>();
+            var collector = interactor.gameObject.GetComponent<Collector>();
 
             if (!Looted && collector)
             {

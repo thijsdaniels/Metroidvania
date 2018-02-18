@@ -67,7 +67,7 @@ namespace Objects.Collectables.Items
             {
                 return false;
             }
-
+            
             if (!Owner.Bombs.Available() || BombCount >= MaxBombCount)
             {
                 return false;
@@ -95,10 +95,11 @@ namespace Objects.Collectables.Items
 
             Bomb bomb = DrawBomb();
 
-            Player player = Owner.GetComponent<Player>();
+            Carrier carrier = Owner.GetComponent<Carrier>();
+            Aimer aimer = Owner.GetComponent<Aimer>();
             
-            player.Grab(bomb.gameObject);
-            player.StartAiming();
+            carrier.Grab(bomb);
+            aimer.StartAiming();
 
             bomb.LightFuse();
         }
@@ -151,10 +152,11 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Player player = Owner.GetComponent<Player>();
+            Thrower thrower = Owner.GetComponent<Thrower>();
+            Aimer aimer = Owner.GetComponent<Aimer>();
             
-            player.Throw(player.GetAimingDirection() * CurrentCharge * Force);
-            player.StopAiming();
+            thrower.Throw(aimer.GetAimingDirection() * CurrentCharge * Force);
+            aimer.StopAiming();
 
             BombInstance = null;
             CurrentCharge = InitialCharge;

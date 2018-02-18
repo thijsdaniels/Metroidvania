@@ -110,6 +110,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Character" t="Include">
+            <e p="CharacterAnimator.cs" t="Include" />
             <e p="CharacterController2D.cs" t="Include" />
             <e p="CharacterState2D.cs" t="Include" />
             <e p="Player.cs" t="Include" />
@@ -161,21 +162,33 @@
             <e p="PhysicsVolumeParameters2D.cs" t="Include" />
           </e>
           <e p="Traits" t="Include">
+            <e p="Aimer.cs" t="Include" />
+            <e p="Carriable.cs" t="Include" />
+            <e p="Carrier.cs" t="Include" />
+            <e p="Chaser.cs" t="Include" />
             <e p="Climbable.cs" t="Include" />
+            <e p="Climber.cs" t="Include" />
             <e p="Collectable.cs" t="Include" />
             <e p="Collector.cs" t="Include" />
+            <e p="Croucher.cs" t="Include" />
             <e p="Damagable.cs" t="Include" />
             <e p="Damager.cs" t="Include" />
             <e p="Dropper.cs" t="Include" />
+            <e p="Equipper.cs" t="Include" />
             <e p="Explodable.cs" t="Include" />
             <e p="Fleeting.cs" t="Include" />
             <e p="Interactable.cs" t="Include" />
+            <e p="Interactor.cs" t="Include" />
+            <e p="Jumper.cs" t="Include" />
             <e p="Lootable.cs" t="Include" />
             <e p="Patroller.cs" t="Include" />
+            <e p="Roller.cs" t="Include" />
             <e p="Speaker.cs" t="Include" />
-            <e p="Stalker.cs" t="Include" />
+            <e p="Swimmer.cs" t="Include" />
+            <e p="Thrower.cs" t="Include" />
             <e p="Tracer.cs" t="Include" />
             <e p="Untouchable.cs" t="Include" />
+            <e p="Walker.cs" t="Include" />
           </e>
           <e p="Utility" t="Include">
             <e p="HUD.cs" t="Include" />

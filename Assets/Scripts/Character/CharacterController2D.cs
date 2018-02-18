@@ -1,6 +1,4 @@
-﻿using System;
-using Physics;
-using Traits;
+﻿using Physics;
 using UnityEngine;
 
 namespace Character
@@ -8,6 +6,7 @@ namespace Character
     /// <summary>
     /// 
     /// </summary>
+    /// TODO: Rename this class to Physics.Body.
     [RequireComponent(typeof(BoxCollider2D))]
     public class CharacterController2D : MonoBehaviour
     {
@@ -33,8 +32,8 @@ namespace Character
         /// </summary>
         public bool HandleCollisions = true;
         private BoxCollider2D BoxCollider;
-        public LayerMask GroundLayerMask;
-        public LayerMask OneWayPlatformLayerMask;
+        public LayerMask PlatformLayerMask;
+        public LayerMask LedgeLayerMask;
 
         /// <summary>
         /// Platforms
@@ -46,6 +45,7 @@ namespace Character
         private Vector2 PlatformVelocity;
         public PhysicsPlatformParameters2D DefaultPlatformParameters;
         public PhysicsPlatformParameters2D PlatformParameters => Platform ? Platform.Parameters : DefaultPlatformParameters;
+        public float WallFriction = 0.2f;
 
         /// <summary>
         /// Volumes
@@ -61,30 +61,9 @@ namespace Character
         public Vector2 Velocity;
         private Vector2 ExternalVelocity;
         private float FallMultiplier => 2f;
-        private float LowJumpMultiplier => 4f;
+        private float LowJumpMultiplier => 4f; // TODO: Would be nice to move this to Traits.Jumper.
+        private bool LowJump; // TODO: Would be nice to move this to Traits.Jumper.
         private float SlopeLimitTangent = Mathf.Tan(75f * Mathf.Deg2Rad);
-
-        /// <summary>
-        /// Jumping
-        /// </summary>
-        [Range(0f, 20f)] public float JumpVelocity = 12f;
-        [Range(0f, 1f)] public float JumpCooldown = 0.25f;
-        private float JumpTimeout;
-        public int AirJumps;
-        private int CurrentAirJump;
-        
-        /// <summary>
-        /// Wall Jump.
-        /// </summary>
-        public bool WallJumpEnabled;
-        public Vector2 WallJumpVelocity = new Vector2(16f, 12f);
-        public float WallFriction = 0.2f;
-
-        /// <summary>
-        /// Climbing
-        /// </summary>
-        public int Climbables;
-        public Climbable Climbable;
 
         /// <summary>
         /// State
@@ -132,12 +111,6 @@ namespace Character
             
             // determine what volume we're in
             DetermineVolume();
-
-            // run jump timer
-            if (JumpTimeout > 0)
-            {
-                JumpTimeout = Mathf.Max(0, JumpTimeout - Time.deltaTime);
-            }
         }
 
         /////////////////////////////
@@ -237,12 +210,21 @@ namespace Character
                 return FallMultiplier;
             }
             
-            if (Velocity.y > 0 && !Input.GetButton("Jump"))
+            if (Velocity.y > 0 && LowJump)
             {
                 return LowJumpMultiplier;
             }
             
             return 1f;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        public void OnInput(Player player)
+        {
+            LowJump = !player.ControllerInput.A.Held;
         }
 
         /// <summary>
@@ -347,305 +329,9 @@ namespace Character
             ), SkinThickness);
         }
 
-        ///////////////////
-        ///// JUMPING /////
-        ///////////////////
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public bool CanJump()
-        {
-            if (State.IsClimbing())
-            {
-                return false;
-            }
-            
-            if (JumpTimeout > 0)
-            {
-                return false;
-            }
-
-            switch (VolumeParameters.JumpMode)
-            {
-                case PhysicsVolumeParameters2D.JumpModes.Anywhere:
-                {
-                    return true;
-                }
-                case PhysicsVolumeParameters2D.JumpModes.Ground:
-                {
-                    return (
-                        State.IsGrounded() ||
-                        CurrentAirJump < AirJumps ||
-                        WallJumpEnabled && State.IsCollidingHorizontally()
-                    );
-                }
-                case PhysicsVolumeParameters2D.JumpModes.None:
-                {
-                    return false;
-                }
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(nameof(PhysicsVolumeParameters2D.JumpMode), VolumeParameters.JumpMode.ToString(), "Invalid JumpMode.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Jump()
-        {
-            if (State.IsClimbing())
-            {
-                StopClimbing();
-            }
-
-            if (State.IsGrounded())
-            {
-                SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
-
-                SetVerticalVelocity(JumpVelocity * VolumeParameters.JumpModifier);
-            }
-            else
-            {
-                if (!State.IsSwimming() && State.IsCollidingHorizontally())
-                {
-                    SendMessage("OnWallJump", SendMessageOptions.DontRequireReceiver);
-
-                    int direction = State.CollisionLeft ? 1 : -1;
-            
-                    SetVelocity(new Vector2(
-                        WallJumpVelocity.x * VolumeParameters.JumpModifier * direction,
-                        WallJumpVelocity.y * VolumeParameters.JumpModifier
-                    ));
-                }
-                else
-                {
-                    if (VolumeParameters.JumpMode == PhysicsVolumeParameters2D.JumpModes.Ground)
-                    {
-                        CurrentAirJump++;
-                    }
-
-                    SendMessage("OnAirJump", SendMessageOptions.DontRequireReceiver);
-                    
-                    SetVerticalVelocity(JumpVelocity * VolumeParameters.JumpModifier);
-                }
-            }
-
-            JumpTimeout = JumpCooldown;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void OnLand()
-        {
-            CurrentAirJump = 0;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void OnStartSwimming()
-        {
-            CurrentAirJump = 0;
-        }
-
-        ///////////////////
-        ///// ROLLING /////
-        ///////////////////
-
-        // TODO: Move to the Player, or to a "Roller" trait.
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool CanRoll()
-        {
-            return (
-                !State.IsRolling() &&
-                State.IsGrounded() &&
-                !State.IsClimbing() &&
-                !State.IsSwimming()
-            ); // TODO: Maybe just let Mecanim decide when it's OK to roll?
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Roll()
-        {
-            Animator animator = GetComponent<Animator>();
-
-            if (!animator)
-            {
-                Debug.LogError("Cannot roll without an Animator component.");
-                return;
-            }
-
-            animator.SetTrigger("Roll");
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void OnRollStart()
-        {
-            State.Rolling = true;
-
-            Damagable damagable = GetComponent<Damagable>();
-
-            if (damagable)
-            {
-                damagable.Dodging = true;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void OnRollEnd()
-        {
-            State.Rolling = false;
-
-            Damagable damagable = GetComponent<Damagable>();
-
-            if (damagable)
-            {
-                damagable.Dodging = false;
-            }
-        }
-
         ////////////////////
-        ///// CLIMBING /////
+        ///// MOVEMENT /////
         ////////////////////
-
-        // TODO: Move to the Player, or to a "Climber" trait.
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="climbable"></param>
-        public void AddClimbable(Climbable climbable)
-        {
-            Climbables++;
-
-            Climbable = climbable;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void RemoveClimbable()
-        {
-            if (Climbables > 0)
-            {
-                Climbables--;
-            }
-
-            if (Climbables == 0 && State.IsClimbing())
-            {
-                StopClimbing();
-
-                Climbable = null;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool CanClimb()
-        {
-            return Climbables > 0;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartClimbing()
-        {
-            State.Climbing = true;
-
-            SetHorizontalVelocity(0);
-
-            CurrentAirJump = 0;
-
-            transform.position = new Vector3(
-                Climbable.transform.position.x + Climbable.Offset,
-                transform.position.y,
-                transform.position.z
-            );
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StopClimbing()
-        {
-            State.Climbing = false;
-
-            SetVerticalVelocity(0);
-        }
-        
-        ////////////////////
-        ///// SWIMMING /////
-        ////////////////////
-
-        // TODO: Move to the Player, or to a "Swimmer" trait.
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StartSwimming()
-        {
-            if (State.IsClimbing())
-            {
-                StopClimbing();
-            }
-            
-            State.Swimming = true;
-            
-            SendMessage("OnStartSwimming", SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StopSwimming()
-        {
-            State.Swimming = false;
-            
-            SendMessage("OnStopSwimming", SendMessageOptions.DontRequireReceiver);
-        }
-
-        /////////////////////
-        ///// CROUCHING /////
-        /////////////////////
-        
-        // TODO: Move to the Player, or to a "Croucher" trait.
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool CanCrouch()
-        {
-            return (
-                !State.IsSwimming() &&
-                !State.IsClimbing() &&
-                !State.IsAttacking() &&
-                !State.IsAiming()
-            );
-        }
-
-        //////////////////
-        ///// MOVING /////
-        //////////////////
 
         /// <summary>
         /// 
@@ -777,7 +463,7 @@ namespace Character
                     Debug.DrawRay(rayVector, rayDirection * halfWidth, isRight ? Color.cyan : Color.magenta);
                 }
                 
-                RaycastHit2D raycastHit = Physics2D.Raycast(rayVector, rayDirection, halfWidth, GroundLayerMask);
+                RaycastHit2D raycastHit = Physics2D.Raycast(rayVector, rayDirection, halfWidth, PlatformLayerMask);
                 
                 if (!raycastHit)
                 {
@@ -828,7 +514,7 @@ namespace Character
                 }
 
                 // calculate whether the ray collided with something
-                RaycastHit2D raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, GroundLayerMask);
+                RaycastHit2D raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, PlatformLayerMask);
 
                 // if no collisions where found, move on to the next ray
                 if (!raycastHit)
@@ -897,13 +583,14 @@ namespace Character
                 }
 
                 RaycastHit2D raycastHit;
+                
                 if (movingUp || State.IsClimbing() || State.IsCrouching())
                 {
-                    raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, GroundLayerMask);
+                    raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, PlatformLayerMask);
                 }
                 else
                 {
-                    raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, GroundLayerMask | OneWayPlatformLayerMask);
+                    raycastHit = Physics2D.Raycast(rayVector, rayDirection, rayDistance, PlatformLayerMask | LedgeLayerMask);
                 }
 
                 if (!raycastHit)
@@ -963,11 +650,6 @@ namespace Character
                 if (PreviousPlatform == null)
                 {
                     SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
-
-                    if (State.IsClimbing())
-                    {
-                        StopClimbing();
-                    }
                 }
 
                 if (PreviousPlatform != Platform)
@@ -1003,7 +685,7 @@ namespace Character
                 {
                     if (Volume.IsLiquid)
                     {
-                        StartSwimming();
+                        SendMessage("OnLiquidVolumeEnter", this, SendMessageOptions.DontRequireReceiver);
                     }
                 }
 
@@ -1015,11 +697,11 @@ namespace Character
                         
                         if (Volume.IsLiquid && !PreviousVolume.IsLiquid)
                         {
-                            StartSwimming();
+                            SendMessage("OnLiquidVolumeEnter", this, SendMessageOptions.DontRequireReceiver);
                         }
                         else if (!Volume.IsLiquid && PreviousVolume.IsLiquid)
                         {
-                            StopSwimming();
+                            SendMessage("OnLiquidVolumeExit", this, SendMessageOptions.DontRequireReceiver);
                         }
                     }
 
@@ -1038,7 +720,7 @@ namespace Character
                 
                 if (PreviousVolume.IsLiquid)
                 {
-                    StopSwimming();                    
+                    SendMessage("OnLiquidVolumeExit", this, SendMessageOptions.DontRequireReceiver);
                 }
                 
                 PreviousVolume = null;
@@ -1167,7 +849,7 @@ namespace Character
                 Debug.DrawRay(slopeRayVector, direction * slopeDistance, Color.yellow);
             }
 
-            RaycastHit2D raycastHit = Physics2D.Raycast(slopeRayVector, direction, slopeDistance, GroundLayerMask);
+            RaycastHit2D raycastHit = Physics2D.Raycast(slopeRayVector, direction, slopeDistance, PlatformLayerMask);
             
             if (!raycastHit)
             {

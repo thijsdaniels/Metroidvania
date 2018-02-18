@@ -99,7 +99,7 @@ namespace Traits
             return Physics2D.Linecast(
                 correctedSightStart,
                 correctedSightEnd,
-                Controller.GroundLayerMask | 1 << LayerMask.NameToLayer("Enemies")
+                Controller.PlatformLayerMask | 1 << LayerMask.NameToLayer("Enemies")
             );
         }
 
@@ -134,7 +134,7 @@ namespace Traits
             return !Physics2D.Linecast(
                 correctedSightStart,
                 correctedSightEnd,
-                Controller.GroundLayerMask | Controller.OneWayPlatformLayerMask
+                Controller.PlatformLayerMask | Controller.LedgeLayerMask
             );
         }
 

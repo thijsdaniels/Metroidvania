@@ -8,7 +8,7 @@ namespace Objects.Projectiles
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Bomb : MonoBehaviour
+	public class Bomb : Carriable
 	{
 		/// <summary>
 		/// 

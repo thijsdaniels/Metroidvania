@@ -5,7 +5,7 @@ namespace Traits
     /// <summary>
     /// 
     /// </summary>
-    public class Stalker : MonoBehaviour
+    public class Chaser : MonoBehaviour
     {
         /// <summary>
         /// 
@@ -27,8 +27,8 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        public bool FollowXAxis;
-        public bool FollowYAxis;
+        public bool ChaseXAxis;
+        public bool ChaseYAxis;
         public MoveModes MoveMode = MoveModes.Linear;
 
         /// <summary>
@@ -154,8 +154,8 @@ namespace Traits
         protected Vector3 GetTargetPosition()
         {
             return new Vector3(
-                FollowXAxis ? Target.position.x + TargetOffset.x : transform.position.x,
-                FollowYAxis ? Target.position.y + TargetOffset.y : transform.position.y,
+                ChaseXAxis ? Target.position.x + TargetOffset.x : transform.position.x,
+                ChaseYAxis ? Target.position.y + TargetOffset.y : transform.position.y,
                 transform.position.z
             );
         }

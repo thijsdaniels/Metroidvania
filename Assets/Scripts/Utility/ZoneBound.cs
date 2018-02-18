@@ -6,7 +6,7 @@ namespace Utility
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(Stalker))]
+    [RequireComponent(typeof(Chaser))]
     public class ZoneBound : MonoBehaviour
     {
         /// <summary>

@@ -1,4 +1,5 @@
 using Character;
+using Traits;
 using UnityEngine;
 
 namespace Objects.Collectables.Items
@@ -72,9 +73,9 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Player player = Owner.GetComponent<Player>();
+            Aimer aimer = Owner.GetComponent<Aimer>();
             
-            player.StartAiming();
+            aimer.StartAiming();
         }
 
         /// <summary>
@@ -109,11 +110,11 @@ namespace Objects.Collectables.Items
                 return;
             }
 
-            Player player = Owner.GetComponent<Player>();
+            Aimer aimer = Owner.GetComponent<Aimer>();
             
-            Throw(player.transform.position, player.GetAimingDirection());
+            Throw(aimer.transform.position, aimer.GetAimingDirection());
 
-            player.StopAiming();
+            aimer.StopAiming();
 
             SetCoolDown(CoolDownDuration);
         }

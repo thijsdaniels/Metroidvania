@@ -1,5 +1,4 @@
-﻿using Character;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Traits
 {
@@ -21,7 +20,7 @@ namespace Traits
         /// 
         /// </summary>
         private int SpeechIndex = -1;
-        private Player Listener;
+        private Interactor Listener;
 
         /// <summary>
         /// 
@@ -31,11 +30,11 @@ namespace Traits
         {
             if (AutoSpeak)
             {
-                var player = collider.GetComponent<Player>();
+                var interactor = collider.GetComponent<Interactor>();
 
-                if (player)
+                if (interactor)
                 {
-                    StartSpeaking(player);
+                    StartSpeaking(interactor);
                 }
             }
         }
@@ -44,11 +43,11 @@ namespace Traits
         /// 
         /// </summary>
         /// <param name="player"></param>
-        public void OnInteraction(Player player)
+        public void OnInteraction(Interactor interactor)
         {
             if (!IsSpeaking())
             {
-                StartSpeaking(player);
+                StartSpeaking(interactor);
             }
             else if (SpeechIndex < Speech.Length - 1)
             {
@@ -64,9 +63,9 @@ namespace Traits
         /// 
         /// </summary>
         /// <param name="player"></param>
-        private void StartSpeaking(Player player)
+        private void StartSpeaking(Interactor interactor)
         {
-            Listener = player;
+            Listener = interactor;
             SpeechIndex = 0;
         }
 

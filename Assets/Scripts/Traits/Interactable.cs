@@ -36,11 +36,11 @@ namespace Traits
         /// <param name="other"></param>
         public void OnTriggerEnter2D(Collider2D other)
         {
-            var player = other.GetComponent<Player>();
+            Interactor interactor = other.GetComponent<Interactor>();
 
-            if (player)
+            if (interactor)
             {
-                player.Interactable = this;
+                interactor.Interactable = this;
             }
         }
 
@@ -50,13 +50,13 @@ namespace Traits
         /// <param name="other"></param>
         public void OnTriggerExit2D(Collider2D other)
         {
-            var player = other.GetComponent<Player>();
+            var interactor = other.GetComponent<Interactor>();
 
-            if (player)
+            if (interactor)
             {
-                if (player.Interactable == this)
+                if (interactor.Interactable == this)
                 {
-                    player.Interactable = null;
+                    interactor.Interactable = null;
                 }
             }
         }

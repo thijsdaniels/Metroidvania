@@ -9,6 +9,7 @@ namespace Utility
     /// 
     /// </summary>
     [RequireComponent(typeof(Player))]
+    [RequireComponent(typeof(Equipper))]
     [RequireComponent(typeof(CharacterController2D))]
     [RequireComponent(typeof(Collector))]
     public class Inventory : MonoBehaviour
@@ -16,9 +17,10 @@ namespace Utility
         /// <summary>
         /// 
         /// </summary>
-        protected Player Player;
         protected CharacterController2D Controller;
+        protected Player Player;
         protected Collector Collector;
+        protected Equipper Equipper;
 
         /// <summary>
         /// 
@@ -48,9 +50,10 @@ namespace Utility
         /// </summary>
         public void Start()
         {
-            Player = GetComponent<Player>();
             Controller = GetComponent<CharacterController2D>();
+            Player = GetComponent<Player>();
             Collector = GetComponent<Collector>();
+            Equipper = GetComponent<Equipper>();
 
             Scale = Camera.main.orthographicSize;
         }
@@ -60,7 +63,7 @@ namespace Utility
         /// </summary>
         public void Update()
         {
-            if (Input.GetButtonDown("Inventory"))
+            if (Input.GetButtonDown("Select"))
             {
                 Toggle();
             }
@@ -71,28 +74,28 @@ namespace Utility
             }
 
             MoveCursor(new Vector2(
-                Input.GetAxis("Horizontal Primary"),
-                Input.GetAxis("Vertical Primary") * -1
+                Input.GetAxis("Left Stick Horizontal"),
+                Input.GetAxis("Left Stick Vertical") * -1
             ));
 
-            if (Input.GetButtonDown("Item Primary"))
+            if (Input.GetButtonDown("X"))
             {
-                Select(CursorPosition, Player.ItemSlots.Primary);
+                Select(CursorPosition, Equipper.ItemSlots.Primary);
             }
 
-            if (Input.GetButtonDown("Item Secondary"))
+            if (Input.GetButtonDown("Y"))
             {
-                Select(CursorPosition, Player.ItemSlots.Secondary);
+                Select(CursorPosition, Equipper.ItemSlots.Secondary);
             }
 
-            if (Input.GetButtonDown("Item Tertiary"))
+            if (Input.GetButtonDown("L"))
             {
-                Select(CursorPosition, Player.ItemSlots.Tertiary);
+                Select(CursorPosition, Equipper.ItemSlots.Tertiary);
             }
 
-            if (Input.GetButtonDown("Item Quaternary"))
+            if (Input.GetButtonDown("R"))
             {
-                Select(CursorPosition, Player.ItemSlots.Quaternary);
+                Select(CursorPosition, Equipper.ItemSlots.Quaternary);
             }
         }
 
@@ -273,7 +276,12 @@ namespace Utility
 
             Vector2 positionOnCamera = PositionToCameraSpace(position);
 
-            GUI.Box(new Rect((positionOnCamera.x - ItemPadding.x) * Scale, (positionOnCamera.y - ItemPadding.y) * Scale, (ItemSize.x + (ItemPadding.x * 2)) * Scale, (ItemSize.y + (ItemPadding.y * 2)) * Scale), GUIContent.none);
+            GUI.Box(new Rect(
+                (positionOnCamera.x - ItemPadding.x) * Scale,
+                (positionOnCamera.y - ItemPadding.y) * Scale,
+                (ItemSize.x + ItemPadding.x * 2) * Scale,
+                (ItemSize.y + ItemPadding.y * 2) * Scale
+            ), GUIContent.none);
         }
 
         /// <summary>
@@ -355,14 +363,14 @@ namespace Utility
         /// </summary>
         /// <param name="position"></param>
         /// <param name="slot"></param>
-        protected void Select(Vector2 position, Player.ItemSlots slot)
+        protected void Select(Vector2 position, Equipper.ItemSlots slot)
         {
             int index = (int) (position.y * ItemGrid.x + position.x);
 
             if (Collector.Items.Count > index)
             {
                 Item item = Collector.Items[index];
-                Player.Equip(slot, item);
+                Equipper.Equip(slot, item);
             }
         }
     }

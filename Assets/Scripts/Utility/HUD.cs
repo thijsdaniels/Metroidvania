@@ -9,6 +9,7 @@ namespace Utility
     /// </summary>
     [RequireComponent(typeof(Player))]
     [RequireComponent(typeof(Collector))]
+    [RequireComponent(typeof(Equipper))]
     [RequireComponent(typeof(Damagable))]
     public class HUD : MonoBehaviour
     {
@@ -17,6 +18,7 @@ namespace Utility
         /// </summary>
         private Player Player;
         private Collector Collector;
+        private Equipper Equipper;
         private Damagable Damagable;
 
         /// <summary>
@@ -147,6 +149,7 @@ namespace Utility
 
             Player = GetComponent<Player>();
             Collector = GetComponent<Collector>();
+            Equipper = GetComponent<Equipper>();
             Damagable = GetComponent<Damagable>();
 
             LabelLeftStyle = new GUIStyle();
@@ -481,7 +484,21 @@ namespace Utility
                 GUI.color = oldColor;
             }
 
-            if (Player.AButtonLabel != null)
+            CharacterController2D controller = Player.GetComponent<CharacterController2D>();
+            Jumper jumper = Player.GetComponent<Jumper>();
+
+            string label = null;
+
+            if (controller && controller.State.IsSwimming())
+            {
+                label = "Swim";
+            }
+            else if (jumper && jumper.CanJump())
+            {
+                label = "Jump";
+            }
+            
+            if (label != null)
             {
                 var aLabelPosition = new Rect(
                     aIconPosition.x,
@@ -490,7 +507,7 @@ namespace Utility
                     16 * Scale
                 );
 
-                OutlinedLabel(aLabelPosition, Player.AButtonLabel, LabelCenterStyle);
+                OutlinedLabel(aLabelPosition, label, LabelCenterStyle);
             }
         }
 
@@ -512,8 +529,22 @@ namespace Utility
                 GUI.DrawTextureWithTexCoords(new Rect(bIconPosition.x, bIconPosition.y, size.x, size.y), BButtonTexture, BButtonCoordinates);
                 GUI.color = oldColor;
             }
+            
+            Roller roller = Player.GetComponent<Roller>();
+            Interactor interactor = Player.GetComponent<Interactor>();
 
-            if (Player.BButtonLabel != null)
+            string label = null;
+
+            if (interactor && interactor.CanInteract())
+            {
+                label = interactor.Interactable.Action;
+            }
+            else if (roller && roller.CanRoll())
+            {
+                label = "Roll";
+            }
+
+            if (label != null)
             {
                 var bLabelPosition = new Rect(
                     bIconPosition.x,
@@ -522,7 +553,7 @@ namespace Utility
                     16 * Scale
                 );
 
-                OutlinedLabel(bLabelPosition, Player.BButtonLabel, LabelCenterStyle);
+                OutlinedLabel(bLabelPosition, label, LabelCenterStyle);
             }
         }
 
@@ -545,9 +576,9 @@ namespace Utility
                 GUI.color = oldColor;
             }
 
-            if (Player.QuaternaryItem)
+            if (Equipper.PrimaryItem)
             {
-                var xButtonActionSprite = Player.QuaternaryItem.GetComponent<SpriteRenderer>().sprite;
+                var xButtonActionSprite = Equipper.PrimaryItem.GetComponent<SpriteRenderer>().sprite;
 
                 if (xButtonActionSprite)
                 {
@@ -563,7 +594,7 @@ namespace Utility
                     GUI.DrawTextureWithTexCoords(new Rect(xIconPosition.x + Padding.x * Scale, xIconPosition.y + Padding.y * Scale, size.x - 2 * Padding.x * Scale, size.y - 2 * Padding.y * Scale), xButtonActionTexture, xButtonActionCoordinates);
                 }
 
-                if (Player.QuaternaryItem.GetAmmo() != null)
+                if (Equipper.PrimaryItem.GetAmmo() != null)
                 {
                     var yLabelPosition = new Rect(
                         xIconPosition.x + (4 * Scale),
@@ -572,7 +603,7 @@ namespace Utility
                         16 * Scale
                     );
 
-                    OutlinedLabel(yLabelPosition, Player.QuaternaryItem.GetAmmo().ToString(), LabelCenterStyle);
+                    OutlinedLabel(yLabelPosition, Equipper.PrimaryItem.GetAmmo().ToString(), LabelCenterStyle);
                 }
             }
         }
@@ -596,9 +627,9 @@ namespace Utility
                 GUI.color = oldColor;
             }
 
-            if (Player.TertiaryItem)
+            if (Equipper.SecondaryItem)
             {
-                var yButtonActionSprite = Player.TertiaryItem.GetComponent<SpriteRenderer>().sprite;
+                var yButtonActionSprite = Equipper.SecondaryItem.GetComponent<SpriteRenderer>().sprite;
 
                 if (yButtonActionSprite)
                 {
@@ -614,7 +645,7 @@ namespace Utility
                     GUI.DrawTextureWithTexCoords(new Rect(yIconPosition.x + Padding.x * Scale, yIconPosition.y + Padding.y * Scale, size.x - 2 * Padding.x * Scale, size.y - 2 * Padding.y * Scale), yButtonActionTexture, yButtonActionCoordinates);
                 }
 
-                if (Player.TertiaryItem.GetAmmo() != null)
+                if (Equipper.SecondaryItem.GetAmmo() != null)
                 {
                     var yLabelPosition = new Rect(
                         yIconPosition.x + (4 * Scale),
@@ -623,7 +654,7 @@ namespace Utility
                         16 * Scale
                     );
 
-                    OutlinedLabel(yLabelPosition, Player.TertiaryItem.GetAmmo().ToString(), LabelCenterStyle);
+                    OutlinedLabel(yLabelPosition, Equipper.SecondaryItem.GetAmmo().ToString(), LabelCenterStyle);
                 }
             }
         }
@@ -647,9 +678,9 @@ namespace Utility
                 GUI.color = oldColor;
             }
 
-            if (Player.SecondaryItem)
+            if (Equipper.TertiaryItem)
             {
-                var lButtonActionSprite = Player.SecondaryItem.GetComponent<SpriteRenderer>().sprite;
+                var lButtonActionSprite = Equipper.TertiaryItem.GetComponent<SpriteRenderer>().sprite;
 
                 if (lButtonActionSprite)
                 {
@@ -665,7 +696,7 @@ namespace Utility
                     GUI.DrawTextureWithTexCoords(new Rect(lIconPosition.x + Padding.x * Scale, lIconPosition.y + Padding.y * Scale, size.x - 2 * Padding.x * Scale, size.y - 2 * Padding.y * Scale), lButtonActionTexture, lButtonActionCoordinates);
                 }
 
-                if (Player.SecondaryItem.GetAmmo() != null)
+                if (Equipper.TertiaryItem.GetAmmo() != null)
                 {
                     var lLabelPosition = new Rect(
                         lIconPosition.x + (4 * Scale),
@@ -674,7 +705,7 @@ namespace Utility
                         16 * Scale
                     );
 
-                    OutlinedLabel(lLabelPosition, Player.SecondaryItem.GetAmmo().ToString(), LabelCenterStyle);
+                    OutlinedLabel(lLabelPosition, Equipper.TertiaryItem.GetAmmo().ToString(), LabelCenterStyle);
                 }
             }
         }
@@ -698,9 +729,9 @@ namespace Utility
                 GUI.color = oldColor;
             }
 
-            if (Player.PrimaryItem)
+            if (Equipper.QuaternaryItem)
             {
-                var rButtonActionSprite = Player.PrimaryItem.GetComponent<SpriteRenderer>().sprite;
+                var rButtonActionSprite = Equipper.QuaternaryItem.GetComponent<SpriteRenderer>().sprite;
 
                 if (rButtonActionSprite)
                 {
@@ -716,7 +747,7 @@ namespace Utility
                     GUI.DrawTextureWithTexCoords(new Rect(rIconPosition.x + Padding.x * Scale, rIconPosition.y + Padding.y * Scale, size.x - 2 * Padding.x * Scale, size.y - 2 * Padding.y * Scale), rButtonActionTexture, rButtonActionCoordinates);
                 }
 
-                if (Player.PrimaryItem.GetAmmo() != null)
+                if (Equipper.QuaternaryItem.GetAmmo() != null)
                 {
                     var rLabelPosition = new Rect(
                         rIconPosition.x + (4 * Scale),
@@ -725,7 +756,7 @@ namespace Utility
                         16 * Scale
                     );
 
-                    OutlinedLabel(rLabelPosition, Player.PrimaryItem.GetAmmo().ToString(), LabelCenterStyle);
+                    OutlinedLabel(rLabelPosition, Equipper.QuaternaryItem.GetAmmo().ToString(), LabelCenterStyle);
                 }
             }
         }

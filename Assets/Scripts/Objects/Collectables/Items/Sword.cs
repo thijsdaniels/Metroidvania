@@ -1,5 +1,4 @@
-﻿using Character;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Objects.Collectables.Items
 {

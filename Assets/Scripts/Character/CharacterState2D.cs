@@ -36,6 +36,55 @@ namespace Character
 		/// <summary>
 		/// 
 		/// </summary>
+		public enum MovementModes
+		{
+			Walking,
+			Swimming,
+			Aiming,
+			Crouching,
+			Climbing,
+			Rolling
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		public MovementModes MovementMode
+		{
+			get
+			{
+				if (IsAiming())
+				{
+					return MovementModes.Aiming;
+				}
+
+				if (IsRolling())
+				{
+					return MovementModes.Rolling;
+				}
+
+				if (IsCrouching())
+				{
+					return MovementModes.Crouching;
+				}
+
+				if (IsSwimming())
+				{
+					return MovementModes.Swimming;
+				}
+
+				if (IsClimbing())
+				{
+					return MovementModes.Climbing;
+				}
+
+				return MovementModes.Walking;
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <returns></returns>
 		public bool IsGrounded()
 		{

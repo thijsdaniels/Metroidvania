@@ -31,12 +31,12 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="controller"></param>
-        public void OnCharacterControllerEnter2D(CharacterController2D controller)
+        /// <param name="climber"></param>
+        public void OnClimberEnter(Climber climber)
         {
-            controller.AddClimbable(this);
+            climber.AddClimbable(this);
 
-            if (controller.State.IsClimbing())
+            if (climber.IsClimbing())
             {
                 Interactable.Action = "Drop";
             }
@@ -49,10 +49,10 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="controller"></param>
-        public void OnCharacterControllerExit2D(CharacterController2D controller)
+        /// <param name="climber"></param>
+        public void OnClimberExit(Climber climber)
         {
-            controller.RemoveClimbable();
+            climber.RemoveClimbable();
         }
 
         /// <summary>
@@ -61,21 +61,21 @@ namespace Traits
         /// <param name="player"></param>
         public void OnInteraction(Player player)
         {
-            CharacterController2D controller = player.GetComponent<CharacterController2D>();
+            Climber climber = player.GetComponent<Climber>();
 
-            if (!controller)
+            if (!climber)
             {
                 return;
             }
 
-            if (!controller.State.IsClimbing() && controller.CanClimb())
+            if (!climber.IsClimbing() && climber.CanClimb())
             {
-                controller.StartClimbing();
+                climber.StartClimbing();
                 Interactable.Action = "Drop";
             }
-            else if (controller.State.IsClimbing())
+            else if (climber.IsClimbing())
             {
-                controller.StopClimbing();
+                climber.StopClimbing();
                 Interactable.Action = "Climb";
             }
         }
