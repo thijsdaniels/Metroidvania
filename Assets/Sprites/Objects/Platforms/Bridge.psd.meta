@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 4cea9045499324033840d480bfbc84f5
-timeCreated: 1517954379
+timeCreated: 1519247934
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -9,6 +9,9 @@ TextureImporter:
     21300004: Bridge_2
     21300006: Bridge_3
     21300008: Bridge_4
+    21300010: Bridge_5
+    21300012: Bridge_6
+    21300014: Bridge_7
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -145,6 +148,48 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Bridge_5
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Bridge_6
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Bridge_7
+      rect:
+        serializedVersion: 2
+        x: 112
         y: 0
         width: 16
         height: 16

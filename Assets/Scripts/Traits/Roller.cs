@@ -1,4 +1,5 @@
 ﻿using Character;
+using Physics;
 using UnityEngine;
 
 namespace Traits
@@ -6,7 +7,7 @@ namespace Traits
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Body))]
     [RequireComponent(typeof(Animator))]
     public class Roller : MonoBehaviour
     {
@@ -18,7 +19,7 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        protected CharacterController2D Controller;
+        protected Body Body;
 
         /// <summary>
         /// 
@@ -40,7 +41,7 @@ namespace Traits
         /// </summary>
         public void Start()
         {
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
             Interactor = GetComponent<Interactor>();
             Animator = GetComponent<Animator>();
             Damagable = GetComponent<Damagable>();
@@ -52,13 +53,12 @@ namespace Traits
         /// <returns></returns>
         public bool CanRoll()
         {
-            // TODO: Maybe just let Mecanim decide when it's OK to roll?
             return (
                 !(Interactor && Interactor.CanInteract()) &&
-                !Controller.State.IsRolling() &&
-                Controller.State.IsGrounded() &&
-                !Controller.State.IsClimbing() &&
-                !Controller.State.IsSwimming()
+                !Body.State.IsRolling() &&
+                Body.State.IsGrounded() &&
+                !Body.State.IsClimbing() &&
+                !Body.State.IsSwimming()
             );
         }
 
@@ -75,7 +75,7 @@ namespace Traits
         /// </summary>
         public void OnRollStart()
         {
-            Controller.State.Rolling = true;
+            Body.State.Rolling = true;
 
             if (Damagable)
             {
@@ -88,7 +88,7 @@ namespace Traits
         /// </summary>
         public void OnRollEnd()
         {
-            Controller.State.Rolling = false;
+            Body.State.Rolling = false;
 
             if (Damagable)
             {
@@ -107,12 +107,12 @@ namespace Traits
                 return;
             }
             
-            if (player.ControllerInput.B.Pressed && CanRoll())
+            if (CanRoll())
             {
-                Roll();
+                player.ControllerInput.B.OncePressed(Roll);
             }
 
-            if (Controller.State.MovementMode.Equals(CharacterState2D.MovementModes.Rolling))
+            if (Body.State.MovementMode.Equals(State.MovementModes.Rolling))
             {
                 Move();
             }
@@ -132,14 +132,14 @@ namespace Traits
         /// </summary>
         private void MoveHorizontally()
         {
-            if (!(Controller.Velocity.x < RollSpeed) || !(Controller.Velocity.x > -RollSpeed))
+            if (!(Body.Velocity.x < RollSpeed) || !(Body.Velocity.x > -RollSpeed))
             {
                 return;
             }
 
             float directionCoefficient = transform.localScale.x > 0f ? 1f : -1f;
             
-            Controller.SetHorizontalVelocity(RollSpeed * directionCoefficient);
+            Body.SetHorizontalVelocity(RollSpeed * directionCoefficient);
         }
 
         /// <summary>

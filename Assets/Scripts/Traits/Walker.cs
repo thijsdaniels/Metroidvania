@@ -1,4 +1,5 @@
 ﻿using Character;
+using Physics;
 using UnityEngine;
 
 namespace Traits
@@ -6,13 +7,13 @@ namespace Traits
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Body))]
     public class Walker : MonoBehaviour
     {
         /// <summary>
         /// 
         /// </summary>
-        public float RunSpeed = 8f;
+        public float RunSpeed = 6f;
 
         /// <summary>
         /// 
@@ -27,14 +28,14 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        protected CharacterController2D Controller;
+        protected Body Body;
 
         /// <summary>
         /// 
         /// </summary>
         public void Start()
         {
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
         }
         
         /// <summary>
@@ -48,7 +49,7 @@ namespace Traits
                 return;
             }
 
-            if (Controller.State.MovementMode.Equals(CharacterState2D.MovementModes.Walking))
+            if (Body.State.MovementMode.Equals(State.MovementModes.Walking))
             {
                 Move(player.ControllerInput.Movement);
             }
@@ -68,11 +69,11 @@ namespace Traits
         /// </summary>
         private void MoveHorizontally(Vector2 movement)
         {
-            float walkAcceleration = RunSpeed * Controller.PlatformParameters.Traction; // * Time.deltaTime;
+            float walkAcceleration = RunSpeed * Body.PlatformParameters.Traction; // * Time.deltaTime;
 
-            if (movement.x > 0f && Controller.Velocity.x < RunSpeed || movement.x < 0f && Controller.Velocity.x > -RunSpeed)
+            if (movement.x > 0f && Body.Velocity.x < RunSpeed || movement.x < 0f && Body.Velocity.x > -RunSpeed)
             {
-                Controller.AddHorizontalVelocity(movement.x * walkAcceleration);
+                Body.AddHorizontalVelocity(movement.x * walkAcceleration);
             }
         }
 

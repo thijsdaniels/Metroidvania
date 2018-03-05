@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Character;
 using Objects.Collectables;
 using UnityEngine;
@@ -14,22 +15,23 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
+        [Serializable] 
         public struct Ammo
         {
             /// <summary>
             /// 
             /// </summary>
-            public bool Enabled { get; private set; }
+            public bool Enabled;
             
             /// <summary>
             /// 
             /// </summary>
-            public int Current { get; private set; }
+            public int Current;
             
             /// <summary>
             /// 
             /// </summary>
-            public int Maximum { get; private set; }
+            public int Maximum;
 
             /// <summary>
             /// 

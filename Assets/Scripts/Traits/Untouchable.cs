@@ -75,7 +75,6 @@ namespace Traits
             
             if (IsTarget(other.gameObject))
             {
-                Debug.Log("Trigger Enter");
                 InflictDamage(other.gameObject);
             }
         }

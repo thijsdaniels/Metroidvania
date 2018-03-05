@@ -1,4 +1,5 @@
 ﻿using Character;
+using Physics;
 using UnityEngine;
 
 namespace Traits
@@ -6,7 +7,7 @@ namespace Traits
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Body))]
     public class Climber : MonoBehaviour
     {
         /// <summary>
@@ -32,7 +33,7 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        protected CharacterController2D Controller;
+        protected Body Body;
         
         /// <summary>
         /// 
@@ -45,7 +46,7 @@ namespace Traits
         /// </summary>
         public void Start()
         {
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
         }
         
         /// <summary>
@@ -69,7 +70,7 @@ namespace Traits
                 Climbables--;
             }
 
-            if (Climbables == 0 && Controller.State.IsClimbing())
+            if (Climbables == 0 && Body.State.IsClimbing())
             {
                 StopClimbing();
 
@@ -92,7 +93,7 @@ namespace Traits
         /// <returns></returns>
         public bool IsClimbing()
         {
-            return Controller.State.IsClimbing();
+            return Body.State.IsClimbing();
         }
 
         /// <summary>
@@ -100,9 +101,9 @@ namespace Traits
         /// </summary>
         public void StartClimbing()
         {
-            Controller.State.Climbing = true;
+            Body.State.Climbing = true;
 
-            Controller.SetHorizontalVelocity(0);
+            Body.SetHorizontalVelocity(0);
 
             transform.position = new Vector3(
                 Climbable.transform.position.x + Climbable.Offset,
@@ -118,9 +119,9 @@ namespace Traits
         /// </summary>
         public void StopClimbing()
         {
-            Controller.State.Climbing = false;
+            Body.State.Climbing = false;
 
-            Controller.SetVerticalVelocity(0);
+            Body.SetVerticalVelocity(0);
             
             SendMessage("OnStopClimbing", this, SendMessageOptions.DontRequireReceiver);
         }
@@ -141,7 +142,7 @@ namespace Traits
                 StartClimbing();
             }
 
-            if (Controller.State.MovementMode.Equals(CharacterState2D.MovementModes.Climbing))
+            if (Body.State.MovementMode.Equals(State.MovementModes.Climbing))
             {
                 Move(player.ControllerInput.Movement);
             }
@@ -169,15 +170,15 @@ namespace Traits
         /// </summary>
         private void MoveVertically(Vector2 movement)
         {
-            Controller.SetVerticalVelocity(movement.y * ClimbSpeed);
+            Body.SetVerticalVelocity(movement.y * ClimbSpeed);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void OnLand()
+        public void OnLand(Platform platform)
         {
-            if (Controller.State.IsClimbing())
+            if (Body.State.IsClimbing())
             {
                 StopClimbing();
             }
@@ -223,7 +224,7 @@ namespace Traits
         public void OnAnimate(Animator animator)
         {
             // set climbing animation parameter
-            animator.SetBool("Climbing", Controller.State.IsClimbing());
+            animator.SetBool("Climbing", Body.State.IsClimbing());
         }
     }
 }

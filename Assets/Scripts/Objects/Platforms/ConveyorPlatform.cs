@@ -1,4 +1,5 @@
 ﻿using Character;
+using Physics;
 using UnityEngine;
 
 namespace Objects.Platforms
@@ -16,10 +17,10 @@ namespace Objects.Platforms
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="other"></param>
-        void OnCharacterControllerStay2D(CharacterController2D other)
+        /// <param name="body"></param>
+        void OnBodyStay(Body body)
         {
-            other.AddExternalHorizontalVelocity(Velocity);
+            body.AddExternalHorizontalVelocity(Velocity);
         }
     }
 }

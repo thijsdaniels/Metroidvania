@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Character;
+using Physics;
+using UnityEngine;
 
 namespace Traits
 {
@@ -29,11 +31,11 @@ namespace Traits
         {
             Carriable carriable = Carrier.Release();
 
-            Rigidbody2D body = carriable.GetComponent<Rigidbody2D>();
+            Body body = carriable.GetComponent<Body>();
             
             if (body)
             {
-                body.AddForce(force);
+                body.AddVelocity(force);
             }
         }
     }

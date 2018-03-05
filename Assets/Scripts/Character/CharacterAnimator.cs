@@ -1,18 +1,19 @@
-﻿using UnityEngine;
+﻿using Physics;
+using UnityEngine;
 
 namespace Character
 {
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Body))]
     [RequireComponent(typeof(Animator))]
     public class CharacterAnimator : MonoBehaviour
     {
         /// <summary>
         /// 
         /// </summary>
-        protected CharacterController2D Character;
+        protected Body Body;
         
         /// <summary>
         /// 
@@ -29,7 +30,7 @@ namespace Character
         /// </summary>
         public void Start()
         {
-            Character = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
             Animator = GetComponent<Animator>();
             Player = GetComponent<Player>();
         }
@@ -57,11 +58,11 @@ namespace Character
         public void OnAnimate(Animator animator)
         {
             // set gounded animation parameter
-            Animator.SetBool("Grounded", Character.State.IsGrounded());
+            Animator.SetBool("Grounded", Body.State.IsGrounded());
 
             // set the velocity animation parameters
-            Animator.SetFloat("Horizontal Velocity", Character.Velocity.x);
-            Animator.SetFloat("Vertical Velocity", Character.Velocity.y);
+            Animator.SetFloat("Horizontal Velocity", Body.Velocity.x);
+            Animator.SetFloat("Vertical Velocity", Body.Velocity.y);
         }
     }
 }

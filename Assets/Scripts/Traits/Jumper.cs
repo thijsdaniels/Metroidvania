@@ -8,13 +8,13 @@ namespace Traits
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(CharacterController2D))] 
+    [RequireComponent(typeof(Body))] 
     public class Jumper : MonoBehaviour
     {
         /// <summary>
         /// 
         /// </summary>
-        CharacterController2D Controller;
+        Body Body;
         
         /// <summary>
         /// 
@@ -71,7 +71,7 @@ namespace Traits
         /// </summary>
         public void Start()
         {
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Traits
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public bool CanJump()
         {
-            if (Controller.State.IsClimbing())
+            if (Body.State.IsClimbing())
             {
                 return false;
             }
@@ -102,27 +102,27 @@ namespace Traits
                 return false;
             }
 
-            switch (Controller.VolumeParameters.JumpMode)
+            switch (Body.VolumeParameters.JumpMode)
             {
-                case PhysicsVolumeParameters2D.JumpModes.Anywhere:
+                case VolumeParameters.JumpModes.Anywhere:
                 {
                     return true;
                 }
-                case PhysicsVolumeParameters2D.JumpModes.Ground:
+                case VolumeParameters.JumpModes.Ground:
                 {
                     return (
-                        Controller.State.IsGrounded() ||
+                        Body.State.IsGrounded() ||
                         CurrentAirJump < AirJumps ||
-                        WallJumpEnabled && Controller.State.IsCollidingHorizontally()
+                        WallJumpEnabled && Body.State.IsCollidingHorizontally()
                     );
                 }
-                case PhysicsVolumeParameters2D.JumpModes.None:
+                case VolumeParameters.JumpModes.None:
                 {
                     return false;
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException(nameof(PhysicsVolumeParameters2D.JumpMode), Controller.VolumeParameters.JumpMode.ToString(), "Invalid JumpMode.");
+                    throw new ArgumentOutOfRangeException(nameof(VolumeParameters.JumpMode), Body.VolumeParameters.JumpMode.ToString(), "Invalid JumpMode.");
                 }
             }
         }
@@ -132,35 +132,35 @@ namespace Traits
         /// </summary>
         public void Jump()
         {
-            if (Controller.State.IsGrounded())
+            if (Body.State.IsGrounded())
             {
                 SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
 
-                Controller.SetVerticalVelocity(JumpVelocity * Controller.VolumeParameters.JumpModifier);
+                Body.SetVerticalVelocity(JumpVelocity * Body.VolumeParameters.JumpModifier);
             }
             else
             {
-                if (!Controller.State.IsSwimming() && Controller.State.IsCollidingHorizontally())
+                if (!Body.State.IsSwimming() && Body.State.IsCollidingHorizontally())
                 {
                     SendMessage("OnWallJump", SendMessageOptions.DontRequireReceiver);
 
-                    int direction = Controller.State.CollisionLeft ? 1 : -1;
+                    int direction = Body.State.CollisionLeft ? 1 : -1;
             
-                    Controller.SetVelocity(new Vector2(
-                        WallJumpVelocity.x * Controller.VolumeParameters.JumpModifier * direction,
-                        WallJumpVelocity.y * Controller.VolumeParameters.JumpModifier
+                    Body.SetVelocity(new Vector2(
+                        WallJumpVelocity.x * Body.VolumeParameters.JumpModifier * direction,
+                        WallJumpVelocity.y * Body.VolumeParameters.JumpModifier
                     ));
                 }
                 else
                 {
-                    if (Controller.VolumeParameters.JumpMode == PhysicsVolumeParameters2D.JumpModes.Ground)
+                    if (Body.VolumeParameters.JumpMode == VolumeParameters.JumpModes.Ground)
                     {
                         CurrentAirJump++;
                     }
 
                     SendMessage("OnAirJump", SendMessageOptions.DontRequireReceiver);
                     
-                    Controller.SetVerticalVelocity(JumpVelocity * Controller.VolumeParameters.JumpModifier);
+                    Body.SetVerticalVelocity(JumpVelocity * Body.VolumeParameters.JumpModifier);
                 }
             }
 
@@ -178,16 +178,16 @@ namespace Traits
                 return;
             }
             
-            if (player.ControllerInput.A.Pressed && CanJump())
+            if (CanJump())
             {
-                Jump();
+                player.ControllerInput.A.OncePressed(Jump);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void OnLand()
+        public void OnLand(Platform platform)
         {
             CurrentAirJump = 0;
         }

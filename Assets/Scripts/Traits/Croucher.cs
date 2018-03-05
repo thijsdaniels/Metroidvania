@@ -1,4 +1,5 @@
 ﻿using Character;
+using Physics;
 using UnityEngine;
 
 namespace Traits
@@ -6,13 +7,13 @@ namespace Traits
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(CharacterController2D))] 
+    [RequireComponent(typeof(Body))] 
     public class Croucher : MonoBehaviour
     {
         /// <summary>
         /// 
         /// </summary>
-        protected CharacterController2D Controller;
+        protected Body Body;
         
         /// <summary>
         /// 
@@ -29,7 +30,7 @@ namespace Traits
         /// </summary>
         public void Start()
         {
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
             Animator = GetComponent<Animator>();
         }
         
@@ -40,10 +41,10 @@ namespace Traits
         public bool CanCrouch()
         {
             return (
-                !Controller.State.IsSwimming() &&
-                !Controller.State.IsClimbing() &&
-                !Controller.State.IsAttacking() &&
-                !Controller.State.IsAiming()
+                !Body.State.IsSwimming() &&
+                !Body.State.IsClimbing() &&
+                !Body.State.IsAttacking() &&
+                !Body.State.IsAiming()
             );
         }
         
@@ -52,7 +53,7 @@ namespace Traits
         /// </summary>
         public void StartCrouching()
         {
-            Controller.State.Crouching = true;
+            Body.State.Crouching = true;
 
             if (Animator)
             {
@@ -65,7 +66,7 @@ namespace Traits
         /// </summary>
         public void StopCrouching()
         {
-            Controller.State.Crouching = false;
+            Body.State.Crouching = false;
 
             if (Animator)
             {
@@ -93,7 +94,7 @@ namespace Traits
                 StopCrouching();
             }
 
-            if (Controller.State.MovementMode.Equals(CharacterState2D.MovementModes.Crouching))
+            if (Body.State.MovementMode.Equals(State.MovementModes.Crouching))
             {
                 Move(player.ControllerInput.Movement);
             }

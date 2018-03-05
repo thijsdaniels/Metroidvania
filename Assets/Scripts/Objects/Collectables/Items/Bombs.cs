@@ -1,5 +1,5 @@
-﻿using Character;
-using Objects.Projectiles;
+﻿using Objects.Projectiles;
+using Physics;
 using Traits;
 using UnityEngine;
 
@@ -21,7 +21,7 @@ namespace Objects.Collectables.Items
         /// <summary>
         /// 
         /// </summary>
-        protected const float Force = 25f;
+        protected const float Force = 10f;
         public float CoolDownDuration = 0.25f;
 
         /// <summary>
@@ -73,9 +73,13 @@ namespace Objects.Collectables.Items
                 return false;
             }
 
-            CharacterController2D controller = Owner.GetComponent<CharacterController2D>();
+            Body body = Owner.GetComponent<Body>();
             
-            if (controller.State.IsRolling() || controller.State.IsSwimming() || controller.State.IsClimbing())
+            if (
+                body.State.IsRolling() ||
+                body.State.IsSwimming() ||
+                body.State.IsClimbing()
+            )
             {
                 return false;
             }

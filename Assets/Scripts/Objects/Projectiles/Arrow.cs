@@ -7,6 +7,7 @@ namespace Objects.Projectiles
     /// <summary>
     /// 
     /// </summary>
+    [RequireComponent(typeof(Rigidbody2D))] 
     public class Arrow : MonoBehaviour
     {
         /// <summary>

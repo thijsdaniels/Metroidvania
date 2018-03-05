@@ -134,7 +134,7 @@ namespace Objects.Collectables.Items
             Owner.Arrows.Consume();
             Owner.Mana.Consume(Arrow.RequiredMana);
 
-            Arrow arrowInstance = Instantiate(Arrow, origin, Quaternion.identity) as Arrow;
+            Arrow arrowInstance = Instantiate(Arrow, origin, Quaternion.identity);
 
             Rigidbody2D arrowBody = arrowInstance.GetComponent<Rigidbody2D>();
             

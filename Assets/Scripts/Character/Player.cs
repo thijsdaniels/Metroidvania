@@ -1,4 +1,5 @@
 ﻿using Objects;
+using Physics;
 using Traits;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,11 +11,78 @@ namespace Character
     /// </summary>
     public struct ControllerInput
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public struct Button
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public bool Pressed;
+            
+            /// <summary>
+            /// 
+            /// </summary>
             public bool Held;
+            
+            /// <summary>
+            /// 
+            /// </summary>
             public bool Released;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public delegate void Action();
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="action"></param>
+            public void OncePressed(Action action)
+            {
+                if (!Pressed)
+                {
+                    return;
+                }
+
+                Pressed = false;
+
+                action();
+            }
+            
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="action"></param>
+            public void OnceHeld(Action action)
+            {
+                if (!Held)
+                {
+                    return;
+                }
+
+                Held = false;
+                
+                action();
+            }
+            
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="action"></param>
+            public void OnceReleased(Action action)
+            {
+                if (!Released)
+                {
+                    return;
+                }
+
+                Released = false;
+                
+                action();
+            }
         }
         
         public Vector2 Movement;
@@ -40,13 +108,15 @@ namespace Character
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(CharacterController2D))]
+    /// TODO: Rename to Traits.Controllable, so that it isn't player-specific.
+    /// TODO: Move anything that is not related to controller input to different/new classes.
+    [RequireComponent(typeof(Body))]
     public class Player : MonoBehaviour
     {
         /// <summary>
         /// 
         /// </summary>
-        public CharacterController2D Controller { get; private set; }
+        public Body Body { get; private set; }
 
         /// <summary>
         /// 
@@ -92,7 +162,7 @@ namespace Character
         public void Start()
         {
             // reference components
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
 
             // determine the facing direction
             Direction = transform.localScale.x > 0f ? Directions.Right : Directions.Left;
@@ -212,7 +282,7 @@ namespace Character
                 return;
             }
             
-            if (Controller.State.IsAiming())
+            if (Body.State.IsAiming())
             {
                 FaceDirection(ControllerInput.Aim);
             }
@@ -262,7 +332,7 @@ namespace Character
         /// <summary>
         /// 
         /// </summary>
-        public void OnLand()
+        public void OnLand(Platform platform)
         {
             if (LandSound)
             {
@@ -283,9 +353,9 @@ namespace Character
             // set moving animation parameter
             animator.SetBool("Moving", (
                 Mathf.Abs(ControllerInput.Movement.x) > 0f &&
-                Controller.State.IsGrounded() &&
-                !Controller.State.IsAiming() &&
-                !Controller.State.IsCrouching()
+                Body.State.IsGrounded() &&
+                !Body.State.IsAiming() &&
+                !Body.State.IsCrouching()
             ));
             
             // set the movement animation parameters

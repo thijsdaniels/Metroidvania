@@ -1,9 +1,10 @@
 ﻿using Character;
+using Physics;
 using UnityEngine;
 
 namespace Traits
 {
-    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Body))]
     public class Swimmer : MonoBehaviour
     {
         /// <summary>
@@ -14,14 +15,19 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        protected CharacterController2D Controller;
+        protected Body Body;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected int Liquids;
 
         /// <summary>
         /// 
         /// </summary>
         public void Start()
         {
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
         }
         
         /// <summary>
@@ -29,7 +35,7 @@ namespace Traits
         /// </summary>
         public void StartSwimming()
         {
-            Controller.State.Swimming = true;
+            Body.State.Swimming = true;
             
             SendMessage("OnStartSwimming", SendMessageOptions.DontRequireReceiver);
         }
@@ -39,7 +45,7 @@ namespace Traits
         /// </summary>
         public void StopSwimming()
         {
-            Controller.State.Swimming = false;
+            Body.State.Swimming = false;
             
             SendMessage("OnStopSwimming", SendMessageOptions.DontRequireReceiver);
         }
@@ -55,7 +61,7 @@ namespace Traits
                 return;
             }
             
-            if (Controller.State.MovementMode.Equals(CharacterState2D.MovementModes.Swimming))
+            if (Body.State.MovementMode.Equals(State.MovementModes.Swimming))
             {
                 Move(player.ControllerInput.Movement);
             }
@@ -78,12 +84,12 @@ namespace Traits
         {
             if (
                 movement.x > 0f &&
-                Controller.Velocity.x < SwimSpeed.x ||
+                Body.Velocity.x < SwimSpeed.x ||
                 movement.x < 0f &&
-                Controller.Velocity.x > -SwimSpeed.x
+                Body.Velocity.x > -SwimSpeed.x
             )
             {
-                Controller.AddHorizontalVelocity(movement.x * SwimSpeed.x);
+                Body.AddHorizontalVelocity(movement.x * SwimSpeed.x);
             }
         }
 
@@ -94,29 +100,45 @@ namespace Traits
         {
             if (
                 movement.y > 0f &&
-                Controller.Velocity.y < SwimSpeed.y ||
+                Body.Velocity.y < SwimSpeed.y ||
                 movement.y < 0f &&
-                Controller.Velocity.y > -SwimSpeed.y
+                Body.Velocity.y > -SwimSpeed.y
             )
             {
-                Controller.AddVerticalVelocity(movement.y * SwimSpeed.y);
+                Body.AddVerticalVelocity(movement.y * SwimSpeed.y);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void OnLiquidVolumeEnter()
+        public void OnVolumeEnter(Volume volume)
         {
-            StartSwimming();
+            if (volume.IsLiquid)
+            {
+                Liquids++;
+            }
+
+            if (Liquids > 0 && !Body.State.IsSwimming())
+            {
+                StartSwimming();
+            }
         }
         
         /// <summary>
         /// 
         /// </summary>
-        public void OnLiquidVolumeExit()
+        public void OnVolumeExit(Volume volume)
         {
-            StopSwimming();
+            if (volume.IsLiquid && Liquids > 0)
+            {
+                Liquids--;
+            }
+            
+            if (Liquids <= 0 && Body.State.IsSwimming())
+            {
+                StopSwimming();
+            }
         }
     }
 }

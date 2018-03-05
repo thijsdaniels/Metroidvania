@@ -1,5 +1,6 @@
 ﻿using Character;
 using Objects.Collectables;
+using Physics;
 using Traits;
 using UnityEngine;
 
@@ -10,14 +11,14 @@ namespace Utility
     /// </summary>
     [RequireComponent(typeof(Player))]
     [RequireComponent(typeof(Equipper))]
-    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Body))]
     [RequireComponent(typeof(Collector))]
     public class Inventory : MonoBehaviour
     {
         /// <summary>
         /// 
         /// </summary>
-        protected CharacterController2D Controller;
+        protected Body Body;
         protected Player Player;
         protected Collector Collector;
         protected Equipper Equipper;
@@ -50,7 +51,7 @@ namespace Utility
         /// </summary>
         public void Start()
         {
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
             Player = GetComponent<Player>();
             Collector = GetComponent<Collector>();
             Equipper = GetComponent<Equipper>();
@@ -123,7 +124,7 @@ namespace Utility
         /// <returns></returns>
         protected bool CanOpen()
         {
-            return Controller.State.IsGrounded();
+            return Body.State.IsGrounded();
         }
 
         /// <summary>

@@ -110,7 +110,7 @@ namespace Objects
 
             player.transform.position = respawnPosition;
 
-            player.Controller.SetVelocity(Vector2.zero);
+            player.Body.SetVelocity(Vector2.zero);
         }
     }
 }

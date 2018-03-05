@@ -14,6 +14,10 @@ namespace Objects.Projectiles
 		/// 
 		/// </summary>
 		private bool FuseLit;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public float FuseLength = 5f;
 
 		/// <summary>

@@ -33,10 +33,18 @@ namespace Traits
                 return;
             }
             
-            if (player.ControllerInput.B.Pressed && CanInteract())
+            if (CanInteract())
             {
-                Interactable.SendMessage("OnInteraction", this, SendMessageOptions.RequireReceiver);
+                player.ControllerInput.B.OncePressed(Interact);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Interact()
+        {
+            Interactable.SendMessage("OnInteraction", this, SendMessageOptions.RequireReceiver);
         }
     }
 }

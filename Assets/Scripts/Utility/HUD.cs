@@ -1,4 +1,5 @@
 ﻿using Character;
+using Physics;
 using Traits;
 using UnityEngine;
 
@@ -484,12 +485,12 @@ namespace Utility
                 GUI.color = oldColor;
             }
 
-            CharacterController2D controller = Player.GetComponent<CharacterController2D>();
+            Body body = Player.GetComponent<Body>();
             Jumper jumper = Player.GetComponent<Jumper>();
 
             string label = null;
 
-            if (controller && controller.State.IsSwimming())
+            if (body && body.State.IsSwimming())
             {
                 label = "Swim";
             }

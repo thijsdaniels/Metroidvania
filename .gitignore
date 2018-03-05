@@ -30,3 +30,6 @@ sysinfo.txt
 
 # Operating System
 .DS_Store
+
+# JetBrains Rider IDE
+/.idea/

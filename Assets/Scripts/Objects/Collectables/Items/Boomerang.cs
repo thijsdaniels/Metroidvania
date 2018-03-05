@@ -1,4 +1,5 @@
 using Character;
+using Physics;
 using Traits;
 using UnityEngine;
 
@@ -53,9 +54,13 @@ namespace Objects.Collectables.Items
                 return false;
             }
 
-            CharacterController2D controller = Owner.GetComponent<CharacterController2D>();
+            Body body = Owner.GetComponent<Body>();
             
-            if (controller.State.IsRolling() || controller.State.IsSwimming() || controller.State.IsClimbing())
+            if (
+                body.State.IsRolling() ||
+                body.State.IsSwimming() ||
+                body.State.IsClimbing()
+            )
             {
                 return false;
             }

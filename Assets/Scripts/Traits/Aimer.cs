@@ -1,4 +1,5 @@
 ﻿using Character;
+using Physics;
 using UnityEngine;
 
 namespace Traits
@@ -7,13 +8,13 @@ namespace Traits
     /// 
     /// </summary>
     /// TODO: Proceduraly create a Crosshair instead of relying on an assigned one.
-    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Body))]
     public class Aimer : MonoBehaviour
     {
         /// <summary>
         /// 
         /// </summary>
-        protected CharacterController2D Controller;
+        protected Body Body;
         
         /// <summary>
         /// 
@@ -45,7 +46,7 @@ namespace Traits
         /// </summary>
         public void Start()
         {
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
         }
         
         /// <summary>
@@ -61,7 +62,7 @@ namespace Traits
             
             SetAimingDirection(player.ControllerInput.Aim);
 
-            if (Controller.State.MovementMode.Equals(CharacterState2D.MovementModes.Aiming))
+            if (Body.State.MovementMode.Equals(State.MovementModes.Aiming))
             {
                 Move(player.ControllerInput.Movement);
             }
@@ -97,12 +98,12 @@ namespace Traits
         /// </summary>
         public void StartAiming()
         {
-            if (Controller.State.Aiming)
+            if (Body.State.Aiming)
             {
                 return;
             }
 
-            Controller.State.Aiming = true;
+            Body.State.Aiming = true;
 
             Crosshair.GetComponent<SpriteRenderer>().enabled = true;
             
@@ -114,12 +115,12 @@ namespace Traits
         /// </summary>
         public void StopAiming()
         {
-            if (!Controller.State.Aiming)
+            if (!Body.State.Aiming)
             {
                 return;
             }
 
-            Controller.State.Aiming = false;
+            Body.State.Aiming = false;
 
             Crosshair.GetComponent<SpriteRenderer>().enabled = false;
             

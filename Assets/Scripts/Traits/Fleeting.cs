@@ -183,8 +183,8 @@ namespace Traits
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="collider"></param>
-        public void OnTriggerEnter2D(Collider2D collider)
+        /// <param name="other"></param>
+        public void OnTriggerEnter2D(Collider2D other)
         {
             if (!Active)
             {
@@ -196,7 +196,7 @@ namespace Traits
                 return;
             }
 
-            if (CollisionLayerMask == (CollisionLayerMask | 1 << collider.gameObject.layer))
+            if (CollisionLayerMask == (CollisionLayerMask | 1 << other.gameObject.layer))
             {
                 SendMessage("OnFleetingDelay", null, SendMessageOptions.RequireReceiver);
             }

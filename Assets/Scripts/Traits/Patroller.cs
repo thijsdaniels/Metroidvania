@@ -1,4 +1,5 @@
 ﻿using Character;
+using Physics;
 using UnityEngine;
 
 namespace Traits
@@ -6,19 +7,13 @@ namespace Traits
     /// <summary>
     /// 
     /// </summary>
-    [RequireComponent(typeof(Rigidbody2D))]
-    [RequireComponent(typeof(CharacterController2D))]
+    [RequireComponent(typeof(Body))]
     public class Patroller : MonoBehaviour
     {
         /// <summary>
         /// 
         /// </summary>
-        private Rigidbody2D Body;
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        private CharacterController2D Controller;
+        private Body Body;
 
         /// <summary>
         /// 
@@ -49,8 +44,7 @@ namespace Traits
         /// </summary>
         public void Start()
         {
-            Body = GetComponent<Rigidbody2D>();
-            Controller = GetComponent<CharacterController2D>();
+            Body = GetComponent<Body>();
         }
 
         /// <summary>
@@ -99,7 +93,7 @@ namespace Traits
             return Physics2D.Linecast(
                 correctedSightStart,
                 correctedSightEnd,
-                Controller.PlatformLayerMask | 1 << LayerMask.NameToLayer("Enemies")
+                Body.PlatformLayerMask | 1 << LayerMask.NameToLayer("Enemies")
             );
         }
 
@@ -110,7 +104,7 @@ namespace Traits
         protected bool GapAhead()
         {
             // don't scan for gaps in the air
-            if (Controller && !Controller.State.IsGrounded())
+            if (Body && !Body.State.IsGrounded())
             {
                 return false;
             }
@@ -134,7 +128,7 @@ namespace Traits
             return !Physics2D.Linecast(
                 correctedSightStart,
                 correctedSightEnd,
-                Controller.PlatformLayerMask | Controller.LedgeLayerMask
+                Body.PlatformLayerMask | Body.LedgeLayerMask
             );
         }
 
@@ -161,11 +155,11 @@ namespace Traits
             {
                 velocity = new Vector2(
                     WalkSpeed * transform.localScale.x,
-                    Body.velocity.y
+                    Body.Velocity.y
                 );
             }
 
-            Body.velocity = velocity;
+            Body.SetVelocity(velocity);
         }
 
         /// <summary>

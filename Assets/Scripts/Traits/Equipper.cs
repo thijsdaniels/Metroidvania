@@ -54,74 +54,30 @@ namespace Traits
             
             if (PrimaryItem)
             {
-                if (player.ControllerInput.X.Pressed)
-                {
-                    PrimaryItem.OnPress();
-                }
-
-                if (player.ControllerInput.X.Held)
-                {
-                    PrimaryItem.OnHold();
-                }
-
-                if (player.ControllerInput.X.Released)
-                {
-                    PrimaryItem.OnRelease();
-                }
+                player.ControllerInput.X.OncePressed(PrimaryItem.OnPress);
+                player.ControllerInput.X.OnceHeld(PrimaryItem.OnHold);
+                player.ControllerInput.X.OnceReleased(PrimaryItem.OnRelease);
             }
 
             if (SecondaryItem)
             {
-                if (player.ControllerInput.Y.Pressed)
-                {
-                    SecondaryItem.OnPress();
-                }
-
-                if (player.ControllerInput.Y.Held)
-                {
-                    SecondaryItem.OnHold();
-                }
-
-                if (player.ControllerInput.Y.Released)
-                {
-                    SecondaryItem.OnRelease();
-                }
+                player.ControllerInput.Y.OncePressed(SecondaryItem.OnPress);
+                player.ControllerInput.Y.OnceHeld(SecondaryItem.OnHold);
+                player.ControllerInput.Y.OnceReleased(SecondaryItem.OnRelease);
             }
 
             if (TertiaryItem)
             {
-                if (player.ControllerInput.L.Pressed)
-                {
-                    TertiaryItem.OnPress();
-                }
-
-                if (player.ControllerInput.L.Held)
-                {
-                    TertiaryItem.OnHold();
-                }
-
-                if (player.ControllerInput.L.Released)
-                {
-                    TertiaryItem.OnRelease();
-                }
+                player.ControllerInput.L.OncePressed(TertiaryItem.OnPress);
+                player.ControllerInput.L.OnceHeld(TertiaryItem.OnHold);
+                player.ControllerInput.L.OnceReleased(TertiaryItem.OnRelease);
             }
 
             if (QuaternaryItem)
             {
-                if (player.ControllerInput.R.Pressed)
-                {
-                    QuaternaryItem.OnPress();
-                }
-
-                if (player.ControllerInput.R.Held)
-                {
-                    QuaternaryItem.OnHold();
-                }
-
-                if (player.ControllerInput.R.Released)
-                {
-                    QuaternaryItem.OnRelease();
-                }
+                player.ControllerInput.R.OncePressed(QuaternaryItem.OnPress);
+                player.ControllerInput.R.OnceHeld(QuaternaryItem.OnHold);
+                player.ControllerInput.R.OnceReleased(QuaternaryItem.OnRelease);
             }
         }
         
