@@ -1,68 +1,180 @@
 fileFormatVersion: 2
 guid: ed3bf7e77d6122149b604f7c8f13707f
-timeCreated: 1465821267
-licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: Zack - Idle 1
-    21300002: Zack - Idle 2
-    21300004: Zack - Idle 3
-    21300006: Zack - Idle 4
-    21300008: Zack - Running 1
-    21300010: Zack_5
-    21300012: Zack - Running 3
-    21300014: Zack - Running 4
-    21300016: Zack - Running 5
-    21300018: Zack - Running 6
-    21300020: Zack - Running 7
-    21300022: Zack - Running 8
-    21300024: Zack_12
-    21300026: Zack - Falling
-    21300028: Zack - Climbing 1
-    21300030: Zack - Climbing 2
-    21300032: Zack_16
-    21300034: Zack_17
-    21300036: Zack - Rolling 1
-    21300038: Zack - Rolling 2
-    21300040: Zack - Rolling 3
-    21300042: Zack - Rolling 4
-    21300044: Zack - Rolling 5
-    21300046: Zack - Shooting 1
-    21300048: Zack - Shooting 2
-    21300050: Zack - Shooting 3
-    21300052: Zack - Shooting 4
-    21300054: Zack - Shooting 5
-    21300056: Zack - Throwing
-    21300058: Zack_0
-    21300060: Zack_1
-    21300062: Zack_2
-    21300064: Zack_3
-    21300066: Zack_4
-    21300068: Zack_6
-    21300070: Zack_7
-    21300072: Zack_8
-    21300074: Zack_9
-    21300076: Zack_10
-    21300078: Zack_11
-    21300080: Zack_13
-    21300082: Zack_14
-    21300084: Zack_15
-    21300086: Zack_18
-    21300088: Zack_19
-    21300090: Zack_20
-    21300092: Zack_21
-    21300094: Zack_22
-    21300096: Zack_23
-    21300098: Zack_24
-    21300100: Zack_25
-    21300102: Zack_26
-    21300104: Zack_27
-    21300106: Zack_28
-    21300108: Zack_29
-    21300110: Zack_30
-    21300112: Zack_31
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: Zack - Idle 1
+  - first:
+      213: 21300002
+    second: Zack - Idle 2
+  - first:
+      213: 21300004
+    second: Zack - Idle 3
+  - first:
+      213: 21300006
+    second: Zack - Idle 4
+  - first:
+      213: 21300008
+    second: Zack - Running 1
+  - first:
+      213: 21300010
+    second: Zack_5
+  - first:
+      213: 21300012
+    second: Zack - Running 3
+  - first:
+      213: 21300014
+    second: Zack - Running 4
+  - first:
+      213: 21300016
+    second: Zack - Running 5
+  - first:
+      213: 21300018
+    second: Zack - Running 6
+  - first:
+      213: 21300020
+    second: Zack - Running 7
+  - first:
+      213: 21300022
+    second: Zack - Running 8
+  - first:
+      213: 21300024
+    second: Zack_12
+  - first:
+      213: 21300026
+    second: Zack - Falling
+  - first:
+      213: 21300028
+    second: Zack - Climbing 1
+  - first:
+      213: 21300030
+    second: Zack - Climbing 2
+  - first:
+      213: 21300032
+    second: Zack_16
+  - first:
+      213: 21300034
+    second: Zack_17
+  - first:
+      213: 21300036
+    second: Zack - Rolling 1
+  - first:
+      213: 21300038
+    second: Zack - Rolling 2
+  - first:
+      213: 21300040
+    second: Zack - Rolling 3
+  - first:
+      213: 21300042
+    second: Zack - Rolling 4
+  - first:
+      213: 21300044
+    second: Zack - Rolling 5
+  - first:
+      213: 21300046
+    second: Zack - Shooting 1
+  - first:
+      213: 21300048
+    second: Zack - Shooting 2
+  - first:
+      213: 21300050
+    second: Zack - Shooting 3
+  - first:
+      213: 21300052
+    second: Zack - Shooting 4
+  - first:
+      213: 21300054
+    second: Zack - Shooting 5
+  - first:
+      213: 21300056
+    second: Zack - Throwing
+  - first:
+      213: 21300058
+    second: Zack_0
+  - first:
+      213: 21300060
+    second: Zack_1
+  - first:
+      213: 21300062
+    second: Zack_2
+  - first:
+      213: 21300064
+    second: Zack_3
+  - first:
+      213: 21300066
+    second: Zack_4
+  - first:
+      213: 21300068
+    second: Zack_6
+  - first:
+      213: 21300070
+    second: Zack_7
+  - first:
+      213: 21300072
+    second: Zack_8
+  - first:
+      213: 21300074
+    second: Zack_9
+  - first:
+      213: 21300076
+    second: Zack_10
+  - first:
+      213: 21300078
+    second: Zack_11
+  - first:
+      213: 21300080
+    second: Zack_13
+  - first:
+      213: 21300082
+    second: Zack_14
+  - first:
+      213: 21300084
+    second: Zack_15
+  - first:
+      213: 21300086
+    second: Zack_18
+  - first:
+      213: 21300088
+    second: Zack_19
+  - first:
+      213: 21300090
+    second: Zack_20
+  - first:
+      213: 21300092
+    second: Zack_21
+  - first:
+      213: 21300094
+    second: Zack_22
+  - first:
+      213: 21300096
+    second: Zack_23
+  - first:
+      213: 21300098
+    second: Zack_24
+  - first:
+      213: 21300100
+    second: Zack_25
+  - first:
+      213: 21300102
+    second: Zack_26
+  - first:
+      213: 21300104
+    second: Zack_27
+  - first:
+      213: 21300106
+    second: Zack_28
+  - first:
+      213: 21300108
+    second: Zack_29
+  - first:
+      213: 21300110
+    second: Zack_30
+  - first:
+      213: 21300112
+    second: Zack_31
   externalObjects: {}
-  serializedVersion: 4
+  serializedVersion: 10
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -80,6 +192,8 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -90,7 +204,7 @@ TextureImporter:
     serializedVersion: 2
     filterMode: 0
     aniso: 16
-    mipBias: -1
+    mipBias: -100
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -102,18 +216,21 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
+  singleChannelComponent: 0
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
   platformSettings:
-  - buildTarget: DefaultTexturePlatform
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -123,7 +240,9 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - buildTarget: Standalone
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: 4
@@ -133,6 +252,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 1
     androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -150,6 +270,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: a5305410000000000800000000000000
+      internalID: 21300058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_1
       rect:
@@ -164,6 +291,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: c5305410000000000800000000000000
+      internalID: 21300060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_2
       rect:
@@ -178,6 +312,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: e5305410000000000800000000000000
+      internalID: 21300062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_3
       rect:
@@ -192,6 +333,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 06305410000000000800000000000000
+      internalID: 21300064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_4
       rect:
@@ -206,6 +354,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 26305410000000000800000000000000
+      internalID: 21300066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_5
       rect:
@@ -220,6 +375,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: a2305410000000000800000000000000
+      internalID: 21300010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_6
       rect:
@@ -234,6 +396,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 46305410000000000800000000000000
+      internalID: 21300068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_7
       rect:
@@ -248,6 +417,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 66305410000000000800000000000000
+      internalID: 21300070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_8
       rect:
@@ -262,6 +438,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 86305410000000000800000000000000
+      internalID: 21300072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_9
       rect:
@@ -276,6 +459,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: a6305410000000000800000000000000
+      internalID: 21300074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_10
       rect:
@@ -290,6 +480,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: c6305410000000000800000000000000
+      internalID: 21300076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_11
       rect:
@@ -304,6 +501,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: e6305410000000000800000000000000
+      internalID: 21300078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_12
       rect:
@@ -318,6 +522,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 83305410000000000800000000000000
+      internalID: 21300024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_13
       rect:
@@ -332,6 +543,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 07305410000000000800000000000000
+      internalID: 21300080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_14
       rect:
@@ -346,6 +564,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 27305410000000000800000000000000
+      internalID: 21300082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_15
       rect:
@@ -360,6 +585,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 47305410000000000800000000000000
+      internalID: 21300084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_16
       rect:
@@ -374,6 +606,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 04305410000000000800000000000000
+      internalID: 21300032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_17
       rect:
@@ -388,6 +627,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 24305410000000000800000000000000
+      internalID: 21300034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_18
       rect:
@@ -402,6 +648,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 67305410000000000800000000000000
+      internalID: 21300086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_19
       rect:
@@ -416,6 +669,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 87305410000000000800000000000000
+      internalID: 21300088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_20
       rect:
@@ -430,6 +690,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: a7305410000000000800000000000000
+      internalID: 21300090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_21
       rect:
@@ -444,6 +711,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: c7305410000000000800000000000000
+      internalID: 21300092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_22
       rect:
@@ -458,6 +732,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: e7305410000000000800000000000000
+      internalID: 21300094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_23
       rect:
@@ -472,6 +753,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 08305410000000000800000000000000
+      internalID: 21300096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_24
       rect:
@@ -486,6 +774,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 28305410000000000800000000000000
+      internalID: 21300098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_25
       rect:
@@ -500,6 +795,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 48305410000000000800000000000000
+      internalID: 21300100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_26
       rect:
@@ -514,6 +816,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 68305410000000000800000000000000
+      internalID: 21300102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_27
       rect:
@@ -528,6 +837,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 88305410000000000800000000000000
+      internalID: 21300104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_28
       rect:
@@ -542,6 +858,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: a8305410000000000800000000000000
+      internalID: 21300106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_29
       rect:
@@ -556,6 +879,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: c8305410000000000800000000000000
+      internalID: 21300108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_30
       rect:
@@ -570,6 +900,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: e8305410000000000800000000000000
+      internalID: 21300110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: Zack_31
       rect:
@@ -584,9 +921,26 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 09305410000000000800000000000000
+      internalID: 21300112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
   spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
